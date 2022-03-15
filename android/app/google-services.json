@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "280608877176",
+    "project_id": "sindustore-dev",
+    "storage_bucket": "sindustore-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280608877176:android:540f4c929517f360769b8d",
+        "android_client_info": {
+          "package_name": "com.sindu.sindustore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280608877176-7cmm33dnjpbv8m0qt2uftdcgqjhp1gp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg1qw_d43Si4nVfic4x3GBBXa1s3Qqdvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280608877176-7cmm33dnjpbv8m0qt2uftdcgqjhp1gp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
