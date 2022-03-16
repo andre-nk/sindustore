@@ -1,25 +1,45 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
+
 import 'package:sindu_store/app/auth/bloc/auth_bloc_observer.dart';
+import 'package:sindu_store/config/routes.dart';
+import 'package:sindu_store/config/theme.dart';
+import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 Future<void> main() async {
-  return BlocOverrides.runZoned(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      runApp(const App());
-    },
-    blocObserver: AuthBlocObserver()
-  );
+  return BlocOverrides.runZoned(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
+    //Repositories
+    final authRepository = AuthRepository();
+
+    //App Runner
+    runApp(App(authRepository: authRepository));
+  }, blocObserver: AuthBlocObserver());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  final AuthRepository _authRepository;
+
+  const App({Key? key, required AuthRepository authRepository})
+      : _authRepository = authRepository,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const AppView();
+    return RepositoryProvider.value(
+        value: _authRepository,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (_) => AuthBloc(authRepository: _authRepository))
+          ],
+          child: const AppView(),
+        ));
   }
 }
 
@@ -28,6 +48,11 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme().appTheme(),
+        home: FlowBuilder(
+            state: context.select((AuthBloc bloc) => bloc.state),
+            onGeneratePages: onGenerateAppViewPages));
   }
 }

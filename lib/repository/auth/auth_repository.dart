@@ -1,19 +1,144 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:sindu_store/model/user/user_model.dart';
 
 class AuthRepository {
   final FirebaseFirestore _firebaseFirestore;
+  final firebase_auth.FirebaseAuth _firebaseAuth;
 
-  AuthRepository({FirebaseFirestore? firebaseFirestore})
-      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
+  AuthRepository(
+      {firebase_auth.FirebaseAuth? firebaseAuth,
+      FirebaseFirestore? firebaseFirestore})
+      : _firebaseAuth =
+            firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _firebaseFirestore =
+            firebaseFirestore ?? FirebaseFirestore.instance;
 
-  var currentUser;
+  User currentUser = User.empty;
 
-  // Stream<User> get user {
-  
-  // }
+  Stream<User> get user {
+    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      try {
+        User user = User.empty;
 
-  Future<void> validatePhoneNumber({required String phoneNumber}) async {}
+        //unauthenticated
+        if (firebaseUser == null) {
+          return user;
 
-  Future<void> signInWithPIN({required String pin}) async {}
+        //authenticated
+        } else {
+          final serverUserInstance = _firebaseFirestore
+              .collection("users")
+              .doc(firebaseUser.uid)
+              .get();
+
+          serverUserInstance.then((userInstance) {
+            if (userInstance.data() != null) {
+              Map<String, dynamic> userData =
+                  userInstance.data() as Map<String, dynamic>;
+              user = User(
+                uid: userData['uid'],
+                email: userData['email'],
+                pin: userData['pin'],
+                role: Roles.worker,
+                name: userData['name'],
+              );
+            }
+          });
+        }
+      } catch (_) {}
+
+      final user = firebaseUser == null
+          ? User.empty
+          : User(
+              email: firebaseUser.email ?? "",
+              uid: firebaseUser.uid,
+              name: firebaseUser.displayName ?? "",
+              pin: "",
+              role: Roles.admin);
+
+      currentUser = user;
+      return user;
+    });
+  }
+
+  Future<void> validateEmail(
+      {required String email, required String password}) async {
+    try {
+      final matchedUsers = await _firebaseFirestore
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .get();
+
+      //registered user
+      if (matchedUsers.docs.isNotEmpty) {
+        signInWithEmailAndPassword(email: email, password: password);
+      } else {
+        final matchedPredefinedUsers = await _firebaseFirestore
+            .collection("predefined-users")
+            .where("email", isEqualTo: email)
+            .get();
+
+        //listed pre-users
+        if (matchedPredefinedUsers.docs.isNotEmpty) {
+          registerWithEmailAndPassword(email: email, password: password);
+        } else {
+          throw ("This e-mail is not listed in Sindustore database");
+        }
+      }
+    } catch (_) {}
+  }
+
+  Future<void> registerWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      await _firebaseFirestore
+          .collection("users")
+          .doc(currentUser.uid)
+          .set({
+        "email": currentUser.email,
+        "name": currentUser.name,
+        "pin": currentUser.pin,
+        "role": currentUser.role
+      });
+
+      final predefinedUserInstance = await _firebaseFirestore
+          .collection("predefined-users")
+          .where("email", isEqualTo: email)
+          .get();
+      if (predefinedUserInstance.docs.isNotEmpty &&
+          predefinedUserInstance.docs.length == 1) {
+        await _firebaseFirestore
+            .collection("predefined-user")
+            .doc(predefinedUserInstance.docs.first.id)
+            .delete();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } catch (_) {}
+  }
+
+  Future<void> signOut() async {
+    try {
+      await Future.wait([_firebaseAuth.signOut()]);
+    } catch (_) {
+    }
+  }
+
+  bool validatePIN({required String pin}) {
+    if (currentUser.isNotEmpty && pin == currentUser.pin) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -14,8 +14,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        super(Unauthenticated()) {
-    on<AuthUserStateChanged>((event, emit) {});
-    on<AuthLogoutRequested>((event, emit) {});
+        super(authRepository.currentUser.isNotEmpty
+            ? Authenticated(authRepository.currentUser)
+            : Unauthenticated()) {
+
+    on<AuthUserStateChanged>((event, emit) {
+      emit(event.user.isNotEmpty ? Authenticated(event.user) : Unauthenticated());
+    });
+    on<AuthLogoutRequested>((event, emit) {
+      unawaited(_authRepository.signOut());
+    });
   }
 }
