@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:logger/logger.dart';
+import 'package:sindu_store/app/auth/cubit/auth_enums.dart';
 import 'package:sindu_store/model/user/user_model.dart';
-
 class AuthRepository {
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -25,7 +26,7 @@ class AuthRepository {
         if (firebaseUser == null) {
           return user;
 
-        //authenticated
+          //authenticated
         } else {
           final serverUserInstance = _firebaseFirestore
               .collection("users")
@@ -62,8 +63,10 @@ class AuthRepository {
     });
   }
 
-  Future<void> validateEmail(
-      {required String email, required String password}) async {
+  Future<AuthStatus> validateEmail({required String email}) async {
+
+    Logger().d(email);
+
     try {
       final matchedUsers = await _firebaseFirestore
           .collection("users")
@@ -72,7 +75,8 @@ class AuthRepository {
 
       //registered user
       if (matchedUsers.docs.isNotEmpty) {
-        signInWithEmailAndPassword(email: email, password: password);
+        Logger().d("User exist. Logging in...");
+        return AuthStatus.existedUser;
       } else {
         final matchedPredefinedUsers = await _firebaseFirestore
             .collection("predefined-users")
@@ -81,12 +85,14 @@ class AuthRepository {
 
         //listed pre-users
         if (matchedPredefinedUsers.docs.isNotEmpty) {
-          registerWithEmailAndPassword(email: email, password: password);
+          return AuthStatus.predefinedUser;
         } else {
-          throw ("This e-mail is not listed in Sindustore database");
+          return AuthStatus.unknownUser;
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> registerWithEmailAndPassword(
@@ -130,8 +136,7 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await Future.wait([_firebaseAuth.signOut()]);
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   bool validatePIN({required String pin}) {

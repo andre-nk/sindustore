@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 
-import 'package:sindu_store/app/auth/bloc/auth_bloc_observer.dart';
+import 'package:sindu_store/app/bloc_observer.dart';
 import 'package:sindu_store/config/routes.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
@@ -19,7 +19,7 @@ Future<void> main() async {
 
     //App Runner
     runApp(App(authRepository: authRepository));
-  }, blocObserver: AuthBlocObserver());
+  }, blocObserver: AppBlocObserver());
 }
 
 class App extends StatelessWidget {
@@ -50,7 +50,7 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: AppTheme().appTheme(),
+        theme: AppTheme.defaultTheme.appTheme(),
         home: FlowBuilder(
             state: context.select((AuthBloc bloc) => bloc.state),
             onGeneratePages: onGenerateAppViewPages));

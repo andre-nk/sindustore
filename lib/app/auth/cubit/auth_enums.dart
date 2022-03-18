@@ -1,0 +1,1 @@
+enum AuthStatus { emptyUser, existedUser, predefinedUser, unknownUser }

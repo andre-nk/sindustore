@@ -8,10 +8,9 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: AppTheme.colors.background,
           title: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Row(
@@ -37,8 +36,8 @@ class OnboardingPage extends StatelessWidget {
         ),
         body: Container(
           padding: EdgeInsets.symmetric(
-              horizontal: MQuery.width(context, 0.05)),
-          width: MQuery.width(context, 1),
+              horizontal: MQuery.width(0.05, context)),
+          width: MQuery.width(1, context),
           height: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,15 +45,15 @@ class OnboardingPage extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: MQuery.width(context, 0.075)),
+                    vertical: MQuery.width(0.075, context)),
                 child: Image.asset("assets/onboarding_illustration.png",
-                    height: MQuery.height(context, 0.25)),
+                    height: MQuery.height(0.25, context)),
               ),
               Column(
                 children: [
                   Text(
                     "Selamat datang!",
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: AppTheme.text.h2,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -63,44 +62,31 @@ class OnboardingPage extends StatelessWidget {
                     child: Text(
                       "SinduStore adalah aplikasi kasir dan manajemen stok pribadi untuk toko Sinar Dunia Elektrik",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(height: 1.67),
+                      style:
+                          AppTheme.text.paragraph.copyWith(height: 1.67),
                     ),
                   ),
                   SizedBox(
-                    height: MQuery.height(context, 0.065),
+                    height: MQuery.height(0.065, context),
                   ),
-                  ElevatedButton(
+                  WideButton(
+                      title: "Masuk ke akun",
                       onPressed: () {
-                        Navigator.of(context).push(AuthFormPage.route());
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          minimumSize: const Size(double.infinity, 54)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text("Masuk ke akun",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary)),
-                      )),
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const AuthFormPage(),
+                                childCurrent: this,
+                                type:
+                                    PageTransitionType.rightToLeftJoined));
+                      }),
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () {},
                     child: Text(
                       "Butuh bantuan? Hubungi admin",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(height: 1.67),
+                      style: AppTheme.text.subtitle.copyWith(height: 1.67),
                     ),
                   ),
                 ],
