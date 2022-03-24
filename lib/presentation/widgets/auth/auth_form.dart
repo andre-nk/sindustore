@@ -5,39 +5,72 @@ class AuthForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.formStatus.isSubmissionFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content:
-                      Text(state.errorMessage ?? 'Authentication Failure'),
-                ),
-              );
-          } else if (state.authStatus.index == 3) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(
-                  content: Text('Unknown user!'),
-                ),
-              );
-          }
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: MQuery.height(0.01, context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              _FormTitle(),
-              _EmailAuthInput(),
-              _SubmitButton(),
-            ],
-          ),
-        ));
+    return BlocConsumer<AuthCubit, AuthState>(listenWhen: (previous, current) {
+      return previous.authStatus != current.authStatus;
+    }, listener: (context, state) {
+      if (state.formStatus.isSubmissionFailure) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              backgroundColor: AppTheme.colors.error,
+              content: Text(state.errorMessage ?? 'Authentication Failure',
+                  style: AppTheme.text.subtitle.copyWith(color: Colors.white)),
+            ),
+          );
+      } else if (state.authStatus == AuthStatusWrapper.unknownUser) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              backgroundColor: AppTheme.colors.error,
+              content: Text(
+                  state.errorMessage ?? 'E-mail pengguna tidak ditemukan!',
+                  style: AppTheme.text.subtitle.copyWith(color: Colors.white)),
+            ),
+          );
+      }
+    }, builder: (context, state) {
+      return Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: MQuery.height(0.01, context)),
+          child: (state.authStatus == AuthStatusWrapper.existedUser ||
+                  state.authStatus == AuthStatusWrapper.predefinedUser
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: _EmailAuthInput(
+                        isValidated: true,
+                      ),
+                    ),
+                    _FormTitle(),
+                    DelayedDisplay(
+                        delay: Duration(milliseconds: 500),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 4.0),
+                          child: _PasswordAuthInput(),
+                        )),
+                    _SubmitButton(),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(top: 56.0),
+                      child: _FormTitle(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.0),
+                      child: _EmailAuthInput(isValidated: false),
+                    ),
+                    _SubmitButton(),
+                  ],
+                )));
+    });
   }
 }
 
@@ -48,20 +81,11 @@ class _FormTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        // Logger().d("isEmailSubmitted:" +
-        //     state.formStatus.isSubmissionSuccess.toString());
-        // Logger().d("isPasswordUnfilled:" + state.password.pure.toString());
-
-        return Padding(
-          padding: EdgeInsets.only(
-              top: MQuery.height(0.08, context),
-              bottom: MQuery.height(0.005, context)),
-          child: Text(
-            (state.authStatus.index == 1 || state.authStatus.index == 2)
-                ? "Masukkan password kamu:"
-                : "Masukkan e-mail kamu:",
-            style: AppTheme.text.h2.copyWith(fontSize: 24),
-          ),
+        return Text(
+          (state.authStatus.index == 1 || state.authStatus.index == 2)
+              ? "Masukkan password kamu:"
+              : "Masukkan e-mail kamu:",
+          style: AppTheme.text.h2.copyWith(fontSize: 24),
         );
       },
     );
@@ -69,32 +93,75 @@ class _FormTitle extends StatelessWidget {
 }
 
 class _EmailAuthInput extends StatelessWidget {
-  const _EmailAuthInput({Key? key}) : super(key: key);
+  final bool isValidated;
+  const _EmailAuthInput({Key? key, required this.isValidated})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
         buildWhen: ((previous, current) =>
-            previous.email != current.email),
+            (previous.email != current.email) ||
+            (previous.formStatus != current.formStatus)),
         builder: (context, state) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                key: const Key('loginForm_emailInput_textField'),
-                onChanged: (email) =>
-                    {context.read<AuthCubit>().emailFormChanged(email)},
-                style: AppTheme.text.paragraph,
-                decoration: const InputDecoration(
-                  fillColor: Colors.cyan,
-                  border: InputBorder.none,
-                  hintText: 'contoh: andreas@gmail.com',
-                  helperText: '',
-                  errorText: null,
-                ),
+          return Padding(
+            padding: isValidated
+                ? EdgeInsets.symmetric(vertical: MQuery.height(0.02, context))
+                : EdgeInsets.only(bottom: MQuery.height(0.04, context)),
+            child: TextField(
+              key: const Key('loginForm_emailInput_textField'),
+              onChanged: (email) =>
+                  {context.read<AuthCubit>().emailFormChanged(email)},
+
+              style: AppTheme.text.paragraph,
+              decoration: InputDecoration(
+                enabled: !isValidated,
+                border: InputBorder.none,
+                hintText: isValidated ? state.email.value : 'contoh: andreas@gmail.com',
+                errorText: state.formStatus.isSubmissionFailure
+                    ? "*E-mail tidak valid. Coba lagi"
+                    : null,
+                suffixIcon: isValidated
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Icon(Ionicons.checkmark,
+                            color: AppTheme.colors.success))
+                    : const SizedBox(),
+                isCollapsed: false,
+                isDense: false,
               ),
-            ],
+            ),
+          );
+        });
+  }
+}
+
+class _PasswordAuthInput extends StatelessWidget {
+  const _PasswordAuthInput({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+        buildWhen: ((previous, current) =>
+            previous.password != current.password),
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: MQuery.height(0.02, context)),
+            child: TextField(
+              key: const Key('loginForm_passwordInput_textField'),
+              onChanged: (password) =>
+                  {context.read<AuthCubit>().passwordFormChanged(password)},
+              style: AppTheme.text.paragraph,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Password kamu...',
+                errorText: state.formStatus.isSubmissionFailure
+                    ? "*Password tidak valid (min. 6 karakter). Coba lagi"
+                    : null,
+                isCollapsed: false,
+                isDense: false,
+              ),
+            ),
           );
         });
   }
@@ -110,13 +177,13 @@ class _SubmitButton extends StatelessWidget {
           previous.formStatus != current.formStatus),
       builder: (context, state) {
         return state.formStatus.isSubmissionInProgress
-            ? CircularProgressIndicator(color: AppTheme.colors.secondary)
+            ? Center(
+                child:
+                    CircularProgressIndicator(color: AppTheme.colors.secondary))
             : WideButton(
                 title: "Lanjut",
                 onPressed: () async {
-                  state.formStatus.isValidated
-                      ? await context.read<AuthCubit>().validateEmail()
-                      : null;
+                  await context.read<AuthCubit>().validateEmail();
                 });
       },
     );

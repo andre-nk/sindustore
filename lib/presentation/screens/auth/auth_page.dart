@@ -8,6 +8,7 @@ class AuthFormPage extends StatelessWidget {
     return BlocProvider<AuthCubit>(
       create: (_) => AuthCubit(context.read<AuthRepository>()),
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: GeneralAppBar(
             title: "Log in",
             secondaryButton: IconButton(

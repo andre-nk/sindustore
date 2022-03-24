@@ -64,9 +64,6 @@ class AuthRepository {
   }
 
   Future<AuthStatus> validateEmail({required String email}) async {
-
-    Logger().d(email);
-
     try {
       final matchedUsers = await _firebaseFirestore
           .collection("users")
