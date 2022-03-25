@@ -21,19 +21,21 @@ class AuthFormPage extends StatelessWidget {
                   size: 24,
                 )),
           ),
-          body: Padding(
-            padding: EdgeInsets.only(
-                top: 56,
-                left: MQuery.width(0.075, context),
-                right: MQuery.width(0.075, context)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset("assets/login_illustration.png",
-                    height: MQuery.height(0.15, context)),
-                const AuthForm()
-              ],
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: 56,
+                  left: MQuery.width(0.06, context),
+                  right: MQuery.width(0.06, context)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset("assets/login_illustration.png",
+                      height: MQuery.height(0.15, context)),
+                  const AuthForm()
+                ],
+              ),
             ),
           )),
     );

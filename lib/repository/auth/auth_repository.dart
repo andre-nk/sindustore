@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:logger/logger.dart';
 import 'package:sindu_store/app/auth/cubit/auth_enums.dart';
 import 'package:sindu_store/model/user/user_model.dart';
+import 'package:sindu_store/repository/auth/auth_exceptions.dart';
+
 class AuthRepository {
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -10,10 +12,8 @@ class AuthRepository {
   AuthRepository(
       {firebase_auth.FirebaseAuth? firebaseAuth,
       FirebaseFirestore? firebaseFirestore})
-      : _firebaseAuth =
-            firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _firebaseFirestore =
-            firebaseFirestore ?? FirebaseFirestore.instance;
+      : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   User currentUser = User.empty;
 
@@ -21,17 +21,21 @@ class AuthRepository {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
       try {
         User user = User.empty;
+        print("Auth State Changes");
+
+        print(firebaseUser);
 
         //unauthenticated
         if (firebaseUser == null) {
           return user;
-
           //authenticated
         } else {
           final serverUserInstance = _firebaseFirestore
               .collection("users")
               .doc(firebaseUser.uid)
               .get();
+
+          print(serverUserInstance);
 
           serverUserInstance.then((userInstance) {
             if (userInstance.data() != null) {
@@ -44,22 +48,17 @@ class AuthRepository {
                 role: Roles.worker,
                 name: userData['name'],
               );
+            } else {
+              print("Firestore instance hasn't been created");
             }
           });
+
+          return user;
         }
-      } catch (_) {}
-
-      final user = firebaseUser == null
-          ? User.empty
-          : User(
-              email: firebaseUser.email ?? "",
-              uid: firebaseUser.uid,
-              name: firebaseUser.displayName ?? "",
-              pin: "",
-              role: Roles.admin);
-
-      currentUser = user;
-      return user;
+      } catch (e) {
+        print(e.toString());
+        return User.empty;
+      }
     });
   }
 
@@ -92,34 +91,50 @@ class AuthRepository {
     }
   }
 
-  Future<void> registerWithEmailAndPassword(
+  Future<void> signUpWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      final _userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-      await _firebaseFirestore
-          .collection("users")
-          .doc(currentUser.uid)
-          .set({
-        "email": currentUser.email,
-        "name": currentUser.name,
-        "pin": currentUser.pin,
-        "role": currentUser.role
-      });
+      if (_userCredential.user != null) {
+        print("Auth success");
 
-      final predefinedUserInstance = await _firebaseFirestore
-          .collection("predefined-users")
-          .where("email", isEqualTo: email)
-          .get();
-      if (predefinedUserInstance.docs.isNotEmpty &&
-          predefinedUserInstance.docs.length == 1) {
-        await _firebaseFirestore
-            .collection("predefined-user")
-            .doc(predefinedUserInstance.docs.first.id)
-            .delete();
+        final _predefinedUserInstance = await _firebaseFirestore
+            .collection("predefined-users")
+            .where("email", isEqualTo: email)
+            .get();
+
+        print(_predefinedUserInstance);
+
+        if (_predefinedUserInstance.docs.isNotEmpty &&
+            _predefinedUserInstance.docs.length == 1) {
+          await _firebaseFirestore
+              .collection("users")
+              .doc(_userCredential.user?.uid)
+              .set({
+            "email": _userCredential.user?.email,
+            "name": _predefinedUserInstance.docs.first.data()["name"],
+            "pin": _predefinedUserInstance.docs.first.data()["pin"],
+            "role": "workers", //TODO: Roles Class fromCode
+          });
+
+          print("Firestore instance created");
+
+          // await _firebaseFirestore
+          //     .collection("predefined-users")
+          //     .doc(_predefinedUserInstance.docs.first.id)
+          //     .delete();
+
+          print("Predefined instance deleted");
+        }
       }
-    } catch (_) {}
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+    } catch (e) {
+      print(e.toString());
+      throw const SignUpWithEmailAndPasswordFailure();
+    }
   }
 
   Future<void> signInWithEmailAndPassword(
@@ -127,7 +142,11 @@ class AuthRepository {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-    } catch (_) {}
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
+    } catch (_) {
+      throw const LogInWithEmailAndPasswordFailure();
+    }
   }
 
   Future<void> signOut() async {

@@ -31,45 +31,42 @@ class AuthForm extends StatelessWidget {
           );
       }
     }, builder: (context, state) {
-      return Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: MQuery.height(0.01, context)),
-          child: (state.authStatus == AuthStatusWrapper.existedUser ||
-                  state.authStatus == AuthStatusWrapper.predefinedUser
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(top: 24),
-                      child: _EmailAuthInput(
-                        isValidated: true,
-                      ),
-                    ),
-                    _FormTitle(),
-                    DelayedDisplay(
-                        delay: Duration(milliseconds: 500),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 4.0),
-                          child: _PasswordAuthInput(),
-                        )),
-                    _SubmitButton(),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(top: 56.0),
-                      child: _FormTitle(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: _EmailAuthInput(isValidated: false),
-                    ),
-                    _SubmitButton(),
-                  ],
-                )));
+      return (state.authStatus == AuthStatusWrapper.existedUser ||
+              state.authStatus == AuthStatusWrapper.predefinedUser
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(top: 24),
+                  child: _EmailAuthInput(
+                    isValidated: true,
+                  ),
+                ),
+                _FormTitle(),
+                DelayedDisplay(
+                    delay: Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 4.0, bottom: 12.0),
+                      child: _PasswordAuthInput(),
+                    )),
+                _SubmitButton(),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(top: 56.0),
+                  child: _FormTitle(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: _EmailAuthInput(isValidated: false),
+                ),
+                _SubmitButton(),
+              ],
+            ));
     });
   }
 }
@@ -112,12 +109,13 @@ class _EmailAuthInput extends StatelessWidget {
               key: const Key('loginForm_emailInput_textField'),
               onChanged: (email) =>
                   {context.read<AuthCubit>().emailFormChanged(email)},
-
               style: AppTheme.text.paragraph,
               decoration: InputDecoration(
                 enabled: !isValidated,
                 border: InputBorder.none,
-                hintText: isValidated ? state.email.value : 'contoh: andreas@gmail.com',
+                hintText: isValidated
+                    ? state.email.value
+                    : 'contoh: andreas@gmail.com',
                 errorText: state.formStatus.isSubmissionFailure
                     ? "*E-mail tidak valid. Coba lagi"
                     : null,
@@ -136,18 +134,26 @@ class _EmailAuthInput extends StatelessWidget {
   }
 }
 
-class _PasswordAuthInput extends StatelessWidget {
+class _PasswordAuthInput extends StatefulWidget {
   const _PasswordAuthInput({Key? key}) : super(key: key);
+
+  @override
+  State<_PasswordAuthInput> createState() => _PasswordAuthInputState();
+}
+
+class _PasswordAuthInputState extends State<_PasswordAuthInput> {
+  bool _isPasswordObscured = true;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
         buildWhen: ((previous, current) =>
-            previous.password != current.password),
+            previous.password != current.password || previous.formStatus != current.formStatus),
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.only(bottom: MQuery.height(0.02, context)),
             child: TextField(
+              obscureText: _isPasswordObscured,
               key: const Key('loginForm_passwordInput_textField'),
               onChanged: (password) =>
                   {context.read<AuthCubit>().passwordFormChanged(password)},
@@ -155,8 +161,22 @@ class _PasswordAuthInput extends StatelessWidget {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Password kamu...',
+                suffixIcon: IconButton(
+                  splashRadius: 24,
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordObscured = !_isPasswordObscured;
+                    });
+                  },
+                  icon: _isPasswordObscured
+                      ? const Icon(
+                          Ionicons.eye_off_outline,
+                          size: 20,
+                        )
+                      : const Icon(Ionicons.eye_outline, size: 20),
+                ),
                 errorText: state.formStatus.isSubmissionFailure
-                    ? "*Password tidak valid (min. 6 karakter). Coba lagi"
+                    ? state.errorMessage ?? "*Password tidak valid (min. 6 karakter). Coba lagi"
                     : null,
                 isCollapsed: false,
                 isDense: false,
@@ -183,7 +203,16 @@ class _SubmitButton extends StatelessWidget {
             : WideButton(
                 title: "Lanjut",
                 onPressed: () async {
-                  await context.read<AuthCubit>().validateEmail();
+                  if(state.authStatus == AuthStatusWrapper.emptyUser){
+                    print("E-mail Validation");
+                    await context.read<AuthCubit>().validateEmail();
+                  } else if (state.authStatus == AuthStatusWrapper.existedUser){
+                    print("Sign In");
+                    // await context.read<AuthCubit>().signInWithEmailAndPassword();
+                  } else if (state.authStatus == AuthStatusWrapper.predefinedUser){
+                    print("Sign Up");
+                    await context.read<AuthCubit>().signUpWithEmailAndPassword();
+                  }
                 });
       },
     );

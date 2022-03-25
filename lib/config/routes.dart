@@ -6,6 +6,8 @@ List<Page> onGenerateAppViewPages(
   AuthState state,
   List<Page<dynamic>> pages,
 ) {
+  print(state.toString() + "route");
+
   if(state is Authenticated){
     return [
       HomePage.page()
