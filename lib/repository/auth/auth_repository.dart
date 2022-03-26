@@ -15,51 +15,55 @@ class AuthRepository {
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
-  User currentUser = User.empty;
-
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      try {
-        User user = User.empty;
-        print("Auth State Changes");
-
-        print(firebaseUser);
-
-        //unauthenticated
-        if (firebaseUser == null) {
-          return user;
-          //authenticated
-        } else {
-          final serverUserInstance = _firebaseFirestore
-              .collection("users")
-              .doc(firebaseUser.uid)
-              .get();
-
-          print(serverUserInstance);
-
-          serverUserInstance.then((userInstance) {
-            if (userInstance.data() != null) {
-              Map<String, dynamic> userData =
-                  userInstance.data() as Map<String, dynamic>;
-              user = User(
-                uid: userData['uid'],
-                email: userData['email'],
-                pin: userData['pin'],
-                role: Roles.worker,
-                name: userData['name'],
-              );
-            } else {
-              print("Firestore instance hasn't been created");
-            }
-          });
-
-          return user;
-        }
-      } catch (e) {
-        print(e.toString());
-        return User.empty;
-      }
+      final user = firebaseUser == null
+          ? User.empty
+          : User(
+              email: firebaseUser.email ?? "",
+              uid: firebaseUser.uid,
+              role: Roles.worker,
+              pin: "",
+              name: "");
+      return user;
     });
+  }
+
+  Future<User> currentUser() async {
+    try {
+      final firebaseUser = _firebaseAuth.currentUser!;
+
+      final localUser = User(
+          email: firebaseUser.email ?? "",
+          uid: firebaseUser.uid,
+          role: Roles.worker,
+          pin: "",
+          name: "");
+
+      final serverUserInstance = await _firebaseFirestore
+          .collection("users")
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (serverUserInstance.data() != null) {
+        Map<String, dynamic> userData =
+            serverUserInstance.data() as Map<String, dynamic>;
+        final localUser = User(
+          uid: serverUserInstance.id,
+          email: userData['email'],
+          pin: userData['pin'],
+          role: Roles.worker,
+          name: userData['name'],
+        );
+
+        print(localUser.toString() + " pre-return");
+        return localUser;
+      }
+
+      return localUser;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<AuthStatus> validateEmail({required String email}) async {
@@ -96,43 +100,32 @@ class AuthRepository {
     try {
       final _userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+      final firebaseUser = _userCredential.user;
+      final predefinedUser = await _firebaseFirestore
+          .collection("predefined-users")
+          .where("email", isEqualTo: firebaseUser!.email)
+          .get();
 
-      if (_userCredential.user != null) {
-        print("Auth success");
+      if (predefinedUser.docs.isNotEmpty && predefinedUser.docs.length == 1) {
+        await _firebaseFirestore.collection("users").doc(firebaseUser.uid).set({
+          "email": firebaseUser.email,
+          "name": predefinedUser.docs.first.data()["name"],
+          "pin": predefinedUser.docs.first.data()["pin"],
+          "role": predefinedUser.docs.first.data()["role"],
+        });
 
-        final _predefinedUserInstance = await _firebaseFirestore
+        print("Firestore instance created");
+
+        await _firebaseFirestore
             .collection("predefined-users")
-            .where("email", isEqualTo: email)
-            .get();
+            .doc(predefinedUser.docs.first.id)
+            .delete();
 
-        print(_predefinedUserInstance);
-
-        if (_predefinedUserInstance.docs.isNotEmpty &&
-            _predefinedUserInstance.docs.length == 1) {
-          await _firebaseFirestore
-              .collection("users")
-              .doc(_userCredential.user?.uid)
-              .set({
-            "email": _userCredential.user?.email,
-            "name": _predefinedUserInstance.docs.first.data()["name"],
-            "pin": _predefinedUserInstance.docs.first.data()["pin"],
-            "role": "workers", //TODO: Roles Class fromCode
-          });
-
-          print("Firestore instance created");
-
-          // await _firebaseFirestore
-          //     .collection("predefined-users")
-          //     .doc(_predefinedUserInstance.docs.first.id)
-          //     .delete();
-
-          print("Predefined instance deleted");
-        }
+        print("Predefined instance deleted");
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
-      print(e.toString());
       throw const SignUpWithEmailAndPasswordFailure();
     }
   }
@@ -155,8 +148,10 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  bool validatePIN({required String pin}) {
-    if (currentUser.isNotEmpty && pin == currentUser.pin) {
+  Future<bool> validatePIN({required String pin}) async {
+    final _currentUser = await currentUser();
+
+    if (_currentUser.isNotEmpty && pin == _currentUser.pin) {
       return true;
     } else {
       return false;

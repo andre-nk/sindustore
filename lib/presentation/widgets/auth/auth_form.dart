@@ -121,9 +121,12 @@ class _EmailAuthInput extends StatelessWidget {
                     : null,
                 suffixIcon: isValidated
                     ? Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Icon(Ionicons.checkmark,
-                            color: AppTheme.colors.success))
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Icon(
+                          Ionicons.checkmark,
+                          color: AppTheme.colors.success,
+                        ),
+                      )
                     : const SizedBox(),
                 isCollapsed: false,
                 isDense: false,
@@ -148,7 +151,8 @@ class _PasswordAuthInputState extends State<_PasswordAuthInput> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
         buildWhen: ((previous, current) =>
-            previous.password != current.password || previous.formStatus != current.formStatus),
+            previous.password != current.password ||
+            previous.formStatus != current.formStatus),
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.only(bottom: MQuery.height(0.02, context)),
@@ -176,7 +180,8 @@ class _PasswordAuthInputState extends State<_PasswordAuthInput> {
                       : const Icon(Ionicons.eye_outline, size: 20),
                 ),
                 errorText: state.formStatus.isSubmissionFailure
-                    ? state.errorMessage ?? "*Password tidak valid (min. 6 karakter). Coba lagi"
+                    ? state.errorMessage ??
+                        "*Password tidak valid (min. 6 karakter). Coba lagi"
                     : null,
                 isCollapsed: false,
                 isDense: false,
@@ -203,15 +208,19 @@ class _SubmitButton extends StatelessWidget {
             : WideButton(
                 title: "Lanjut",
                 onPressed: () async {
-                  if(state.authStatus == AuthStatusWrapper.emptyUser){
+                  if (state.authStatus == AuthStatusWrapper.emptyUser) {
                     print("E-mail Validation");
                     await context.read<AuthCubit>().validateEmail();
-                  } else if (state.authStatus == AuthStatusWrapper.existedUser){
+                  } else if (state.authStatus ==
+                      AuthStatusWrapper.existedUser) {
                     print("Sign In");
                     // await context.read<AuthCubit>().signInWithEmailAndPassword();
-                  } else if (state.authStatus == AuthStatusWrapper.predefinedUser){
+                  } else if (state.authStatus ==
+                      AuthStatusWrapper.predefinedUser) {
                     print("Sign Up");
-                    await context.read<AuthCubit>().signUpWithEmailAndPassword();
+                    await context
+                        .read<AuthCubit>()
+                        .signUpWithEmailAndPassword();
                   }
                 });
       },

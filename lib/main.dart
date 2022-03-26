@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
+import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
 
 import 'package:sindu_store/app/bloc_observer.dart';
 import 'package:sindu_store/config/routes.dart';
@@ -36,7 +36,7 @@ class App extends StatelessWidget {
         child: MultiBlocProvider(
           providers: [
             BlocProvider(
-                create: (_) => AuthBloc(authRepository: _authRepository))
+                create: (_) => AppBloc(authRepository: _authRepository))
           ],
           child: const AppView(),
         ));
@@ -52,7 +52,7 @@ class AppView extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.defaultTheme.appTheme(),
         home: FlowBuilder(
-            state: context.select((AuthBloc bloc) => bloc.state),
+            state: context.select((AppBloc bloc) => bloc.state),
             onGeneratePages: onGenerateAppViewPages));
   }
 }

@@ -5,23 +5,26 @@ import 'package:equatable/equatable.dart';
 import 'package:sindu_store/model/user/user_model.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
-part 'auth_event.dart';
-part 'auth_state.dart';
+part 'app_event.dart';
+part 'app_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AppBloc extends Bloc<AppEvent, AppState> {
   final AuthRepository _authRepository;
   StreamSubscription<User>? _userSubscription;
 
-  AuthBloc({required AuthRepository authRepository})
+  AppBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        super(authRepository.currentUser.isNotEmpty
-            ? Authenticated(authRepository.currentUser)
-            : Unauthenticated()) {
-
-    on<AuthUserStateChanged>((event, emit) {
-      emit(event.user.isNotEmpty ? Authenticated(event.user) : Unauthenticated());
+        super(Unauthenticated()) {
+    on<AuthUserStateChanged>((event, emit) async {
+      print(event.user);
+      if(event.user.isNotEmpty){
+        final localUser = await _authRepository.currentUser();
+        emit(Authenticated(localUser));
+      } else {
+        emit(Unauthenticated());
+      }
     });
-    
+
     on<AuthLogoutRequested>((event, emit) {
       unawaited(_authRepository.signOut());
     });
@@ -32,8 +35,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   @override
-  Future<void> close(){
-    _userSubscription?.cancel();  
+  Future<void> close() {
+    _userSubscription?.cancel();
     return super.close();
   }
 }
