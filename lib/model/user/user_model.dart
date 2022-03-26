@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-enum Roles { owner, admin, worker }
-
+import 'package:sindu_store/model/user/user_roles.dart';
 class User extends Equatable {
   final String uid;
   final String email;
@@ -16,8 +14,7 @@ class User extends Equatable {
       required this.pin,
       required this.role});
 
-  static const empty =
-      User(uid: '', name: '', email: '', pin: '', role: Roles.worker);
+  static final empty = User(uid: '', name: '', email: '', pin: '', role: UserRoles.worker);
 
   bool get isEmpty => this == User.empty;
   bool get isNotEmpty => this != User.empty;

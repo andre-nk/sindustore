@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:logger/logger.dart';
 import 'package:sindu_store/app/auth/cubit/auth_enums.dart';
 import 'package:sindu_store/model/user/user_model.dart';
+import 'package:sindu_store/model/user/user_roles.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
 
 class AuthRepository {
@@ -22,7 +23,7 @@ class AuthRepository {
           : User(
               email: firebaseUser.email ?? "",
               uid: firebaseUser.uid,
-              role: Roles.worker,
+              role: UserRoles.worker,
               pin: "",
               name: "");
       return user;
@@ -36,7 +37,7 @@ class AuthRepository {
       final localUser = User(
           email: firebaseUser.email ?? "",
           uid: firebaseUser.uid,
-          role: Roles.worker,
+          role: UserRoles.worker,
           pin: "",
           name: "");
 
@@ -52,7 +53,7 @@ class AuthRepository {
           uid: serverUserInstance.id,
           email: userData['email'],
           pin: userData['pin'],
-          role: Roles.worker,
+          role: UserRoles.fromCode(userData["role"]).role,
           name: userData['name'],
         );
 
