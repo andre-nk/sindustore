@@ -36,6 +36,15 @@ class AuthCubit extends Cubit<AuthState> {
         formStatus: Formz.validate([filledPassword])));
   }
 
+  void pinFormChanged(String value) {
+    final filledPIN = PIN.dirty(value);
+
+    emit(state.copyWith(
+      pin: filledPIN,
+      formStatus: Formz.validate([filledPIN]),
+    ));
+  }
+
   Future<void> validateEmail() async {
     if (!(state.formStatus.isValidated) && state.formStatus.isInvalid) {
       //#3
@@ -57,7 +66,6 @@ class AuthCubit extends Cubit<AuthState> {
           authStatus: authStatus,
           formStatus: FormzStatus.submissionSuccess));
     } catch (e) {
-
       //#4
       emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
     }
@@ -65,7 +73,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signInWithEmailAndPassword() async {
     if (!(state.formStatus.isValidated) && state.formStatus.isInvalid) {
-
       //#6
       emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
       return;
@@ -73,7 +80,9 @@ class AuthCubit extends Cubit<AuthState> {
 
     //#6
     emit(state.copyWith(
-        email: state.email, password: state.password, formStatus: FormzStatus.submissionInProgress));
+        email: state.email,
+        password: state.password,
+        formStatus: FormzStatus.submissionInProgress));
 
     try {
       await _authRepository.signInWithEmailAndPassword(
@@ -83,7 +92,6 @@ class AuthCubit extends Cubit<AuthState> {
 
       //#7
       emit(state.copyWith(formStatus: FormzStatus.submissionSuccess));
-
     } on LogInWithEmailAndPasswordFailure catch (e) {
       //#7
       emit(
@@ -107,7 +115,9 @@ class AuthCubit extends Cubit<AuthState> {
 
     //#6
     emit(state.copyWith(
-        email: state.email, password: state.password, formStatus: FormzStatus.submissionInProgress));
+        email: state.email,
+        password: state.password,
+        formStatus: FormzStatus.submissionInProgress));
 
     try {
       await _authRepository.signUpWithEmailAndPassword(
@@ -116,7 +126,6 @@ class AuthCubit extends Cubit<AuthState> {
       );
       //#7
       emit(state.copyWith(formStatus: FormzStatus.submissionSuccess));
-
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       //#7
       emit(
@@ -127,7 +136,9 @@ class AuthCubit extends Cubit<AuthState> {
       );
     } catch (e) {
       //#7
-      emit(state.copyWith(errorMessage: e.toString(), formStatus: FormzStatus.submissionFailure));
+      emit(state.copyWith(
+          errorMessage: e.toString(),
+          formStatus: FormzStatus.submissionFailure));
     }
   }
 

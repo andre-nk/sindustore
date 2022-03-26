@@ -5,69 +5,81 @@ class AuthForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(listenWhen: (previous, current) {
-      return previous.authStatus != current.authStatus;
-    }, listener: (context, state) {
-      if (state.formStatus.isSubmissionFailure) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              backgroundColor: AppTheme.colors.error,
-              content: Text(state.errorMessage ?? 'Authentication Failure',
-                  style: AppTheme.text.subtitle.copyWith(color: Colors.white)),
-            ),
-          );
-      } else if (state.authStatus == AuthStatusWrapper.unknownUser) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              backgroundColor: AppTheme.colors.error,
-              content: Text(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listenWhen: (previous, current) {
+        return previous.authStatus != current.authStatus;
+      },
+      listener: (context, state) {
+        if (state.formStatus.isSubmissionFailure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: AppTheme.colors.error,
+                content: Text(
+                  state.errorMessage ?? 'Authentication Failure',
+                  style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                ),
+              ),
+            );
+        } else if (state.authStatus == AuthStatusWrapper.unknownUser) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: AppTheme.colors.error,
+                content: Text(
                   state.errorMessage ?? 'E-mail pengguna tidak ditemukan!',
-                  style: AppTheme.text.subtitle.copyWith(color: Colors.white)),
-            ),
-          );
-      }
-    }, builder: (context, state) {
-      return (state.authStatus == AuthStatusWrapper.existedUser ||
-              state.authStatus == AuthStatusWrapper.predefinedUser
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(top: 24),
-                  child: _EmailAuthInput(
-                    isValidated: true,
+                  style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                ),
+              ),
+            );
+        }
+      },
+      builder: (context, state) {
+        return (state.authStatus == AuthStatusWrapper.existedUser ||
+                state.authStatus == AuthStatusWrapper.predefinedUser
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24),
+                    child: _EmailAuthInput(
+                      isValidated: true,
+                    ),
                   ),
-                ),
-                _FormTitle(),
-                DelayedDisplay(
-                    delay: Duration(milliseconds: 250),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 4.0, bottom: 12.0),
-                      child: _PasswordAuthInput(),
-                    )),
-                _SubmitButton(),
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(top: 56.0),
-                  child: _FormTitle(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: _EmailAuthInput(isValidated: false),
-                ),
-                _SubmitButton(),
-              ],
-            ));
-    });
+                  _FormTitle(),
+                  DelayedDisplay(
+                      delay: Duration(milliseconds: 250),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 4.0,
+                          bottom: 12.0,
+                        ),
+                        child: _PasswordAuthInput(),
+                      )),
+                  _SubmitButton(),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(top: 56.0),
+                    child: _FormTitle(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.0),
+                    child: _EmailAuthInput(
+                      isValidated: false,
+                    ),
+                  ),
+                  _SubmitButton(),
+                ],
+              ));
+      },
+    );
   }
 }
 
@@ -121,7 +133,7 @@ class _EmailAuthInput extends StatelessWidget {
                     : null,
                 suffixIcon: isValidated
                     ? Padding(
-                        padding: EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: Icon(
                           Ionicons.checkmark,
                           color: AppTheme.colors.success,
@@ -150,45 +162,46 @@ class _PasswordAuthInputState extends State<_PasswordAuthInput> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
-        buildWhen: ((previous, current) =>
-            previous.password != current.password ||
-            previous.formStatus != current.formStatus),
-        builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: MQuery.height(0.02, context)),
-            child: TextField(
-              obscureText: _isPasswordObscured,
-              key: const Key('loginForm_passwordInput_textField'),
-              onChanged: (password) =>
-                  {context.read<AuthCubit>().passwordFormChanged(password)},
-              style: AppTheme.text.paragraph,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Password kamu...',
-                suffixIcon: IconButton(
-                  splashRadius: 24,
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordObscured = !_isPasswordObscured;
-                    });
-                  },
-                  icon: _isPasswordObscured
-                      ? const Icon(
-                          Ionicons.eye_off_outline,
-                          size: 20,
-                        )
-                      : const Icon(Ionicons.eye_outline, size: 20),
-                ),
-                errorText: state.formStatus.isSubmissionFailure
-                    ? state.errorMessage ??
-                        "*Password tidak valid (min. 6 karakter). Coba lagi"
-                    : null,
-                isCollapsed: false,
-                isDense: false,
+      buildWhen: ((previous, current) =>
+          previous.password != current.password ||
+          previous.formStatus != current.formStatus),
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MQuery.height(0.02, context)),
+          child: TextField(
+            obscureText: _isPasswordObscured,
+            key: const Key('loginForm_passwordInput_textField'),
+            onChanged: (password) =>
+                {context.read<AuthCubit>().passwordFormChanged(password)},
+            style: AppTheme.text.paragraph,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Password kamu...',
+              suffixIcon: IconButton(
+                splashRadius: 24,
+                onPressed: () {
+                  setState(() {
+                    _isPasswordObscured = !_isPasswordObscured;
+                  });
+                },
+                icon: _isPasswordObscured
+                    ? const Icon(
+                        Ionicons.eye_off_outline,
+                        size: 20,
+                      )
+                    : const Icon(Ionicons.eye_outline, size: 20),
               ),
+              errorText: state.formStatus.isSubmissionFailure
+                  ? state.errorMessage ??
+                      "*Password tidak valid (min. 6 karakter). Coba lagi"
+                  : null,
+              isCollapsed: false,
+              isDense: false,
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -207,6 +220,7 @@ class _SubmitButton extends StatelessWidget {
                     CircularProgressIndicator(color: AppTheme.colors.secondary))
             : WideButton(
                 title: "Lanjut",
+                disabled: state.authStatus == AuthStatusWrapper.unknownUser,
                 onPressed: () async {
                   if (state.authStatus == AuthStatusWrapper.emptyUser) {
                     print("E-mail Validation");
@@ -222,7 +236,8 @@ class _SubmitButton extends StatelessWidget {
                         .read<AuthCubit>()
                         .signUpWithEmailAndPassword();
                   }
-                });
+                },
+              );
       },
     );
   }

@@ -7,6 +7,8 @@ abstract class AppState extends Equatable {
   List<Object> get props => [];
 }
 
+class InitialAppState extends AppState {}
+
 class Authenticated extends AppState {
   final User user;
 

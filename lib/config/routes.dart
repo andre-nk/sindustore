@@ -6,13 +6,15 @@ List<Page> onGenerateAppViewPages(
   AppState state,
   List<Page<dynamic>> pages,
 ) {
-  print(state.toString() + "route");
-
   if(state is Authenticated){
     return [
-      HomePage.page()
+      PINInputPage.page()
     ];
   } else if (state is Unauthenticated){
+    return [
+      OnboardingPage.page()
+    ];
+  } else if (state is InitialAppState) {
     return [
       OnboardingPage.page()
     ];

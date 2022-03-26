@@ -16,6 +16,7 @@ class AuthRepository {
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
+  //?Stream is only used for the initial auth status
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
       final user = firebaseUser == null
