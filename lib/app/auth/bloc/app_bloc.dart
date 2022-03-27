@@ -10,18 +10,17 @@ part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final AuthRepository _authRepository;
-  StreamSubscription<User>? _userSubscription;
-
   AppBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        super(InitialAppState()) {
+        super(const AppState.initial()) {
+          
     on<AuthUserStateChanged>((event, emit) async {
-      print(event.user);
-      if(event.user.isNotEmpty){
+      print("Auth Bloc changed: " + event.user.toString());
+      if (event.user.isNotEmpty) {
         final localUser = await _authRepository.currentUser();
-        emit(Authenticated(localUser));
+        emit(AppState.authenticated(localUser));
       } else {
-        emit(Unauthenticated());
+        emit(const AppState.unauthenticated());
       }
     });
 
@@ -30,13 +29,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     });
 
     _userSubscription = _authRepository.user.listen((user) {
-      add(AuthUserStateChanged(user));
+      print("Subs changed: " + user.toString());
+      add(
+        AuthUserStateChanged(user),
+      );
     });
   }
 
+  late final StreamSubscription<User> _userSubscription;
+
   @override
   Future<void> close() {
-    _userSubscription?.cancel();
+    _userSubscription.cancel();
     return super.close();
   }
 }

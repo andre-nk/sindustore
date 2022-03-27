@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:sindu_store/app/auth/cubit/auth_enums.dart';
 import 'package:sindu_store/model/auth/email.dart';
 import 'package:sindu_store/model/auth/password.dart';
@@ -53,12 +56,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     //#3
-    emit(state.copyWith(
-        email: state.email, formStatus: FormzStatus.submissionInProgress));
+    emit(
+        state.copyWith(email: state.email, formStatus: FormzStatus.submissionInProgress));
 
     try {
-      final authStatus =
-          await _authRepository.validateEmail(email: state.email.value);
+      final authStatus = await _authRepository.validateEmail(email: state.email.value);
 
       //#4
       emit(state.copyWith(
@@ -137,10 +139,75 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       //#7
       emit(state.copyWith(
-          errorMessage: e.toString(),
-          formStatus: FormzStatus.submissionFailure));
+          errorMessage: e.toString(), formStatus: FormzStatus.submissionFailure));
     }
   }
 
-  Future<void> validatePIN(PIN pin) async {}
+  Future<void> validatePIN() async {
+    if (!(state.formStatus.isValidated) && state.formStatus.isInvalid) {
+      emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        pin: state.pin,
+        formStatus: FormzStatus.submissionInProgress,
+      ),
+    );
+
+    try {
+      final authStatus = await _authRepository.validatePIN(pin: state.pin.value);
+      //#4
+      emit(
+        state.copyWith(
+          pin: state.pin,
+          authStatus: authStatus,
+          formStatus: FormzStatus.submissionSuccess,
+        ),
+      );
+    } catch (e) {
+      //#4
+      emit(state.copyWith(
+          errorMessage: e.toString(), formStatus: FormzStatus.submissionFailure));
+    }
+  }
+
+  Future<void> validateBiometrics() async {
+    var localAuth = LocalAuthentication();
+    bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+    if (canCheckBiometrics) {
+      List<BiometricType> availableBiometrics = await localAuth.getAvailableBiometrics();
+      if (availableBiometrics.contains(BiometricType.fingerprint) && Platform.isAndroid) {
+        bool didAuthenticate = await localAuth.authenticate(
+          localizedReason: 'Autentikasi untuk masuk ke SinduStore',
+          biometricOnly: true,
+        );
+
+        if (didAuthenticate == true) {
+          emit(
+            state.copyWith(
+              authStatus: AuthStatus.correctPIN,
+              formStatus: FormzStatus.submissionSuccess,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              authStatus: AuthStatus.wrongPIN,
+              formStatus: FormzStatus.submissionFailure,
+              errorMessage: "Proses biometrik gagal! Silahkan coba lagi"
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            formStatus: FormzStatus.submissionFailure,
+            errorMessage: "Perangkat Anda tidak memiliki dukungan biometrik. Gunakan PIN",
+          ),
+        );
+      }
+    }
+  }
 }

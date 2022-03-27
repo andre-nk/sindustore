@@ -14,7 +14,7 @@ class User extends Equatable {
       required this.pin,
       required this.role});
 
-  static final empty = User(uid: '', name: '', email: '', pin: '', role: UserRoles.worker);
+  static const empty = User(uid: '', name: '', email: '', pin: '', role: Roles.worker);
 
   bool get isEmpty => this == User.empty;
   bool get isNotEmpty => this != User.empty;

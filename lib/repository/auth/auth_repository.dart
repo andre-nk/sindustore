@@ -19,6 +19,8 @@ class AuthRepository {
   //?Stream is only used for the initial auth status
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      print("State changed: " + firebaseUser.toString());
+
       final user = firebaseUser == null
           ? User.empty
           : User(
@@ -26,7 +28,8 @@ class AuthRepository {
               uid: firebaseUser.uid,
               role: UserRoles.worker,
               pin: "",
-              name: "");
+              name: "",
+            );
       return user;
     });
   }
@@ -102,6 +105,8 @@ class AuthRepository {
     try {
       final _userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+      print("Auth Created");
+
       final firebaseUser = _userCredential.user;
       final predefinedUser = await _firebaseFirestore
           .collection("predefined-users")
@@ -118,10 +123,10 @@ class AuthRepository {
 
         print("Firestore instance created");
 
-        await _firebaseFirestore
-            .collection("predefined-users")
-            .doc(predefinedUser.docs.first.id)
-            .delete();
+        // await _firebaseFirestore
+        //     .collection("predefined-users")
+        //     .doc(predefinedUser.docs.first.id)
+        //     .delete();
 
         print("Predefined instance deleted");
       }
@@ -150,13 +155,13 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  Future<bool> validatePIN({required String pin}) async {
+  Future<AuthStatus> validatePIN({required String pin}) async {
     final _currentUser = await currentUser();
 
     if (_currentUser.isNotEmpty && pin == _currentUser.pin) {
-      return true;
+      return AuthStatus.correctPIN;
     } else {
-      return false;
+      return AuthStatus.wrongPIN;
     }
   }
 }

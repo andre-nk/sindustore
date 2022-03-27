@@ -228,7 +228,7 @@ class _SubmitButton extends StatelessWidget {
                   } else if (state.authStatus ==
                       AuthStatusWrapper.existedUser) {
                     print("Sign In");
-                    // await context.read<AuthCubit>().signInWithEmailAndPassword();
+                    await context.read<AuthCubit>().signInWithEmailAndPassword();
                   } else if (state.authStatus ==
                       AuthStatusWrapper.predefinedUser) {
                     print("Sign Up");

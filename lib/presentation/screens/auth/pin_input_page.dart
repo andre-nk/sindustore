@@ -38,8 +38,7 @@ class PINInputPage extends StatelessWidget {
           ),
         ),
         body: Container(
-          padding:
-              EdgeInsets.symmetric(horizontal: MQuery.width(0.05, context)),
+          padding: EdgeInsets.symmetric(horizontal: MQuery.width(0.05, context)),
           width: MQuery.width(1, context),
           height: double.infinity,
           child: Column(
@@ -69,32 +68,66 @@ class PINInputPage extends StatelessWidget {
                     ),
                     child: BlocConsumer<AuthCubit, AuthState>(
                       buildWhen: (previous, current) {
-                        return previous.pin.value != current.pin.value;
+                        return previous.pin.value != current.pin.value ||
+                            previous.authStatus != current.authStatus;
                       },
                       listener: (context, state) {
-                        if(state.pin.value.length == 6){
-                          print("Completed");
+                        if (state.pin.value.length == 6) {
+                          context.read<AuthCubit>().validatePIN();
+                          context.read<AuthCubit>().pinFormChanged("");
+                        } else if (state.authStatus == AuthStatusWrapper.correctPIN) {
+                          Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                              child: const HomePage(),
+                              childCurrent: this,
+                              type: PageTransitionType.rightToLeftJoined,
+                            ),
+                          );
                         }
                       },
                       builder: (context, state) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(6, (index) {
-                            return Container(
-                              height: 16,
-                              width: 16,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: state.pin.value.length >= index
-                                    ? AppTheme.colors.secondary
-                                    : Colors.white,
-                                border: Border.all(
-                                    color:
-                                        AppTheme.colors.tertiary.withOpacity(0.1), // Set border color
-                                    width: 3.0), // Set border width
-                              ),
-                            );
-                          }),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(6, (index) {
+                                return Container(
+                                  height: 16,
+                                  width: 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: state.pin.value.length > index
+                                        ? AppTheme.colors.secondary
+                                        : Colors.white,
+                                    border: Border.all(
+                                      color: AppTheme.colors.primary
+                                          .withOpacity(0.25), // Set border color
+                                      width: 3.0,
+                                    ), // Set border width
+                                  ),
+                                );
+                              }),
+                            ),
+                            state.errorMessage != null ||
+                                    state.authStatus == AuthStatusWrapper.wrongPIN
+                                ? DelayedDisplay(
+                                    delay: const Duration(milliseconds: 50),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 24.0),
+                                      child: Text(
+                                        state.errorMessage != null
+                                            ? state.errorMessage!
+                                            : "PIN salah! Coba lagi",
+                                        style: AppTheme.text.subtitle.copyWith(
+                                          color: AppTheme.colors.error,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox()
+                          ],
                         );
                       },
                     ),
@@ -103,10 +136,10 @@ class PINInputPage extends StatelessWidget {
                     builder: (context, state) {
                       return NumericKeyboard(
                         onKeyboardTap: (str) {
-                          if(state.pin.value.length != 6){
+                          if (state.pin.value.length != 6) {
                             context
-                              .read<AuthCubit>()
-                              .pinFormChanged(state.pin.value + str);
+                                .read<AuthCubit>()
+                                .pinFormChanged(state.pin.value + str);
                           }
                         },
                         textColor: AppTheme.colors.primary,
@@ -122,7 +155,9 @@ class PINInputPage extends StatelessWidget {
                           Ionicons.backspace,
                           color: AppTheme.colors.secondary,
                         ),
-                        leftButtonFn: () {},
+                        leftButtonFn: () {
+                          context.read<AuthCubit>().validateBiometrics();
+                        },
                         leftIcon: Icon(
                           Ionicons.finger_print,
                           color: AppTheme.colors.secondary,

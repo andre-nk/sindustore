@@ -1,12 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
 
 import 'package:sindu_store/app/bloc_observer.dart';
-import 'package:sindu_store/config/routes.dart';
 import 'package:sindu_store/config/theme.dart';
+import 'package:sindu_store/presentation/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 Future<void> main() async {
@@ -35,8 +34,7 @@ class App extends StatelessWidget {
         value: _authRepository,
         child: MultiBlocProvider(
           providers: [
-            BlocProvider(
-                create: (_) => AppBloc(authRepository: _authRepository))
+            BlocProvider(create: (_) => AppBloc(authRepository: _authRepository))
           ],
           child: const AppView(),
         ));
@@ -49,10 +47,23 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.defaultTheme.appTheme(),
-        home: FlowBuilder(
-            state: context.select((AppBloc bloc) => bloc.state),
-            onGeneratePages: onGenerateAppViewPages));
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.defaultTheme.appTheme(),
+      home: BlocBuilder<AppBloc, AppState>(
+        buildWhen: ((previous, current) {
+          return previous.status != current.status;
+        }),
+        builder: (context, state) {
+          switch (state.status) {
+            case AppStatus.authenticated:
+              return const PINInputPage();
+            case AppStatus.unauthenticated:
+              return const OnboardingPage();
+            case AppStatus.initial:
+              return const SplashPage();
+          }
+        },
+      ),
+    );
   }
 }

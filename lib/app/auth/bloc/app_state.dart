@@ -1,21 +1,26 @@
 part of 'app_bloc.dart';
 
-abstract class AppState extends Equatable {
-  const AppState();
-  
-  @override
-  List<Object> get props => [];
+enum AppStatus {
+  initial,
+  authenticated,
+  unauthenticated,
 }
 
-class InitialAppState extends AppState {}
+class AppState extends Equatable {
+  const AppState._({
+    required this.status,
+    this.user = User.empty,
+  });
 
-class Authenticated extends AppState {
+  const AppState.authenticated(User user)
+      : this._(status: AppStatus.authenticated, user: user);
+
+  const AppState.unauthenticated() : this._(status: AppStatus.unauthenticated);
+  const AppState.initial() : this._(status: AppStatus.initial);
+
+  final AppStatus status;
   final User user;
 
-  const Authenticated(this.user);
-
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [status, user];
 }
-
-class Unauthenticated extends AppState {}
