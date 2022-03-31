@@ -5,8 +5,8 @@ import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
 
 import 'package:sindu_store/app/bloc_observer.dart';
 import 'package:sindu_store/config/theme.dart';
-import 'package:sindu_store/presentation/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
+import 'package:sindu_store/routes/router.gr.dart';
 
 Future<void> main() async {
   return BlocOverrides.runZoned(() async {
@@ -16,54 +16,55 @@ Future<void> main() async {
     //Repositories
     final authRepository = AuthRepository();
 
+    //Router
+    final _appRouter = AppRouter();
+
     //App Runner
-    runApp(App(authRepository: authRepository));
+    runApp(App(
+      authRepository: authRepository,
+      appRouter: _appRouter,
+    ));
   }, blocObserver: AppBlocObserver());
 }
 
 class App extends StatelessWidget {
   final AuthRepository _authRepository;
+  final AppRouter _appRouter;
 
-  const App({Key? key, required AuthRepository authRepository})
+  const App(
+      {Key? key, required AuthRepository authRepository, required AppRouter appRouter})
       : _authRepository = authRepository,
+        _appRouter = appRouter,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-        value: _authRepository,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => AppBloc(authRepository: _authRepository))
-          ],
-          child: const AppView(),
-        ));
+      value: _authRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AppBloc(authRepository: _authRepository))
+        ],
+        child: AppView(appRouter: _appRouter),
+      ),
+    );
   }
 }
 
 class AppView extends StatelessWidget {
-  const AppView({Key? key}) : super(key: key);
+  final AppRouter _appRouter;
+
+  const AppView({Key? key, required AppRouter appRouter})
+      : _appRouter = appRouter,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.defaultTheme.appTheme(),
-      home: BlocBuilder<AppBloc, AppState>(
-        buildWhen: ((previous, current) {
-          return previous.status != current.status;
-        }),
-        builder: (context, state) {
-          switch (state.status) {
-            case AppStatus.authenticated:
-              return const PINInputPage();
-            case AppStatus.unauthenticated:
-              return const OnboardingPage();
-            case AppStatus.initial:
-              return const SplashPage();
-          }
-        },
-      ),
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
     );
   }
 }

@@ -76,14 +76,7 @@ class PINInputPage extends StatelessWidget {
                           context.read<AuthCubit>().validatePIN();
                           context.read<AuthCubit>().pinFormChanged("");
                         } else if (state.authStatus == AuthStatusWrapper.correctPIN) {
-                          Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                              child: const HomePage(),
-                              childCurrent: this,
-                              type: PageTransitionType.rightToLeftJoined,
-                            ),
-                          );
+                          context.router.replaceNamed("/home");
                         }
                       },
                       builder: (context, state) {
