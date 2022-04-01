@@ -18,7 +18,11 @@ part 'auth/onboarding_page.dart';
 part 'auth/pin_input_page.dart';
 part 'auth/auth_page.dart';
 
-part 'home/home_page.dart';
+part 'home/dashboard_page.dart';
+part 'home/profile_page.dart';
+part 'home/home_wrapper_page.dart';
+part 'home/qr_scan_page.dart';
+part 'home/product_list_page.dart';
 
 part 'splash/splash_page.dart';
 

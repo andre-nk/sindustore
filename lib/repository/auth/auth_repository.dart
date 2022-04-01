@@ -19,7 +19,6 @@ class AuthRepository {
   //?Stream is only used for the initial auth status
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      print("State changed: " + firebaseUser.toString());
 
       final user = firebaseUser == null
           ? User.empty
@@ -60,8 +59,6 @@ class AuthRepository {
           role: UserRoles.fromCode(userData["role"]).role,
           name: userData['name'],
         );
-
-        print(localUser.toString() + " pre-return");
         return localUser;
       }
 
@@ -105,7 +102,6 @@ class AuthRepository {
     try {
       final _userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      print("Auth Created");
 
       final firebaseUser = _userCredential.user;
       final predefinedUser = await _firebaseFirestore
@@ -121,14 +117,10 @@ class AuthRepository {
           "role": predefinedUser.docs.first.data()["role"],
         });
 
-        print("Firestore instance created");
-
         // await _firebaseFirestore
         //     .collection("predefined-users")
         //     .doc(predefinedUser.docs.first.id)
         //     .delete();
-
-        print("Predefined instance deleted");
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);

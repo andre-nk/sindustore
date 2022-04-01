@@ -9,7 +9,16 @@ import 'package:sindu_store/presentation/screens/screens.dart';
     AutoRoute(path: "/onboarding", page: OnboardingPage),
     AutoRoute(path: "/auth", page: AuthFormPage),
     AutoRoute(path: "/pin", page: PINInputPage),
-    CustomRoute(path: "/home", page: HomePage, transitionsBuilder: TransitionsBuilders.slideLeft)
+    AutoRoute(
+      path: "/home",
+      page: HomeWrapperPage,
+      children: [
+        AutoRoute(path: 'dashboard', page: DashboardPage),
+        AutoRoute(path: 'profile', page: ProfilePage)
+      ],
+    ),
+    AutoRoute(path: 'qr', page: QRScanPage),
+    AutoRoute(path: 'products', page: ProductListPage),
   ],
 )
 class $AppRouter {}

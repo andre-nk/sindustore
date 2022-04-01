@@ -15,7 +15,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         super(const AppState.initial()) {
           
     on<AuthUserStateChanged>((event, emit) async {
-      print("Auth Bloc changed: " + event.user.toString());
       if (event.user.isNotEmpty) {
         final localUser = await _authRepository.currentUser();
         emit(AppState.authenticated(localUser));
@@ -29,7 +28,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     });
 
     _userSubscription = _authRepository.user.listen((user) {
-      print("Subs changed: " + user.toString());
       add(
         AuthUserStateChanged(user),
       );

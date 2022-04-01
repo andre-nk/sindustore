@@ -223,15 +223,12 @@ class _SubmitButton extends StatelessWidget {
                 disabled: state.authStatus == AuthStatusWrapper.unknownUser,
                 onPressed: () async {
                   if (state.authStatus == AuthStatusWrapper.emptyUser) {
-                    print("E-mail Validation");
                     await context.read<AuthCubit>().validateEmail();
                   } else if (state.authStatus ==
                       AuthStatusWrapper.existedUser) {
-                    print("Sign In");
                     await context.read<AuthCubit>().signInWithEmailAndPassword();
                   } else if (state.authStatus ==
                       AuthStatusWrapper.predefinedUser) {
-                    print("Sign Up");
                     await context
                         .read<AuthCubit>()
                         .signUpWithEmailAndPassword();

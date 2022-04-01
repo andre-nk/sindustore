@@ -41,13 +41,28 @@ class AppRouter extends _i2.RootStackRouter {
       return _i2.MaterialPageX<dynamic>(
           routeData: routeData, child: const _i1.PINInputPage());
     },
-    HomeRoute.name: (routeData) {
+    HomeWrapperRoute.name: (routeData) {
+      return _i2.MaterialPageX<dynamic>(
+          routeData: routeData, child: const _i1.HomeWrapperPage());
+    },
+    ProductListRoute.name: (routeData) {
+      return _i2.MaterialPageX<dynamic>(
+          routeData: routeData, child: const _i1.ProductListPage());
+    },
+    DashboardRoute.name: (routeData) {
       return _i2.CustomPage<dynamic>(
           routeData: routeData,
-          child: const _i1.HomePage(),
-          transitionsBuilder: _i2.TransitionsBuilders.slideLeft,
+          child: const _i1.DashboardPage(),
           opaque: true,
           barrierDismissible: false);
+    },
+    QRScanRoute.name: (routeData) {
+      return _i2.MaterialPageX<dynamic>(
+          routeData: routeData, child: const _i1.QRScanPage());
+    },
+    ProfileRoute.name: (routeData) {
+      return _i2.MaterialPageX<dynamic>(
+          routeData: routeData, child: const _i1.ProfilePage());
     }
   };
 
@@ -58,7 +73,15 @@ class AppRouter extends _i2.RootStackRouter {
         _i2.RouteConfig(OnboardingRoute.name, path: '/onboarding'),
         _i2.RouteConfig(AuthFormRoute.name, path: '/auth'),
         _i2.RouteConfig(PINInputRoute.name, path: '/pin'),
-        _i2.RouteConfig(HomeRoute.name, path: '/home')
+        _i2.RouteConfig(HomeWrapperRoute.name, path: '/home', children: [
+          _i2.RouteConfig(DashboardRoute.name,
+              path: 'dashboard', parent: HomeWrapperRoute.name),
+          _i2.RouteConfig(QRScanRoute.name,
+              path: 'qr', parent: HomeWrapperRoute.name),
+          _i2.RouteConfig(ProfileRoute.name,
+              path: 'profile', parent: HomeWrapperRoute.name)
+        ]),
+        _i2.RouteConfig(ProductListRoute.name, path: 'products')
       ];
 }
 
@@ -103,9 +126,42 @@ class PINInputRoute extends _i2.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i1.HomePage]
-class HomeRoute extends _i2.PageRouteInfo<void> {
-  const HomeRoute() : super(HomeRoute.name, path: '/home');
+/// [_i1.HomeWrapperPage]
+class HomeWrapperRoute extends _i2.PageRouteInfo<void> {
+  const HomeWrapperRoute({List<_i2.PageRouteInfo>? children})
+      : super(HomeWrapperRoute.name, path: '/home', initialChildren: children);
 
-  static const String name = 'HomeRoute';
+  static const String name = 'HomeWrapperRoute';
+}
+
+/// generated route for
+/// [_i1.ProductListPage]
+class ProductListRoute extends _i2.PageRouteInfo<void> {
+  const ProductListRoute() : super(ProductListRoute.name, path: 'products');
+
+  static const String name = 'ProductListRoute';
+}
+
+/// generated route for
+/// [_i1.DashboardPage]
+class DashboardRoute extends _i2.PageRouteInfo<void> {
+  const DashboardRoute() : super(DashboardRoute.name, path: 'dashboard');
+
+  static const String name = 'DashboardRoute';
+}
+
+/// generated route for
+/// [_i1.QRScanPage]
+class QRScanRoute extends _i2.PageRouteInfo<void> {
+  const QRScanRoute() : super(QRScanRoute.name, path: 'qr');
+
+  static const String name = 'QRScanRoute';
+}
+
+/// generated route for
+/// [_i1.ProfilePage]
+class ProfileRoute extends _i2.PageRouteInfo<void> {
+  const ProfileRoute() : super(ProfileRoute.name, path: 'profile');
+
+  static const String name = 'ProfileRoute';
 }
