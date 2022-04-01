@@ -12,7 +12,7 @@ class AppViewPage extends StatelessWidget {
       listener: (context, state) {
         switch (state.status) {
           case AppStatus.authenticated:
-            context.router.replace(const PINInputRoute());
+            context.router.replace(const HomeWrapperRoute());
             break;
           case AppStatus.unauthenticated:
             context.router.replace(const OnboardingRoute());

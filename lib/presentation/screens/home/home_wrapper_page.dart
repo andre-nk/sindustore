@@ -18,7 +18,7 @@ class HomeWrapperPage extends StatelessWidget {
               color: Colors.grey[900]!.withOpacity(0.05),
               spreadRadius: 5,
               blurRadius: 10,
-              offset: Offset(0, -2), // changes position of shadow
+              offset: const Offset(0, -2), // changes position of shadow
             ),
           ],
           border: Border.all(color: Colors.white, width: 4),

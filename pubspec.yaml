@@ -28,23 +28,21 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   auto_route: ^3.2.4
-  bubble_bottom_bar: ^2.0.0
   cloud_firestore: ^3.1.10
   cupertino_icons: ^1.0.2
   delayed_display: ^2.0.0
   equatable: ^2.0.3
   firebase_auth: ^3.3.10
   firebase_core: ^1.13.1
-  flow_builder: ^0.0.6
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
+  flutter_svg: ^1.0.3
   formz: ^0.4.1
   ionicons: ^0.1.2
   local_auth: ^1.1.11
   logger: ^1.1.0
   numeric_keyboard: ^1.1.0
-  page_transition: ^2.0.5
 
 dev_dependencies:
   auto_route_generator: ^3.2.3
