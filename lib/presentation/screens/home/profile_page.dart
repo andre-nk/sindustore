@@ -7,9 +7,11 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-          "Woi, ini Profile",
-          style: Theme.of(context).textTheme.displayLarge,
+        child: ElevatedButton(
+          child: const Text("Log out"),
+          onPressed: () async {
+            FirebaseAuth.instance.signOut();
+          },
         )
       ) 
     );

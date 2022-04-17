@@ -76,7 +76,12 @@ class OnboardingPage extends StatelessWidget {
                 WideButton(
                   title: "Masuk ke akun",
                   onPressed: () {
-                    context.router.pushNamed("/auth");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthFormPage(),
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 16),
