@@ -28,13 +28,9 @@ class AppTypography {
   TextStyle h3 = const TextStyle(
       color: Color(0xFF333333), fontWeight: FontWeight.w500, fontSize: 22);
   TextStyle paragraph = const TextStyle(
-      color: Color(0xFF333333),
-      fontWeight: FontWeight.normal,
-      fontSize: 18);
+      color: Color(0xFF333333), fontWeight: FontWeight.normal, fontSize: 18);
   TextStyle subtitle = const TextStyle(
-      color: Color(0xFF333333),
-      fontWeight: FontWeight.normal,
-      fontSize: 16);
+      color: Color(0xFF333333), fontWeight: FontWeight.normal, fontSize: 16);
   TextStyle footnote = const TextStyle(
       color: Color(0xFF333333), fontWeight: FontWeight.w300, fontSize: 14);
 }
@@ -62,9 +58,13 @@ class DefaultAppTheme {
       scaffoldBackgroundColor: AppColors().background,
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors().primary,
-        contentTextStyle: AppTypography().paragraph.copyWith(color: AppColors().secondary),
-        actionTextColor: AppColors().secondary
-      )
+        contentTextStyle: const TextStyle(
+          color: Color(0xFF333333),
+          fontWeight: FontWeight.normal,
+          fontSize: 18,
+        ),
+        actionTextColor: AppColors().secondary,
+      ),
     );
   }
 }

@@ -78,7 +78,7 @@ class AuthRepository {
         }
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw UnknownUserException();
     }
   }
 

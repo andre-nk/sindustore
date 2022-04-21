@@ -12,3 +12,7 @@ part "general/app_bar.dart";
 part "general/wide_button.dart";
 
 part "auth/auth_form.dart";
+part "auth/auth_form_title.dart";
+part "auth/auth_form_email.dart";
+part "auth/auth_form_password.dart";
+part "auth/auth_form_button.dart";

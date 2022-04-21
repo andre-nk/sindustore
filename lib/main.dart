@@ -5,7 +5,7 @@ import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
 
 import 'package:sindu_store/app/bloc_observer.dart';
 import 'package:sindu_store/config/theme.dart';
-import 'package:sindu_store/presentation/screens/screens.dart';
+import 'package:sindu_store/view/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 Future<void> main() async {
@@ -44,8 +44,10 @@ class AppView extends StatelessWidget {
 
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
-        if (state is AppStateLoggedIn) {
+        if (state is AppStateLoggedIn && state.isPINCorrect) {
           return const HomeWrapperPage();
+        } else if (state is AppStateLoggedIn && !state.isPINCorrect){
+          return const PINInputPage();
         } else if (state is AppStateLoggedOut) {
           return const OnboardingPage();
         } else if (state is AppStateInitial) {

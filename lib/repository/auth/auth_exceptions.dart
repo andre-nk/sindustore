@@ -77,12 +77,4 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 
 class UnknownUserException implements Exception {}
 
-class WrongPasswordAuthException implements Exception {}
-
 class WrongPINException implements Exception {}
-
-class WeakPasswordAuthException implements Exception {}
-
-class InvalidEmailAuthException implements Exception {}
-
-class GenericAuthException implements Exception {}

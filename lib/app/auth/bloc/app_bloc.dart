@@ -5,7 +5,6 @@ import 'package:sindu_store/model/auth/email.dart';
 import 'package:sindu_store/model/auth/password.dart';
 import 'package:sindu_store/model/auth/pin.dart';
 import 'package:sindu_store/model/user/user_model.dart';
-import 'package:sindu_store/repository/auth/auth_exceptions.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 part 'app_event.dart';
@@ -44,7 +43,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       try {
         final verificationStatus = await authRepository.validateEmail(email: event.email);
 
-        //#4
         emit(
           AppStateEmailVerified(
             email: Email.dirty(event.email),
@@ -53,10 +51,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           ),
         );
       } on Exception catch (e) {
+        final filledEmail = Email.dirty(event.email);
+
         emit(
-          AppStateFailed(
-            exception: e,
+          AppStateEmailChanged(
+            email: filledEmail,
+            formStatus: Formz.validate([filledEmail]),
             isLoading: false,
+            exception: e,
           ),
         );
       }
@@ -80,7 +82,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       try {
         final loggedInUser = await authRepository.signInWithEmailAndPassword(
           email: event.email,
-          password: event.email,
+          password: event.password,
         );
 
         emit(AppStateLoggedIn(
@@ -89,7 +91,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           isPINCorrect: false,
         ));
       } on Exception catch (e) {
-        emit(AppStateFailed(exception: e, isLoading: false));
+        emit(AppStatePasswordChanged(
+          password: Password.dirty(event.password),
+          email: Email.dirty(event.email),
+          formStatus: Formz.validate([Password.dirty(event.password)]),
+          emailStatus: EmailVerificationStatus.existedUser,
+          isLoading: false,
+          exception: e,
+        ));
       }
     }));
 
@@ -106,7 +115,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           isPINCorrect: false,
         ));
       } on Exception catch (e) {
-        emit(AppStateFailed(exception: e, isLoading: false));
+        emit(AppStatePasswordChanged(
+          password: Password.dirty(event.password),
+          email: Email.dirty(event.email),
+          formStatus: Formz.validate([Password.dirty(event.password)]),
+          emailStatus: EmailVerificationStatus.existedUser,
+          isLoading: false,
+          exception: e,
+        ));
       }
     }));
 
@@ -139,11 +155,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
             isLoading: false,
           ),
         );
-      } catch (e) {
-        //#4
-        emit(AppStateFailed(
-          exception: WrongPINException(),
+      } on Exception catch (e) {
+        emit(AppStatePINChanged(
+          pin: PIN.dirty(event.pin),
+          formStatus: Formz.validate([PIN.dirty(event.pin)]),
           isLoading: false,
+          exception: e,
         ));
       }
     }));

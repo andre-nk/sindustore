@@ -4,33 +4,35 @@ enum EmailVerificationStatus { existedUser, predefinedUser }
 
 abstract class AppState {
   final bool isLoading;
-  const AppState({
-    required this.isLoading,
-  });
+  final Exception? exception;
+
+  const AppState({required this.isLoading, required this.exception});
+}
+
+class AppFormState extends AppState {
+  final FormzStatus formStatus;
+
+  AppFormState({
+    required this.formStatus,
+    Exception? exception,
+    required bool isLoading,
+  }) : super(isLoading: isLoading, exception: exception);
 }
 
 class AppStateInitial extends AppState {
-  const AppStateInitial({required bool isLoading}) : super(isLoading: isLoading);
+  const AppStateInitial({required bool isLoading})
+      : super(isLoading: isLoading, exception: null);
 }
 
-class AppStateFailed extends AppState {
-  final Exception exception;
-
-  AppStateFailed({
-    required this.exception,
-    required bool isLoading,
-  }) : super(isLoading: isLoading);
-}
-
-class AppStateEmailChanged extends AppState {
+class AppStateEmailChanged extends AppFormState {
   final Email email;
-  final FormzStatus formStatus;
 
-  const AppStateEmailChanged({
+  AppStateEmailChanged({
     required this.email,
-    required this.formStatus,
+    required FormzStatus formStatus,
+    Exception? exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+  }) : super(isLoading: isLoading, formStatus: formStatus, exception: exception);
 }
 
 class AppStateEmailVerified extends AppState {
@@ -40,8 +42,9 @@ class AppStateEmailVerified extends AppState {
   AppStateEmailVerified({
     required this.email,
     required this.emailStatus,
+    Exception? exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+  }) : super(isLoading: isLoading, exception: exception);
 }
 
 class AppStatePasswordChanged extends AppState {
@@ -55,8 +58,9 @@ class AppStatePasswordChanged extends AppState {
     required this.password,
     required this.formStatus,
     required this.emailStatus,
+    Exception? exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+  }) : super(isLoading: isLoading, exception: exception);
 }
 
 class AppStatePINChanged extends AppState {
@@ -66,8 +70,9 @@ class AppStatePINChanged extends AppState {
   AppStatePINChanged({
     required this.pin,
     required this.formStatus,
+    Exception? exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+  }) : super(isLoading: isLoading, exception: exception);
 }
 
 class AppStateLoggedIn extends AppState {
@@ -76,14 +81,16 @@ class AppStateLoggedIn extends AppState {
   const AppStateLoggedIn({
     required this.user,
     required this.isPINCorrect,
+    Exception? exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+  }) : super(isLoading: isLoading, exception: exception);
 }
 
 class AppStateLoggedOut extends AppState with EquatableMixin {
   const AppStateLoggedOut({
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+    Exception? exception,
+  }) : super(isLoading: isLoading, exception: exception);
 
   @override
   List<Object?> get props => [isLoading];
