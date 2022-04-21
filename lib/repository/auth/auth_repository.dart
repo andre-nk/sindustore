@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
-import 'package:sindu_store/app/auth/cubit/auth_enums.dart';
+import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
 import 'package:sindu_store/model/user/user_model.dart';
 import 'package:sindu_store/model/user/user_roles.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
@@ -11,55 +12,39 @@ class AuthRepository {
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
   AuthRepository(
-      {firebase_auth.FirebaseAuth? firebaseAuth,
-      FirebaseFirestore? firebaseFirestore})
+      {firebase_auth.FirebaseAuth? firebaseAuth, FirebaseFirestore? firebaseFirestore})
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
-  //?Stream is only used for the initial auth status
-  Stream<User> get user {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-
-      final user = firebaseUser == null
-          ? User.empty
-          : User(
-              email: firebaseUser.email ?? "",
-              uid: firebaseUser.uid,
-              role: UserRoles.worker,
-              pin: "",
-              name: "",
-            );
-      return user;
-    });
+  Future<void> initializeApp() async {
+    await Firebase.initializeApp();
   }
 
-  Future<User> currentUser() async {
+  Future<AuthUser> currentUser() async {
     try {
-      final firebaseUser = _firebaseAuth.currentUser!;
+      final firebaseUser = _firebaseAuth.currentUser;
 
-      final localUser = User(
-          email: firebaseUser.email ?? "",
-          uid: firebaseUser.uid,
-          role: UserRoles.worker,
-          pin: "",
-          name: "");
+      AuthUser localUser = AuthUser(
+        email: "",
+        uid: "",
+        role: UserRoles.worker,
+        pin: "",
+        name: "",
+      );
 
-      final serverUserInstance = await _firebaseFirestore
-          .collection("users")
-          .doc(firebaseUser.uid)
-          .get();
-
-      if (serverUserInstance.data() != null) {
-        Map<String, dynamic> userData =
-            serverUserInstance.data() as Map<String, dynamic>;
-        final localUser = User(
-          uid: serverUserInstance.id,
-          email: userData['email'],
-          pin: userData['pin'],
-          role: UserRoles.fromCode(userData["role"]).role,
-          name: userData['name'],
-        );
-        return localUser;
+      if (firebaseUser != null) {
+        final serverUserInstance = await _firebaseFirestore.collection("users").doc(firebaseUser.uid).get();
+        if (serverUserInstance.data() != null) {
+          Map<String, dynamic> userData =
+              serverUserInstance.data() as Map<String, dynamic>;
+          localUser = AuthUser(
+            uid: serverUserInstance.id,
+            email: userData['email'],
+            pin: userData['pin'],
+            role: UserRoles.fromCode(userData["role"]).role,
+            name: userData['name'],
+          );
+        }
       }
 
       return localUser;
@@ -68,7 +53,7 @@ class AuthRepository {
     }
   }
 
-  Future<AuthStatus> validateEmail({required String email}) async {
+  Future<EmailVerificationStatus> validateEmail({required String email}) async {
     try {
       final matchedUsers = await _firebaseFirestore
           .collection("users")
@@ -78,7 +63,7 @@ class AuthRepository {
       //registered user
       if (matchedUsers.docs.isNotEmpty) {
         Logger().d("User exist. Logging in...");
-        return AuthStatus.existedUser;
+        return EmailVerificationStatus.existedUser;
       } else {
         final matchedPredefinedUsers = await _firebaseFirestore
             .collection("predefined-users")
@@ -87,9 +72,9 @@ class AuthRepository {
 
         //listed pre-users
         if (matchedPredefinedUsers.docs.isNotEmpty) {
-          return AuthStatus.predefinedUser;
+          return EmailVerificationStatus.predefinedUser;
         } else {
-          return AuthStatus.unknownUser;
+          throw UnknownUserException;
         }
       }
     } catch (e) {
@@ -97,11 +82,11 @@ class AuthRepository {
     }
   }
 
-  Future<void> signUpWithEmailAndPassword(
+  Future<AuthUser> signUpWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      final _userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      final _userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
       final firebaseUser = _userCredential.user;
       final predefinedUser = await _firebaseFirestore
@@ -122,18 +107,23 @@ class AuthRepository {
         //     .doc(predefinedUser.docs.first.id)
         //     .delete();
       }
+
+      final localUser = await currentUser();
+      return localUser;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-    } catch (e) {
+    } catch (_) {
       throw const SignUpWithEmailAndPasswordFailure();
     }
   }
 
-  Future<void> signInWithEmailAndPassword(
+  Future<AuthUser> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final AuthUser loggedInUser = await currentUser();
+
+      return loggedInUser;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -147,13 +137,13 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  Future<AuthStatus> validatePIN({required String pin}) async {
+  Future<bool> validatePIN({required String pin}) async {
     final _currentUser = await currentUser();
 
     if (_currentUser.isNotEmpty && pin == _currentUser.pin) {
-      return AuthStatus.correctPIN;
+      return true;
     } else {
-      return AuthStatus.wrongPIN;
+      return false;
     }
   }
 }

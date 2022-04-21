@@ -5,8 +5,8 @@ class AuthFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthCubit>(
-      create: (_) => AuthCubit(context.read<AuthRepository>()),
+    return BlocProvider<AppBloc>(
+      create: (_) => AppBloc(AuthRepository()),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: GeneralAppBar(

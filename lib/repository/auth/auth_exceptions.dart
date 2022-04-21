@@ -74,3 +74,15 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
   /// The associated error message.
   final String message;
 }
+
+class UnknownUserException implements Exception {}
+
+class WrongPasswordAuthException implements Exception {}
+
+class WrongPINException implements Exception {}
+
+class WeakPasswordAuthException implements Exception {}
+
+class InvalidEmailAuthException implements Exception {}
+
+class GenericAuthException implements Exception {}

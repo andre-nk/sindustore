@@ -13,31 +13,22 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
 
-    //Repositories
-    final authRepository = AuthRepository();
-
     //App Runner
-    runApp(App(
-      authRepository: authRepository,
-    ));
+    runApp(const App());
   }, blocObserver: AppBlocObserver());
 }
 
 class App extends StatelessWidget {
-  final AuthRepository _authRepository;
-
-  const App({Key? key, required AuthRepository authRepository})
-      : _authRepository = authRepository,
-        super(key: key);
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: _authRepository,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => AppBloc(authRepository: _authRepository))
-        ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.defaultTheme.appTheme(),
+      title: 'SinduStore',
+      home: BlocProvider(
+        create: (_) => AppBloc(AuthRepository()),
         child: const AppView(),
       ),
     );
@@ -49,23 +40,20 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.defaultTheme.appTheme(),
-      title: 'SinduStore',
-      home: BlocBuilder<AppBloc, AppState>(
-        builder: (context, state) {
-          if(state.status == AppStatus.authenticated){
-            return const HomeWrapperPage();
-          } else if (state.status == AppStatus.unauthenticated){
-            return const OnboardingPage();
-          } else if (state.status == AppStatus.initial){
-            return const SplashPage();
-          } else {
-            return const SplashPage();
-          }
-        },
-      ),
+    context.read<AppBloc>().add(const AppEventInitialize());
+
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, state) {
+        if (state is AppStateLoggedIn) {
+          return const HomeWrapperPage();
+        } else if (state is AppStateLoggedOut) {
+          return const OnboardingPage();
+        } else if (state is AppStateInitial) {
+          return const SplashPage();
+        } else {
+          return const SplashPage();
+        }
+      },
     );
   }
 }
