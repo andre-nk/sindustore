@@ -12,12 +12,12 @@ class _PasswordAuthInputState extends State<PasswordAuthInput> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: ((previous, current) {
-        if (previous is AppStateEmailVerified && current is AppStatePasswordChanged) {
+        if (previous is AuthStateEmailVerified && current is AuthStatePasswordChanged) {
           return true;
-        } else if (previous is AppStatePasswordChanged &&
-            current is AppStatePasswordChanged) {
+        } else if (previous is AuthStatePasswordChanged &&
+            current is AuthStatePasswordChanged) {
           if (previous.password.value != current.password.value) {
             return true;
           } else {
@@ -34,14 +34,14 @@ class _PasswordAuthInputState extends State<PasswordAuthInput> {
             obscureText: _isPasswordObscured,
             key: const Key('loginForm_passwordInput_textField'),
             onChanged: (password) => {
-              context.read<AppBloc>().add(
-                    AppEventPasswordFormChanged(
-                      email: state is AppStateEmailVerified
+              context.read<AuthBloc>().add(
+                    AuthEventPasswordFormChanged(
+                      email: state is AuthStateEmailVerified
                           ? state.email.value
-                          : (state as AppStatePasswordChanged).email.value,
-                      emailStatus: state is AppStateEmailVerified
+                          : (state as AuthStatePasswordChanged).email.value,
+                      emailStatus: state is AuthStateEmailVerified
                           ? state.emailStatus
-                          : (state as AppStatePasswordChanged).emailStatus,
+                          : (state as AuthStatePasswordChanged).emailStatus,
                       password: password,
                     ),
                   )

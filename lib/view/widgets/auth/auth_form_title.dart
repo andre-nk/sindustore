@@ -5,10 +5,10 @@ class FormTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return Text(
-          (state is AppStateInitial || state is AppStateEmailChanged)
+          (state is AuthStateInitial || state is AuthStateEmailChanged)
               ? "Masukkan e-mail kamu:"
               : "Masukkan password kamu:",
           style: AppTheme.text.h2.copyWith(fontSize: 24),

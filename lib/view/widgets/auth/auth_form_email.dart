@@ -6,11 +6,11 @@ class EmailAuthInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: ((previous, current) {
-        if (previous is AppStateInitial && current is AppStateEmailChanged) {
+        if (previous is AuthStateInitial && current is AuthStateEmailChanged) {
           return true;
-        } else if (previous is AppStateEmailChanged && current is AppStateEmailChanged) {
+        } else if (previous is AuthStateEmailChanged && current is AuthStateEmailChanged) {
           if (previous.email.value != current.email.value) {
             return true;
           } else {
@@ -28,18 +28,18 @@ class EmailAuthInput extends StatelessWidget {
           child: TextField(
             key: const Key('loginForm_emailInput_textField'),
             onChanged: (email) =>
-                {context.read<AppBloc>().add(AppEventEmailFormChanged(email: email))},
+                {context.read<AuthBloc>().add(AuthEventEmailFormChanged(email: email))},
             style: AppTheme.text.paragraph,
             decoration: InputDecoration(
               enabled: !isValidated,
               border: InputBorder.none,
-              hintText: isValidated && state is AppStateEmailVerified
+              hintText: isValidated && state is AuthStateEmailVerified
                   ? state.email.value
-                  : isValidated && state is AppStatePasswordChanged
+                  : isValidated && state is AuthStatePasswordChanged
                       ? state.email.value
                       : 'contoh: andreas@gmail.com',
               errorText:
-                  state is AppStateEmailChanged && state.formStatus == FormzStatus.invalid
+                  state is AuthStateEmailChanged && state.formStatus == FormzStatus.invalid
                       ? "*E-mail tidak valid. Coba lagi"
                       : null,
               suffixIcon: isValidated

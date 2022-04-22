@@ -1,13 +1,12 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:delayed_display/delayed_display.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
-import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
+import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
+import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
 import 'package:sindu_store/config/media_query.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/view/widgets/widgets.dart';

@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sindu_store/app/auth/bloc/app_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 
 import 'package:sindu_store/app/bloc_observer.dart';
 import 'package:sindu_store/config/theme.dart';
@@ -9,13 +11,17 @@ import 'package:sindu_store/view/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 Future<void> main() async {
-  return BlocOverrides.runZoned(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-    //App Runner
-    runApp(const App());
-  }, blocObserver: AppBlocObserver());
+  final storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
+  HydratedBlocOverrides.runZoned(
+    () => runApp(const App()),
+    storage: storage,
+    blocObserver: AuthBlocObserver(),
+  );
 }
 
 class App extends StatelessWidget {
@@ -28,7 +34,7 @@ class App extends StatelessWidget {
       theme: AppTheme.defaultTheme.appTheme(),
       title: 'SinduStore',
       home: BlocProvider(
-        create: (_) => AppBloc(AuthRepository()),
+        create: (_) => AuthBloc(AuthRepository()),
         child: const AppView(),
       ),
     );
@@ -40,17 +46,18 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AppBloc>().add(const AppEventInitialize());
+    context.read<AuthBloc>().add(const AuthEventInitialize());
 
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is AppStateLoggedIn && state.isPINCorrect) {
+        if (state is AuthStateLoggedIn && state.isPINCorrect) {
           return const HomeWrapperPage();
-        } else if (state is AppStateLoggedIn && !state.isPINCorrect){
+        } else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
+            state is AuthStatePINChanged) {
           return const PINInputPage();
-        } else if (state is AppStateLoggedOut) {
+        } else if (state is AuthStateLoggedOut) {
           return const OnboardingPage();
-        } else if (state is AppStateInitial) {
+        } else if (state is AuthStateInitial) {
           return const SplashPage();
         } else {
           return const SplashPage();

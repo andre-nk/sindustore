@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
         child: ElevatedButton(
           child: const Text("Log out"),
           onPressed: () async {
-            FirebaseAuth.instance.signOut();
+
           },
         )
       ) 

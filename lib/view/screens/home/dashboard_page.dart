@@ -7,6 +7,9 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print((context.read<AuthBloc>().state as AuthStateLoggedIn).user);
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.topCenter,

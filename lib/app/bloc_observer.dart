@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
-class AppBlocObserver extends BlocObserver {
+class AuthBlocObserver extends BlocObserver {
   // @override
   // void onEvent(Bloc bloc, Object? event) {
   //   super.onEvent(bloc, event);

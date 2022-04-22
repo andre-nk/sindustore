@@ -23,14 +23,15 @@ class PINInputPage extends StatelessWidget {
                 height: 24,
               ),
               IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 24,
-                  splashRadius: 24,
-                  onPressed: () {},
-                  icon: const Icon(
-                    Ionicons.help_circle_outline,
-                    size: 24,
-                  )),
+                padding: EdgeInsets.zero,
+                iconSize: 24,
+                splashRadius: 24,
+                onPressed: () {},
+                icon: const Icon(
+                  Ionicons.help_circle_outline,
+                  size: 24,
+                ),
+              ),
             ],
           ),
         ),
@@ -64,28 +65,28 @@ class PINInputPage extends StatelessWidget {
                     vertical: MQuery.height(0.03, context),
                     horizontal: MQuery.width(0.125, context),
                   ),
-                  child: BlocConsumer<AppBloc, AppState>(
-                    buildWhen: (previous, current) {
-                      if (previous is AppStateLoggedIn && current is AppStatePINChanged) {
-                        return true;
-                      } else if ((previous as AppStatePINChanged).pin.value !=
-                          (current as AppStatePINChanged).pin.value) {
-                        return true;
-                      } else if (previous.formStatus != current.formStatus) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    },
+                  child: BlocConsumer<AuthBloc, AuthState>(
+                    // buildWhen: (previous, current) {
+                    //   if (previous is AuthStateLoggedIn && current is AuthStatePINChanged) {
+                    //     return true;
+                    //   } else if ((previous as AuthStatePINChanged).pin.value !=
+                    //       (current as AuthStatePINChanged).pin.value) {
+                    //     return true;
+                    //   } else if (previous.formStatus != current.formStatus) {
+                    //     return true;
+                    //   } else {
+                    //     return false;
+                    //   }
+                    // },
                     listener: (context, state) {
-                      if (state is AppStatePINChanged && state.pin.value.length == 6) {
-                        context
-                            .read<AppBloc>()
-                            .add(AppEventVerifyPIN(pin: state.pin.value));
+                      if (state is AuthStatePINChanged && state.pin.value.length == 6) {
+                        context.read<AuthBloc>().add(
+                              AuthEventVerifyPIN(
+                                pin: state.pin.value,
+                              ),
+                            );
 
-                        context.read<AppBloc>().add(const AppEventVerifyPIN(pin: ""));
-                      } else if (state is AppStateLoggedIn && state.isPINCorrect) {
-                        context.router.replaceNamed("/home");
+                        context.read<AuthBloc>().add(const AuthEventVerifyPIN(pin: ""));
                       }
                     },
                     builder: (context, state) {
@@ -100,7 +101,7 @@ class PINInputPage extends StatelessWidget {
                                 width: 16,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: state is AppStatePINChanged &&
+                                  color: state is AuthStatePINChanged &&
                                           state.pin.value.length > index
                                       ? AppTheme.colors.secondary
                                       : Colors.white,
@@ -113,7 +114,7 @@ class PINInputPage extends StatelessWidget {
                               );
                             }),
                           ),
-                          state is AppStatePINChanged &&
+                          state is AuthStatePINChanged &&
                                   state.formStatus == FormzStatus.invalid
                               ? DelayedDisplay(
                                   delay: const Duration(milliseconds: 50),
@@ -133,25 +134,25 @@ class PINInputPage extends StatelessWidget {
                     },
                   ),
                 ),
-                BlocBuilder<AppBloc, AppState>(
+                BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     return NumericKeyboard(
                       onKeyboardTap: (str) {
-                        if ((runtimeType is AppStateLoggedIn ||
-                            state is AppStatePINChanged && state.pin.value.length != 6)) {
-                          context.read<AppBloc>().add(AppEventPINFormChanged(
-                              pin: state is AppStateLoggedIn
+                        if ((state is AuthStateLoggedIn ||
+                            state is AuthStatePINChanged && state.pin.value.length != 6)) {
+                          context.read<AuthBloc>().add(AuthEventPINFormChanged(
+                              pin: state is AuthStateLoggedIn
                                   ? str
-                                  : (state as AppStatePINChanged).pin.value + str));
+                                  : (state as AuthStatePINChanged).pin.value + str));
                         }
                       },
                       textColor: AppTheme.colors.primary,
                       rightButtonFn: () {
-                        if (state is AppStatePINChanged) {
+                        if (state is AuthStatePINChanged) {
                           String currentPIN = state.pin.value;
 
                           if (currentPIN.isNotEmpty) {
-                            context.read<AppBloc>().add(AppEventPINFormChanged(
+                            context.read<AuthBloc>().add(AuthEventPINFormChanged(
                                 pin: currentPIN.substring(0, currentPIN.length - 1)));
                           }
                         }
@@ -161,7 +162,7 @@ class PINInputPage extends StatelessWidget {
                         color: AppTheme.colors.secondary,
                       ),
                       leftButtonFn: () {
-                        context.read<AppBloc>().add(AppEventValidateBiometric());
+                        context.read<AuthBloc>().add(AuthEventValidateBiometric());
                       },
                       leftIcon: Icon(
                         Ionicons.finger_print,

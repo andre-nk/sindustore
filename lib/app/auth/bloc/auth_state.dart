@@ -1,15 +1,15 @@
-part of 'app_bloc.dart';
+part of 'auth_bloc.dart';
 
 enum EmailVerificationStatus { existedUser, predefinedUser }
 
-abstract class AppState {
+abstract class AuthState {
   final bool isLoading;
   final Exception? exception;
 
-  const AppState({required this.isLoading, required this.exception});
+  const AuthState({required this.isLoading, required this.exception});
 }
 
-class AppFormState extends AppState {
+class AppFormState extends AuthState {
   final FormzStatus formStatus;
 
   AppFormState({
@@ -19,15 +19,15 @@ class AppFormState extends AppState {
   }) : super(isLoading: isLoading, exception: exception);
 }
 
-class AppStateInitial extends AppState {
-  const AppStateInitial({required bool isLoading})
+class AuthStateInitial extends AuthState {
+  const AuthStateInitial({required bool isLoading})
       : super(isLoading: isLoading, exception: null);
 }
 
-class AppStateEmailChanged extends AppFormState {
+class AuthStateEmailChanged extends AppFormState {
   final Email email;
 
-  AppStateEmailChanged({
+  AuthStateEmailChanged({
     required this.email,
     required FormzStatus formStatus,
     Exception? exception,
@@ -35,11 +35,11 @@ class AppStateEmailChanged extends AppFormState {
   }) : super(isLoading: isLoading, formStatus: formStatus, exception: exception);
 }
 
-class AppStateEmailVerified extends AppState {
+class AuthStateEmailVerified extends AuthState {
   final Email email;
   final EmailVerificationStatus emailStatus;
 
-  AppStateEmailVerified({
+  AuthStateEmailVerified({
     required this.email,
     required this.emailStatus,
     Exception? exception,
@@ -47,13 +47,13 @@ class AppStateEmailVerified extends AppState {
   }) : super(isLoading: isLoading, exception: exception);
 }
 
-class AppStatePasswordChanged extends AppState {
+class AuthStatePasswordChanged extends AuthState {
   final Email email;
   final Password password;
   final FormzStatus formStatus;
   final EmailVerificationStatus emailStatus;
 
-  AppStatePasswordChanged({
+  AuthStatePasswordChanged({
     required this.email,
     required this.password,
     required this.formStatus,
@@ -63,11 +63,11 @@ class AppStatePasswordChanged extends AppState {
   }) : super(isLoading: isLoading, exception: exception);
 }
 
-class AppStatePINChanged extends AppState {
+class AuthStatePINChanged extends AuthState {
   final PIN pin;
   final FormzStatus formStatus;
 
-  AppStatePINChanged({
+  AuthStatePINChanged({
     required this.pin,
     required this.formStatus,
     Exception? exception,
@@ -75,10 +75,10 @@ class AppStatePINChanged extends AppState {
   }) : super(isLoading: isLoading, exception: exception);
 }
 
-class AppStateLoggedIn extends AppState {
+class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
   final bool isPINCorrect;
-  const AppStateLoggedIn({
+  const AuthStateLoggedIn({
     required this.user,
     required this.isPINCorrect,
     Exception? exception,
@@ -86,8 +86,8 @@ class AppStateLoggedIn extends AppState {
   }) : super(isLoading: isLoading, exception: exception);
 }
 
-class AppStateLoggedOut extends AppState with EquatableMixin {
-  const AppStateLoggedOut({
+class AuthStateLoggedOut extends AuthState with EquatableMixin {
+  const AuthStateLoggedOut({
     required bool isLoading,
     Exception? exception,
   }) : super(isLoading: isLoading, exception: exception);

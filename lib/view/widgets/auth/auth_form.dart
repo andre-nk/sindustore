@@ -5,7 +5,7 @@ class AuthForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.exception != null) {
           String exceptionMessage = "";
@@ -35,7 +35,7 @@ class AuthForm extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is AppStateInitial || state is AppStateEmailChanged) {
+        if (state is AuthStateInitial || state is AuthStateEmailChanged) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
@@ -52,8 +52,8 @@ class AuthForm extends StatelessWidget {
               SubmitButton(),
             ],
           );
-        } else if (state is AppStateEmailVerified ||
-            state is AppStatePasswordChanged ||
+        } else if (state is AuthStateEmailVerified ||
+            state is AuthStatePasswordChanged ||
             (state.exception != null &&
                 state.exception is LogInWithEmailAndPasswordFailure)) {
           return Column(
