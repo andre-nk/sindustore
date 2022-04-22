@@ -10,9 +10,7 @@ class HomeWrapperPage extends StatelessWidget {
       child: BlocBuilder<NavigationCubit, int>(
         builder: (context, state) {
           return Scaffold(
-            body: state == 0
-                ? const DashboardPage()
-                : const ProfilePage(),
+            body: state == 0 ? const DashboardPage() : const ProfilePage(),
             floatingActionButton: const CustomFAB(),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             bottomNavigationBar: const CustomBottomNavbar(),

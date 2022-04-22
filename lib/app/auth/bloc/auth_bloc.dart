@@ -15,7 +15,8 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
-  AuthBloc(AuthRepository authRepository) : super(const AuthStateInitial(isLoading: true)) {
+  AuthBloc(AuthRepository authRepository)
+      : super(const AuthStateInitial(isLoading: true)) {
     //#1: INITIALIZATION
     on<AuthEventInitialize>((event, emit) async {
       await authRepository.initializeApp();
@@ -207,6 +208,19 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         }
       }
     }));
+
+    on<AuthEventSignOut>((event, emit) async {
+      try {
+        emit(const AuthStateLoggedOut(
+          isLoading: false,
+        ));
+      } on Exception catch (e) {
+        emit(AuthStateLoggedOut(
+          isLoading: false,
+          exception: e
+        ));
+      }
+    });
   }
 
   @override

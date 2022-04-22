@@ -7,9 +7,6 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    print((context.read<AuthBloc>().state as AuthStateLoggedIn).user);
-
     return Scaffold(
       body: Stack(
         alignment: Alignment.topCenter,
@@ -99,7 +96,9 @@ class DashboardPage extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              RouteWrapper.push(context, child: const ProductListPage());
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,7 +157,8 @@ class DashboardPage extends StatelessWidget {
                     ),
                     Text(
                       "lihat semua",
-                      style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
+                      style: AppTheme.text.subtitle
+                          .copyWith(color: AppTheme.colors.tertiary),
                     )
                   ],
                 ),

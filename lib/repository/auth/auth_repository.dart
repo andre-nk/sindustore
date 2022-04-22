@@ -33,7 +33,8 @@ class AuthRepository {
       );
 
       if (firebaseUser != null) {
-        final serverUserInstance = await _firebaseFirestore.collection("users").doc(firebaseUser.uid).get();
+        final serverUserInstance =
+            await _firebaseFirestore.collection("users").doc(firebaseUser.uid).get();
         if (serverUserInstance.data() != null) {
           Map<String, dynamic> userData =
               serverUserInstance.data() as Map<String, dynamic>;
@@ -102,10 +103,10 @@ class AuthRepository {
           "role": predefinedUser.docs.first.data()["role"],
         });
 
-        // await _firebaseFirestore
-        //     .collection("predefined-users")
-        //     .doc(predefinedUser.docs.first.id)
-        //     .delete();
+        await _firebaseFirestore
+            .collection("predefined-users")
+            .doc(predefinedUser.docs.first.id)
+            .delete();
       }
 
       final localUser = await currentUser();
@@ -134,7 +135,9 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await Future.wait([_firebaseAuth.signOut()]);
-    } catch (_) {}
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<bool> validatePIN({required String pin}) async {

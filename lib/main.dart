@@ -50,12 +50,14 @@ class AppView extends StatelessWidget {
 
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is AuthStateLoggedIn && state.isPINCorrect) {
+        if (state is AuthStateLoggedIn) {
           return const HomeWrapperPage();
-        } else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
-            state is AuthStatePINChanged) {
-          return const PINInputPage();
-        } else if (state is AuthStateLoggedOut) {
+        }
+        // else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
+        //     state is AuthStatePINChanged) {
+        //   return const PINInputPage();
+        // }
+        else if (state is AuthStateLoggedOut) {
           return const OnboardingPage();
         } else if (state is AuthStateInitial) {
           return const SplashPage();

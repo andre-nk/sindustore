@@ -57,3 +57,5 @@ class AuthEventVerifyPIN extends AuthEvent {
 }
 
 class AuthEventValidateBiometric extends AuthEvent {}
+
+class AuthEventSignOut extends AuthEvent {}

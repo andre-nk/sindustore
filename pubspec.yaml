@@ -43,6 +43,7 @@ dependencies:
   local_auth: ^1.1.11
   logger: ^1.1.0
   numeric_keyboard: ^1.1.0
+  page_transition: ^2.0.5
   path_provider: ^2.0.9
 
 dev_dependencies:

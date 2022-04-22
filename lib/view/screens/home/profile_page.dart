@@ -8,9 +8,9 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          child: const Text("Log out"),
-          onPressed: () async {
-
+          child: Text("Log out", style: AppTheme.text.paragraph.copyWith(color: Colors.white),),
+          onPressed: () {
+            context.read<AuthBloc>().add(AuthEventSignOut());
           },
         )
       ) 
