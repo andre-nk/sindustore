@@ -52,8 +52,12 @@ class DashboardPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 8, bottom: 4.0, left: 3, right: 4),
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 4.0,
+                        left: 3,
+                        right: 4,
+                      ),
                       child: TextField(
                         decoration: InputDecoration(
                           prefixIcon: Padding(

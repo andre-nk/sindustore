@@ -1,4 +1,5 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
+import 'package:sindu_store/app/ui_helpers/sliver_app_bar/cubit/sliver_cubit.dart';
 import 'package:sindu_store/config/media_query.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/config/route_wrapper.dart';

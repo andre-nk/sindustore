@@ -20,3 +20,5 @@ part "auth/auth_form_button.dart";
 
 part "home/custom_fab.dart";
 part "home/custom_bottom_navbar.dart";
+
+part "product/product_sliver_appbar.dart";

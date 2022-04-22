@@ -7,23 +7,41 @@ class ProductListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              title: Text("Test"),
-              floating: true,
-              flexibleSpace: Flexible(
-                child: Text("Wow")
-              ),
-              expandedHeight: 200,
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => ListTile(title: Text('Item #$index')),
-                childCount: 1000,
-              ),
-            ),
-          ],
+        child: BlocProvider<SliverCubit>(
+          create: (context) => SliverCubit(),
+          child: BlocBuilder<SliverCubit, bool>(
+            builder: (context, state) {
+              return NotificationListener<UserScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.context != null &&
+                      notification.context!.widget is RawGestureDetector) {
+                    if ((notification.context!.widget as RawGestureDetector)
+                            .gestures
+                            .entries
+                            .first
+                            .value
+                        is! GestureRecognizerFactoryWithHandlers<
+                            HorizontalDragGestureRecognizer>) {
+                      context.read<SliverCubit>().scroll(notification.direction);
+                    }
+                  }
+
+                  return true;
+                },
+                child: CustomScrollView(
+                  slivers: [
+                    ProductSliverAppBar(state: state),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => ListTile(title: Text('Item #$index')),
+                        childCount: 1000,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
