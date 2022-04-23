@@ -27,6 +27,8 @@ class AppTypography {
       color: Color(0xFF333333), fontWeight: FontWeight.w600, fontSize: 28);
   TextStyle h3 = const TextStyle(
       color: Color(0xFF333333), fontWeight: FontWeight.w500, fontSize: 22);
+  TextStyle title = const TextStyle(
+      color: Color(0xFF333333), fontWeight: FontWeight.w600, fontSize: 20);
   TextStyle paragraph = const TextStyle(
       color: Color(0xFF333333), fontWeight: FontWeight.normal, fontSize: 18);
   TextStyle subtitle = const TextStyle(

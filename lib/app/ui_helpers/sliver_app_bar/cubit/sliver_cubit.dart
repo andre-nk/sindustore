@@ -1,14 +1,29 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class SliverCubit extends Cubit<bool> {
-  SliverCubit() : super(false);
+part 'sliver_state.dart';
 
-  void scroll(ScrollDirection direction){
-    if(direction == ScrollDirection.forward || direction == ScrollDirection.idle){
-      emit(true);
-    } else {
-      emit(false);
+class SliverCubit extends Cubit<SliverState> {
+  SliverCubit() : super(SliverShowAppBar());
+
+  void verticalScroll(ScrollDirection direction){
+    if(direction == ScrollDirection.reverse){
+      emit(SliverHideAppBar());
+    } else if (direction != ScrollDirection.reverse) {
+      emit(SliverShowAppBar());
+    }
+  }
+
+  void horizontalScroll(ScrollMetrics metrics){
+    if (metrics.atEdge) {
+      bool isTop = metrics.pixels == 0.0;
+      if (isTop) {
+        emit(SliverHorizontalReachStart());
+      } else {
+        emit(SliverHorizontalLeaveStart());
+      }
     }
   }
 }

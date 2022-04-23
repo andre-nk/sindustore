@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
+import 'package:sindu_store/app/ui_helpers/sliver_app_bar/cubit/sliver_cubit.dart';
 import 'package:sindu_store/config/media_query.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
