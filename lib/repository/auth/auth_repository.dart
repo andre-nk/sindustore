@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
-import 'package:sindu_store/model/user/user_model.dart';
+import 'package:sindu_store/model/user/user.dart';
 import 'package:sindu_store/model/user/user_roles.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
 

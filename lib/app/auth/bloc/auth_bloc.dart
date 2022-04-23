@@ -8,7 +8,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:sindu_store/model/auth/email.dart';
 import 'package:sindu_store/model/auth/password.dart';
 import 'package:sindu_store/model/auth/pin.dart';
-import 'package:sindu_store/model/user/user_model.dart';
+import 'package:sindu_store/model/user/user.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 part 'auth_event.dart';

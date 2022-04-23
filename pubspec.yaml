@@ -40,6 +40,7 @@ dependencies:
   formz: ^0.4.1
   hydrated_bloc: ^8.1.0
   ionicons: ^0.1.2
+  json_annotation: ^4.4.0
   local_auth: ^1.1.11
   logger: ^1.1.0
   numeric_keyboard: ^1.1.0
@@ -48,6 +49,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.1.8
+  json_serializable: ^6.1.6
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
