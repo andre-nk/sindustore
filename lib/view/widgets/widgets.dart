@@ -23,3 +23,5 @@ part "home/custom_fab.dart";
 part "home/custom_bottom_navbar.dart";
 
 part "product/product_sliver_appbar.dart";
+part "product/product_card.dart";
+part "product/product_fab.dart";

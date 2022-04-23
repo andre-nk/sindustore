@@ -39,7 +39,6 @@ class ProductSliverAppBar extends StatelessWidget {
         centerTitle: true,
         title: BlocBuilder<SliverCubit, SliverState>(
           builder: (context, state) {
-            print(state);
             return AnimatedOpacity(
               opacity: state is! SliverHideAppBar ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 250),
