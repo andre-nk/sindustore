@@ -3,14 +3,10 @@ part of "../widgets.dart";
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
-    required this.productTitle,
-    required this.productPrice,
-    required this.productCoverURL,
+    required this.product,
   }) : super(key: key);
 
-  final String productTitle;
-  final String productPrice;
-  final String productCoverURL;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +24,13 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      productTitle,
+                      product.productName,
                       style: AppTheme.text.title,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
-                        productPrice,
+                        NumberFormat.simpleCurrency(locale: 'id_ID', decimalDigits: 0).format(product.productSellPrice.toInt()),
                         style: AppTheme.text.subtitle,
                       ),
                     )
@@ -46,8 +42,11 @@ class ProductCard extends StatelessWidget {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                          color: AppTheme.colors.surface,
-                          borderRadius: BorderRadius.circular(12.0)),
+                        color: AppTheme.colors.surface,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Image.network(product.productCoverURL),
                     ),
                     Container(
                       padding: const EdgeInsets.only(top: 12.0),

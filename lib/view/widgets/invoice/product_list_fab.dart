@@ -24,9 +24,10 @@ class ProductFAB extends StatelessWidget {
                   Text(
                     "Belum ada produk",
                     style: AppTheme.text.subtitle.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.1),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.1,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),

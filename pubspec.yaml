@@ -37,8 +37,10 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_svg: ^1.0.3
+  flutterfire_ui: ^0.4.0+3
   formz: ^0.4.1
   hydrated_bloc: ^8.1.0
+  intl: ^0.17.0
   ionicons: ^0.1.2
   json_annotation: ^4.4.0
   local_auth: ^1.1.11
@@ -49,10 +51,10 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.1.8
-  json_serializable: ^6.1.6
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.1.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
