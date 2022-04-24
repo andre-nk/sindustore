@@ -6,7 +6,9 @@ class RouteWrapper {
     return Navigator.push(
       context,
       PageTransition(
-        type: PageTransitionType.rightToLeft,
+        curve: Curves.bounceOut,
+        opaque: true,
+        type: PageTransitionType.rightToLeftWithFade,
         child: child,
       ),
     );

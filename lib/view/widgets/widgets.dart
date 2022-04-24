@@ -7,8 +7,10 @@ import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
 import 'package:sindu_store/app/ui_helpers/sliver_app_bar/cubit/sliver_cubit.dart';
 import 'package:sindu_store/config/media_query.dart';
+import 'package:sindu_store/config/route_wrapper.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
+import 'package:sindu_store/view/screens/screens.dart';
 
 part "general/app_bar.dart";
 part "general/wide_button.dart";
@@ -22,6 +24,9 @@ part "auth/auth_form_button.dart";
 part "home/custom_fab.dart";
 part "home/custom_bottom_navbar.dart";
 
-part "product/product_sliver_appbar.dart";
-part "product/product_card.dart";
-part "product/product_fab.dart";
+part 'invoice/product_list_appbar.dart';
+part "invoice/product_card.dart";
+part 'invoice/product_list_fab.dart';
+part 'invoice/checkout_sheet.dart';
+part 'invoice/checkout_header.dart';
+part 'invoice/checkout_product_card.dart';

@@ -9,7 +9,9 @@ class ProductFAB extends StatelessWidget {
       height: 72,
       width: MQuery.width(0.9, context),
       child: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          RouteWrapper.push(context, child: const InvoiceCheckoutPage());
+        },
         backgroundColor: AppTheme.colors.primary,
         label: SizedBox(
           width: MQuery.width(0.75, context),

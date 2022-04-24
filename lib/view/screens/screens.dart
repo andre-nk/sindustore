@@ -24,6 +24,7 @@ part 'home/profile_page.dart';
 part 'home/home_wrapper_page.dart';
 part 'home/qr_scan_page.dart';
 
-part 'product/product_list_page.dart';
+part 'invoice/product_list_page.dart';
+part 'invoice/invoice_checkout_page.dart';
 
 part 'splash/splash_page.dart';
