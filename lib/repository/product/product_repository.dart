@@ -47,7 +47,40 @@ class ProductRepository {
           );
 
       return productRef;
-    } catch (e) {
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Query<Product>> searchProductQuery(String searchQuery) async {
+    try {
+      final productRef = _firebaseFirestore
+          .collection('products')
+          .where('productName', isGreaterThanOrEqualTo: searchQuery)
+          .where('productName', isLessThan: searchQuery + "z")
+          .withConverter<Product>(
+            fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
+            toFirestore: (product, _) => product.toJson(),
+          );
+
+      return productRef;
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Query<Product>> filterProductQuery(String filterTag) async {
+    try {
+      final productRef = _firebaseFirestore
+          .collection('products')
+          .where('tags', arrayContains: filterTag)
+          .withConverter<Product>(
+            fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
+            toFirestore: (product, _) => product.toJson(),
+          );
+
+      return productRef;
+    } on Exception catch (e) {
       throw Exception(e);
     }
   }

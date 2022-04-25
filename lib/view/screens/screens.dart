@@ -11,7 +11,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
-import 'package:sindu_store/app/product/bloc/bloc/product_bloc.dart';
+import 'package:sindu_store/app/product/product/bloc/product_bloc.dart';
 import 'package:sindu_store/app/ui_helpers/sliver_app_bar/cubit/sliver_cubit.dart';
 import 'package:sindu_store/config/media_query.dart';
 import 'package:sindu_store/config/theme.dart';

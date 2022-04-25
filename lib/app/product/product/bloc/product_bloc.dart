@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/repository/product/product_repository.dart';
 
 part 'product_event.dart';
@@ -14,9 +15,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         await productRepository.generateRandomProducts();
         emit(const ProductStateCreated());
       } on Exception catch (error) {
-        emit(ProductStateFetching(
-          exception: error
-        ));
+        emit(ProductStateFetching(exception: error));
       }
     });
 
@@ -24,12 +23,30 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       try {
         emit(const ProductStateFetching());
         final CollectionReference query = await productRepository.fetchProductQuery();
+        emit(ProductStateAllLoaded(query: query));
+      } on Exception catch (e) {
+        throw ProductStateFetching(exception: e);
+      }
+    });
+
+    on<ProductEventSearchActive>(((event, emit) async {
+      try {
+        emit(const ProductStateFetching());
+        final Query<Product> query = await productRepository.searchProductQuery(event.searchQuery);
         emit(ProductStateQueryLoaded(query: query));
       } on Exception catch (e) {
-        throw ProductStateFetching(
-          exception: e
-        );
-      } 
-    }); 
+        throw ProductStateFetching(exception: e);
+      }
+    }));
+
+    on<ProductEventFilter>((event, emit) async {
+      try {
+        emit(const ProductStateFetching());
+        final Query<Product> query = await productRepository.filterProductQuery(event.filterTag);
+         emit(ProductStateQueryLoaded(query: query));
+      } on Exception catch (e) {
+        throw ProductStateFetching(exception: e);
+      }
+    });
   }
 }

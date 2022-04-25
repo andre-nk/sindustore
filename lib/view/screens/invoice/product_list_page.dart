@@ -65,9 +65,22 @@ class ProductListPage extends StatelessWidget {
                     builder: (context, state) {
                       if (state is ProductStateFetching) {
                         return const LoadingIndicator();
+                      } else if (state is ProductStateAllLoaded) {
+                        return FirestoreQueryBuilder(
+                          pageSize: 10,
+                          query: state.query,
+                          builder: (context, snapshot, _) {
+                            return CustomScrollView(
+                              slivers: [
+                                const ProductSliverAppBar(),
+                                ProductSliverList(snapshot: snapshot)
+                              ],
+                            );
+                          },
+                        );
                       } else if (state is ProductStateQueryLoaded) {
                         return FirestoreQueryBuilder(
-                          pageSize: 2,
+                          pageSize: 10,
                           query: state.query,
                           builder: (context, snapshot, _) {
                             return CustomScrollView(

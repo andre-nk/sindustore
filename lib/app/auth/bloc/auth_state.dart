@@ -9,10 +9,10 @@ abstract class AuthState {
   const AuthState({required this.isLoading, required this.exception});
 }
 
-class AppFormState extends AuthState {
+class AuthFormState extends AuthState {
   final FormzStatus formStatus;
 
-  AppFormState({
+  AuthFormState({
     required this.formStatus,
     Exception? exception,
     required bool isLoading,
@@ -24,7 +24,7 @@ class AuthStateInitial extends AuthState {
       : super(isLoading: isLoading, exception: null);
 }
 
-class AuthStateEmailChanged extends AppFormState {
+class AuthStateEmailChanged extends AuthFormState {
   final Email email;
 
   AuthStateEmailChanged({
