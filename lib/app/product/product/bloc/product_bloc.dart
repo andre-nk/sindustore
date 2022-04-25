@@ -22,8 +22,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventFetchQuery>((event, emit) async {
       try {
         emit(const ProductStateFetching());
-        final CollectionReference query = await productRepository.fetchProductQuery();
-        emit(ProductStateAllLoaded(query: query));
+        final Query<Product> query = await productRepository.fetchProductQuery();
+        emit(ProductStateQueryLoaded(query: query));
       } on Exception catch (e) {
         throw ProductStateFetching(exception: e);
       }

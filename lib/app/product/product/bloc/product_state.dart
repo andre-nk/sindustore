@@ -15,13 +15,6 @@ class ProductStateInitial extends ProductState {
 class ProductStateFetching extends ProductState {
   const ProductStateFetching({Exception? exception}) : super(exception: exception);
 }
-
-class ProductStateAllLoaded extends ProductState {
-  final CollectionReference query;
-  const ProductStateAllLoaded({Exception? exception, required this.query})
-      : super(exception: exception);
-}
-
 class ProductStateQueryLoaded extends ProductState{
   final Query query;
   const ProductStateQueryLoaded({Exception? exception, required this.query})

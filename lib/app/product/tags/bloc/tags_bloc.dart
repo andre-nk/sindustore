@@ -23,8 +23,6 @@ class TagsBloc extends Bloc<TagsEvent, TagsState> {
         productTags: event.tags,
         activeTagIndex: event.activeTagIndex,
       ));
-
-      print(event.activeTagIndex);
     }));
   }
 }

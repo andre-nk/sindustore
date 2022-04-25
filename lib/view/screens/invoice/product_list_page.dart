@@ -65,7 +65,7 @@ class ProductListPage extends StatelessWidget {
                     builder: (context, state) {
                       if (state is ProductStateFetching) {
                         return const LoadingIndicator();
-                      } else if (state is ProductStateAllLoaded) {
+                      } else if (state is ProductStateQueryLoaded) {
                         return FirestoreQueryBuilder(
                           pageSize: 10,
                           query: state.query,

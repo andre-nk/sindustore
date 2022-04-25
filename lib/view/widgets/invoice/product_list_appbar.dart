@@ -53,10 +53,10 @@ class ProductSliverAppBar extends StatelessWidget {
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextField(
-                              onSubmitted: (value) {
-                                context
-                                    .read<ProductBloc>()
-                                    .add(ProductEventSearchActive(searchQuery: value));
+                              onChanged: (value) {
+                                context.read<ProductBloc>().add(
+                                      ProductEventSearchActive(searchQuery: value),
+                                    );
                               },
                               decoration: InputDecoration(
                                 isDense: true,

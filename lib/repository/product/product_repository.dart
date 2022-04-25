@@ -39,7 +39,7 @@ class ProductRepository {
     }
   }
 
-  Future<CollectionReference> fetchProductQuery() async {
+  Future<Query<Product>> fetchProductQuery() async {
     try {
       final productRef = _firebaseFirestore.collection('products').withConverter<Product>(
             fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
@@ -54,14 +54,24 @@ class ProductRepository {
 
   Future<Query<Product>> searchProductQuery(String searchQuery) async {
     try {
-      final productRef = _firebaseFirestore
-          .collection('products')
-          .where('productName', isGreaterThanOrEqualTo: searchQuery)
-          .where('productName', isLessThan: searchQuery + "z")
-          .withConverter<Product>(
-            fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
-            toFirestore: (product, _) => product.toJson(),
-          );
+      late final Query<Product> productRef;
+      if (searchQuery == "") {
+        productRef = _firebaseFirestore
+            .collection('products')
+            .withConverter<Product>(
+              fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
+              toFirestore: (product, _) => product.toJson(),
+            );
+      } else {
+        productRef = _firebaseFirestore
+            .collection('products')
+            .where('productName', isGreaterThanOrEqualTo: searchQuery)
+            .where('productName', isLessThan: searchQuery + "z")
+            .withConverter<Product>(
+              fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
+              toFirestore: (product, _) => product.toJson(),
+            );
+      }
 
       return productRef;
     } on Exception catch (e) {
