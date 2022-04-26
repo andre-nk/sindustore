@@ -5,9 +5,16 @@ class ProductListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ProductBloc(ProductRepository())..add(ProductEventFetchQuery()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<InvoiceBloc>(create: (context) => InvoiceBloc()),
+        BlocProvider<ProductBloc>(
+          create: (context) => ProductBloc(ProductRepository())
+            ..add(
+              ProductEventFetchQuery(),
+            ),
+        ),
+      ],
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: const ProductFAB(),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/model/product/product_discount.dart';
+import 'package:uuid/uuid.dart';
 
 class ProductRepository {
   final FirebaseFirestore _firebaseFirestore;
@@ -17,6 +18,7 @@ class ProductRepository {
 
       for (var i = 0; i < 10; i++) {
         final sampleProduct = Product(
+          id: const Uuid().v4(),
           productName: "Rinnai 52$i-E",
           productCoverURL:
               "https://i.picsum.photos/id/314/100/100.jpg?hmac=nh2nxi9SdrJrB4GcKTer5SAe6x1yviXXJ05DORRKlL0",

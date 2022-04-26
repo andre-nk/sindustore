@@ -30,7 +30,8 @@ class ProductCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
-                        NumberFormat.simpleCurrency(locale: 'id_ID', decimalDigits: 0).format(product.productSellPrice.toInt()),
+                        NumberFormat.simpleCurrency(locale: 'id_ID', decimalDigits: 0)
+                            .format(product.productSellPrice.toInt()),
                         style: AppTheme.text.subtitle,
                       ),
                     )
@@ -62,8 +63,9 @@ class ProductCard extends StatelessWidget {
                           child: Text(
                             "Tambah",
                             style: AppTheme.text.footnote.copyWith(
-                                color: AppTheme.colors.secondary,
-                                fontWeight: FontWeight.w500),
+                              color: AppTheme.colors.secondary,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),

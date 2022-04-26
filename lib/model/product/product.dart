@@ -7,6 +7,7 @@ part 'product.g.dart';
 
 @JsonSerializable()
 class Product extends Equatable {
+  final String id;
   final String productName;
   final String productCoverURL;
   final double productBuyPrice;
@@ -19,6 +20,7 @@ class Product extends Equatable {
   final DateTime updatedAt;
 
   const Product({
+    required this.id,
     required this.productName,
     required this.productCoverURL,
     required this.productBuyPrice,
@@ -33,6 +35,7 @@ class Product extends Equatable {
 
   @override
   List<Object?> get props => [
+    id,
     productName,
     productCoverURL,
     productBuyPrice,

@@ -1,7 +1,9 @@
 part of "../widgets.dart";
 
 class CheckoutProductCard extends StatelessWidget {
-  const CheckoutProductCard({Key? key}) : super(key: key);
+  const CheckoutProductCard({Key? key, required this.product}) : super(key: key);
+
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,14 @@ class CheckoutProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Rinnai 52",
+                        product.productName,
                         style: AppTheme.text.title,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Text(
-                          "Rp320.000",
+                          NumberFormat.simpleCurrency(locale: 'id_ID', decimalDigits: 0)
+                              .format(product.productSellPrice.toInt()),
                           style: AppTheme.text.subtitle,
                         ),
                       )
@@ -61,50 +64,40 @@ class CheckoutProductCard extends StatelessWidget {
                       ),
                       child: const Text("Pilihan diskon (2)"),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: RawMaterialButton(
-                            onPressed: () {},
-                            elevation: 0,
-                            fillColor: AppTheme.colors.primary,
-                            child: Icon(
-                              Ionicons.remove_outline,
-                              size: 16.0,
-                              color: AppTheme.colors.secondary,
-                            ),
-                            padding: const EdgeInsets.all(4.0),
-                            shape: const CircleBorder(),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "1",
-                            style: AppTheme.text.subtitle,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: RawMaterialButton(
-                            onPressed: () {},
-                            elevation: 0,
-                            fillColor: AppTheme.colors.primary,
-                            child: Icon(
-                              Ionicons.add_outline,
-                              size: 16.0,
-                              color: AppTheme.colors.secondary,
-                            ),
-                            padding: const EdgeInsets.all(4.0),
-                            shape: const CircleBorder(),
-                          ),
-                        )
-                      ],
+                    BlocConsumer<InvoiceBloc, InvoiceState>(
+                      listener: ((context, state) {
+                        if (state is InvoiceStateDeactivated) {
+                          print("deactivated, routing back...");
+                        }
+                      }),
+                      builder: (context, state) {
+                        print(state);
+
+                        if (state is InvoiceStateActivated) {
+                          for (var stateProduct in state.invoice.products) {
+                            if (stateProduct.productID == product.id) {
+                              //? THIS PRODUCT EXISTS IN THE INVOICE
+                              return ProductCardQuantity(
+                                activatedProduct: stateProduct,
+                              );
+                            } else {
+                              return ProductCardQuantity(
+                                activatedProduct: stateProduct,
+                              );
+                            }
+                          }
+                        } else if (state is InvoiceStateInitial) {
+                          print("Initial");
+
+                          return ProductCardQuantity(
+                            deactivatedProduct: product,
+                          );
+                        } else {
+                          return Container(color: Colors.red, width: 50,);
+                        }
+
+                        return const SizedBox();
+                      },
                     )
                   ],
                 ),

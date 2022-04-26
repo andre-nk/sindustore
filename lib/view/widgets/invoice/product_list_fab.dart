@@ -10,7 +10,8 @@ class ProductFAB extends StatelessWidget {
       width: MQuery.width(0.9, context),
       child: FloatingActionButton.extended(
         onPressed: () {
-          RouteWrapper.push(context, child: const InvoiceCheckoutPage());
+          context.read<ProductBloc>().add(ProductEventGenerateRandom());
+          // RouteWrapper.push(context, child: const InvoiceCheckoutPage());
         },
         backgroundColor: AppTheme.colors.primary,
         label: SizedBox(

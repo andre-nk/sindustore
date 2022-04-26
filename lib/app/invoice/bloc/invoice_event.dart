@@ -8,10 +8,16 @@ abstract class InvoiceEvent extends Equatable {
 }
 
 class InvoiceEventActivate extends InvoiceEvent {
-  final Invoice invoice;
+  final String adminHandlerUID;
   final String initialProductID;
 
-  const InvoiceEventActivate({required this.invoice, required this.initialProductID});
+  const InvoiceEventActivate({required this.adminHandlerUID, required this.initialProductID});
+}
+
+class InvoiceEventRead extends InvoiceEvent {
+  final Invoice invoice;
+
+  const InvoiceEventRead({required this.invoice});
 }
 
 class InvoiceEventAddItem extends InvoiceEvent {

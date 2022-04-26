@@ -55,11 +55,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(bottom: MQuery.height(0.25, context)),
-                          child: Column(
-                            children: List.generate(3, (index) {
-                              return const CheckoutProductCard();
-                            }),
-                          ),
+                          child: Column(children: const []),
                         )
                       ],
                     ),
