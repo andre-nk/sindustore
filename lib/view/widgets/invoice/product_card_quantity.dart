@@ -14,8 +14,6 @@ class ProductCardQuantity extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InvoiceBloc, InvoiceState>(
       builder: (context, state) {
-        print(state.toString() + " " + activatedProduct.toString());
-
         if (state is InvoiceStateActivated && activatedProduct != null) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,8 +119,6 @@ class ProductCardQuantity extends StatelessWidget {
                 width: 100,
                 child: ElevatedButton(
                   onPressed: () {
-                    print("Activation");
-
                     context.read<InvoiceBloc>().add(
                           InvoiceEventActivate(
                             adminHandlerUID: "", //TODO: CALL ADMIN HANDLER UID,

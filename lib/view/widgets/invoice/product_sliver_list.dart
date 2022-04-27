@@ -13,7 +13,7 @@ class ProductSliverList extends StatelessWidget {
           if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
             snapshot.fetchMore();
           }
-
+    
           if (snapshot.docs.isEmpty) {
             return SizedBox(
               height: MQuery.height(0.6, context),
@@ -47,11 +47,8 @@ class ProductSliverList extends StatelessWidget {
                   ? EdgeInsets.only(bottom: MQuery.height(0.1, context))
                   : EdgeInsets.zero,
               child: snapshot.docs[index].data() != null
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: CheckoutProductCard(
-                        product: snapshot.docs[index].data() as Product,
-                      ),
+                  ? ProductCard(
+                      product: snapshot.docs[index].data() as Product,
                     )
                   : const SizedBox(),
             );

@@ -41,6 +41,20 @@ class ProductRepository {
     }
   }
 
+  Future<Product> getProductByID(String productID) async {
+    try {
+      final productSnapshot = await _firebaseFirestore.collection('products').doc(productID).get();
+      if(productSnapshot.exists){
+        final Product productInstance = Product.fromJson(productSnapshot.data()!);
+        return productInstance;
+      } else {
+        throw Exception("No product found");
+      }
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<Query<Product>> fetchProductQuery() async {
     try {
       final productRef = _firebaseFirestore.collection('products').withConverter<Product>(
