@@ -14,8 +14,16 @@ class InvoiceStateInitial extends InvoiceState {
 
 class InvoiceStateActivated extends InvoiceState {
   final Invoice invoice;
+  final String key;
 
-  const InvoiceStateActivated({required this.invoice, Exception? exception}) : super(exception: exception);
+  @override
+  List<Object> get props => [key];
+
+  const InvoiceStateActivated({
+    required this.invoice,
+    required this.key,
+    Exception? exception,
+  }) : super(exception: exception);
 }
 
 class InvoiceStateDeactivated extends InvoiceState {

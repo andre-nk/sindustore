@@ -56,50 +56,38 @@ class ProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ProductCardDiscount(product: product, isMini: true,)
-                      // BlocConsumer<InvoiceBloc, InvoiceState>(
-                      //   listener: ((context, state) {
-                      //     if (state is InvoiceStateDeactivated) {
-                      //       print("deactivated, routing back...");
-                      //     }
-                      //   }),
-                      //   builder: (context, state) {
-                      //     print(state);
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // ProductCardDiscount(product: product, isMini: true,)
+                    BlocBuilder<InvoiceBloc, InvoiceState>(
+                      builder: (context, state) {
+                        if (state is InvoiceStateActivated) {
+                          for (var stateProduct in state.invoice.products) {
+                            if (stateProduct.productID == product.id) {
+                              //? THIS PRODUCT EXISTS IN THE INVOICE
+                              return ProductCardQuantity(
+                                activatedProduct: stateProduct,
+                              );
+                            } else {
+                              return ProductCardQuantity(
+                                deactivatedProduct: product,
+                              );
+                            }
+                          }
+                        } else if (state is InvoiceStateInitial) {
+                          return ProductCardQuantity(
+                            deactivatedProduct: product,
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
 
-                      //     if (state is InvoiceStateActivated) {
-                      //       for (var stateProduct in state.invoice.products) {
-                      //         if (stateProduct.productID == product.id) {
-                      //           //? THIS PRODUCT EXISTS IN THE INVOICE
-                      //           return ProductCardQuantity(
-                      //             activatedProduct: stateProduct,
-                      //           );
-                      //         } else {
-                      //           return ProductCardQuantity(
-                      //             activatedProduct: stateProduct,
-                      //           );
-                      //         }
-                      //       }
-                      //     } else if (state is InvoiceStateInitial) {
-                      //       print("Initial");
-
-                      //       return ProductCardQuantity(
-                      //         deactivatedProduct: product,
-                      //       );
-                      //     } else {
-                      //       return Container(color: Colors.red, width: 50,);
-                      //     }
-
-                      //     return const SizedBox();
-                      //   },
-                      // )
-                    ],
-                  ),
+                        return const SizedBox();
+                      },
+                    )
+                  ],
                 )
               ],
             ),

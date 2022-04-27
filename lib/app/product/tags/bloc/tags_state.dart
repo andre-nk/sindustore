@@ -26,11 +26,15 @@ class TagsStateLoaded extends TagsState {
 }
 
 class TagsStateSelected extends TagsState {
-  final int? activeTagIndex;
+  final int activeTagIndex;
 
   const TagsStateSelected({
     Exception? exception,
-    this.activeTagIndex,
-     required List<String> productTags,
+    required this.activeTagIndex,
+    required List<String> productTags,
   }) : super(exception: exception, productTags: productTags);
+
+
+  @override
+  List<Object> get props => [activeTagIndex];
 }

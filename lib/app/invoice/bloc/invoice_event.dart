@@ -11,7 +11,10 @@ class InvoiceEventActivate extends InvoiceEvent {
   final String adminHandlerUID;
   final String initialProductID;
 
-  const InvoiceEventActivate({required this.adminHandlerUID, required this.initialProductID});
+  const InvoiceEventActivate({
+    required this.adminHandlerUID,
+    required this.initialProductID,
+  });
 }
 
 class InvoiceEventRead extends InvoiceEvent {
@@ -39,7 +42,8 @@ class InvoiceEventEditDiscount extends InvoiceEvent {
   final String productID;
   final ProductDiscount productDiscount;
 
-  const InvoiceEventEditDiscount({required this.invoice, required this.productID, required this.productDiscount});
+  const InvoiceEventEditDiscount(
+      {required this.invoice, required this.productID, required this.productDiscount});
 }
 
 class InvoiceEventMarkStatus extends InvoiceEvent {
@@ -50,5 +54,3 @@ class InvoiceEventMarkStatus extends InvoiceEvent {
 }
 
 class InvoiceEventDeactivate extends InvoiceEvent {}
-
-

@@ -10,7 +10,7 @@ abstract class TagsEvent extends Equatable {
 class TagsEventFetch extends TagsEvent {}
 
 class TagsEventSelect extends TagsEvent {
-  final int? activeTagIndex;
+  final int activeTagIndex;
   final List<String> tags;
 
   const TagsEventSelect({required this.tags, required this.activeTagIndex});

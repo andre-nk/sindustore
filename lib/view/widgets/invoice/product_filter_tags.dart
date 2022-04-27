@@ -44,9 +44,7 @@ class ProductFilterTags extends StatelessWidget {
                         ).copyWith(right: 12.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: state is TagsStateSelected &&
-                                      state.activeTagIndex != null &&
-                                      state.activeTagIndex == index
+                              primary: state is TagsStateSelected && state.activeTagIndex == index
                                   ? AppTheme.colors.tertiary
                                   : Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -74,7 +72,7 @@ class ProductFilterTags extends StatelessWidget {
                             } else {
                               context.read<TagsBloc>().add(
                                     TagsEventSelect(
-                                        tags: state.productTags, activeTagIndex: null),
+                                        tags: state.productTags, activeTagIndex: -1),
                                   );
                             }
 
