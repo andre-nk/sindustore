@@ -21,7 +21,8 @@ class ProductCard extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0)
+                .copyWith(bottom: 12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,8 +52,9 @@ class ProductCard extends StatelessWidget {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                          color: AppTheme.colors.surface,
-                          borderRadius: BorderRadius.circular(12.0)),
+                        color: AppTheme.colors.surface,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                     ),
                   ],
                 ),
@@ -63,10 +65,10 @@ class ProductCard extends StatelessWidget {
                     // ProductCardDiscount(product: product, isMini: true,)
                     BlocBuilder<InvoiceBloc, InvoiceState>(
                       builder: (context, state) {
-                        if (state is InvoiceStateActivated) {
+                        if (state is InvoiceStateActivated &&
+                            state.invoice.products.isNotEmpty) {
                           for (var stateProduct in state.invoice.products) {
                             if (stateProduct.productID == product.id) {
-                              //? THIS PRODUCT EXISTS IN THE INVOICE
                               return ProductCardQuantity(
                                 activatedProduct: stateProduct,
                               );
@@ -76,12 +78,15 @@ class ProductCard extends StatelessWidget {
                               );
                             }
                           }
+                        } else if (state is InvoiceStateActivated &&
+                            state.invoice.products.isEmpty) {
+                          return ProductCardQuantity(
+                            deactivatedProduct: product,
+                          );
                         } else if (state is InvoiceStateInitial) {
                           return ProductCardQuantity(
                             deactivatedProduct: product,
                           );
-                        } else {
-                          return const SizedBox();
                         }
 
                         return const SizedBox();

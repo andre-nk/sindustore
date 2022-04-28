@@ -52,36 +52,52 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         Invoice invoice = event.invoice;
 
         //MODIFY PRODUCT LIST
-        for (var i = 0; i < invoice.products.length; i++) {
-          if (invoice.products[i].productID == event.productID) {
-            //"IFF EXISTS, REPLACE WITH THE SAME DATA, EXCEPT QTY + 1");
-            invoice.products[i] = InvoiceItem(
-              quantity: invoice.products[i].quantity + 1,
-              productID: invoice.products[i].productID,
-              discount: invoice.products[i].discount,
-            );
+        if (event.invoice.products.isNotEmpty) {
+          for (var i = 0; i < invoice.products.length; i++) {
+            if (invoice.products[i].productID == event.productID) {
+              //"IF EXISTS, REPLACE WITH THE SAME DATA, EXCEPT QTY + 1");
+              invoice.products[i] = InvoiceItem(
+                quantity: invoice.products[i].quantity + 1,
+                productID: invoice.products[i].productID,
+                discount: invoice.products[i].discount,
+              );
 
-            emit(InvoiceStateActivated(
-              invoice: invoice,
-              key: const Uuid().v4(),
-            ));
-            break;
-          } else if (invoice.products[i].productID != event.productID) {
-            //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
-            invoice.products.add(
-              InvoiceItem(
-                quantity: 1,
-                productID: event.productID,
-                discount: 0.0,
-              ),
-            );
+              emit(InvoiceStateActivated(
+                invoice: invoice,
+                key: const Uuid().v4(),
+              ));
+              break;
+            } else if (invoice.products[i].productID != event.productID) {
+              //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
+              invoice.products.add(
+                InvoiceItem(
+                  quantity: 1,
+                  productID: event.productID,
+                  discount: 0.0,
+                ),
+              );
 
-            emit(InvoiceStateActivated(
-              invoice: invoice,
-              key: const Uuid().v4(),
-            ));
-            break;
+              emit(InvoiceStateActivated(
+                invoice: invoice,
+                key: const Uuid().v4(),
+              ));
+              break;
+            }
           }
+        } else {
+          //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
+          invoice.products.add(
+            InvoiceItem(
+              quantity: 1,
+              productID: event.productID,
+              discount: 0.0,
+            ),
+          );
+
+          emit(InvoiceStateActivated(
+            invoice: invoice,
+            key: const Uuid().v4(),
+          ));
         }
 
         emit(InvoiceStateActivated(
@@ -105,7 +121,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         //MODIFY PRODUCT LIST
         for (var i = 0; i < invoice.products.length; i++) {
           if (invoice.products[i].productID == event.productID) {
-            if (invoice.products[i].quantity > 0) {
+            if (invoice.products[i].quantity > 1) {
               //IF EXISTS AND QTY IS MORE THAN 0, REPLACE WITH THE SAME DATA, EXCEPT QTY - 1
               invoice.products[i] = InvoiceItem(
                 quantity: invoice.products[i].quantity - 1,
@@ -118,13 +134,8 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
                 key: const Uuid().v4(),
               ));
               break;
-
-            //TODO: FIGURE OUT WHAT'S WRONG HERE, AND REMOVE THE INSTANCE (NOT THE SHADOW INSTANCE!)
-            } else {
-              //IF EXISTS AND QTY IS 0, REMOVE INSTANCE
-              print("remove instance");
+            } else if (invoice.products[i].quantity <= 1) {
               invoice.products.remove(invoice.products[i]);
-
               emit(InvoiceStateActivated(
                 invoice: invoice,
                 key: const Uuid().v4(),

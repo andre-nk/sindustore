@@ -13,12 +13,14 @@ class ProductCardQuantity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 16.0),
       child: BlocBuilder<InvoiceBloc, InvoiceState>(
         builder: (context, state) {
-          if (state is InvoiceStateActivated && activatedProduct != null && activatedProduct!.quantity != 0) {
+          if (state is InvoiceStateActivated &&
+              activatedProduct != null &&
+              activatedProduct!.quantity != 0) {
             return Padding(
-              padding: const EdgeInsets.only(top: 4.0),
+              padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,9 +81,7 @@ class ProductCardQuantity extends StatelessWidget {
                 ],
               ),
             );
-          } else if (state is InvoiceStateActivated &&
-              (deactivatedProduct != null ||
-                  activatedProduct != null && activatedProduct!.quantity == 0)) {
+          } else if (state is InvoiceStateActivated && deactivatedProduct != null) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +93,7 @@ class ProductCardQuantity extends StatelessWidget {
                       context.read<InvoiceBloc>().add(
                             InvoiceEventAddItem(
                               invoice: state.invoice,
-                              productID: deactivatedProduct != null ? deactivatedProduct!.id : activatedProduct!.productID,
+                              productID: deactivatedProduct!.id,
                             ),
                           );
                     },
@@ -124,12 +124,12 @@ class ProductCardQuantity extends StatelessWidget {
                   width: 100,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.read<InvoiceBloc>().add(
-                            InvoiceEventActivate(
-                              adminHandlerUID: "", //TODO: CALL ADMIN HANDLER UID,
-                              initialProductID: deactivatedProduct!.id,
-                            ),
-                          );
+                      // context.read<InvoiceBloc>().add(
+                      //       InvoiceEventActivate(
+                      //         adminHandlerUID: (context.read<AuthBloc>().state as AuthStateLoggedIn).user.uid,
+                      //         initialProductID: deactivatedProduct!.id,
+                      //       ),
+                      //     );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: AppTheme.colors.primary,

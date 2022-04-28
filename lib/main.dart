@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
-
 import 'package:sindu_store/app/bloc_observer.dart';
+
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/view/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
@@ -17,10 +17,11 @@ Future<void> main() async {
   final storage = await HydratedStorage.build(
     storageDirectory: await getTemporaryDirectory(),
   );
+  
   HydratedBlocOverrides.runZoned(
     () => runApp(const App()),
     storage: storage,
-    blocObserver: AuthBlocObserver(),
+    blocObserver: AppBlocObserver(),
   );
 }
 
@@ -53,10 +54,10 @@ class AppView extends StatelessWidget {
         if (state is AuthStateLoggedIn) {
           return const HomeWrapperPage();
         }
-        // else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
-        //     state is AuthStatePINChanged) {
-        //   return const PINInputPage();
-        // }
+        else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
+            state is AuthStatePINChanged) {
+          return const PINInputPage();
+        }
         else if (state is AuthStateLoggedOut) {
           return const OnboardingPage();
         } else if (state is AuthStateInitial) {

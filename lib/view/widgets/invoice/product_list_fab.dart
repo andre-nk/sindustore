@@ -12,9 +12,6 @@ class ProductFAB extends StatelessWidget {
           width: MQuery.width(0.9, context),
           child: FloatingActionButton.extended(
             onPressed: () {
-              if(state is InvoiceStateActivated){
-                print(state.invoice.products);
-              }
               // RouteWrapper.push(context, child: const InvoiceCheckoutPage());
             },
             backgroundColor: AppTheme.colors.primary,

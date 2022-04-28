@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
-class AuthBlocObserver extends BlocObserver {
-  // @override
-  // void onEvent(Bloc bloc, Object? event) {
-  //   super.onEvent(bloc, event);
-  //   // Logger().d(event);
-  // }
+class AppBlocObserver extends BlocObserver {
+  @override
+  void onEvent(Bloc bloc, Object? event) {
+    super.onEvent(bloc, event);
+    Logger().d(event);
+  }
 
   // @override
   // void onError(BlocBase bloc, Object error, StackTrace stackTrace) {

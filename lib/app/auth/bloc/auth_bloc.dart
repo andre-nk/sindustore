@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -14,7 +13,7 @@ import 'package:sindu_store/repository/auth/auth_repository.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthRepository authRepository)
       : super(const AuthStateInitial(isLoading: true)) {
     //#1: INITIALIZATION
@@ -221,31 +220,5 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         ));
       }
     });
-  }
-
-  @override
-  AuthState? fromJson(Map<String, dynamic> json) {
-    if (json["type"] == "logInState") {
-      return AuthStateLoggedIn(
-        user: jsonDecode(json["authUser"]),
-        isPINCorrect: json["isPINCorrect"],
-        isLoading: false,
-      );
-    } else {
-      return const AuthStateInitial(isLoading: false);
-    }
-  }
-
-  @override
-  Map<String, dynamic>? toJson(AuthState state) {
-    if (state is AuthStateLoggedIn) {
-      return {
-        "type": "logInState",
-        "authUser": state.user.toString(),
-        "isPINCorrect": state.isPINCorrect,
-      };
-    } else {
-      return {"type": "other"};
-    }
   }
 }

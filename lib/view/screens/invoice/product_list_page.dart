@@ -8,6 +8,7 @@ class ProductListPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<InvoiceBloc>(create: (context) => InvoiceBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc(AuthRepository())),
         BlocProvider<ProductBloc>(
           create: (context) => ProductBloc(ProductRepository())
             ..add(
