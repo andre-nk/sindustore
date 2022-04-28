@@ -29,7 +29,9 @@ environment:
 dependencies:
   cloud_firestore: ^3.1.10
   cupertino_icons: ^1.0.2
+  deep_collection: ^1.0.2
   delayed_display: ^2.0.0
+  diffutil_dart: ^3.0.0
   dropdown_button2: ^1.4.0
   equatable: ^2.0.3
   firebase_auth: ^3.3.10
@@ -44,6 +46,7 @@ dependencies:
   intl: ^0.17.0
   ionicons: ^0.1.2
   json_annotation: ^4.4.0
+  list_ext: ^1.0.4
   local_auth: ^1.1.11
   logger: ^1.1.0
   modal_bottom_sheet: ^2.0.1

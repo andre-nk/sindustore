@@ -17,7 +17,7 @@ Future<void> main() async {
   final storage = await HydratedStorage.build(
     storageDirectory: await getTemporaryDirectory(),
   );
-  
+
   HydratedBlocOverrides.runZoned(
     () => runApp(const App()),
     storage: storage,
@@ -53,12 +53,9 @@ class AppView extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
           return const HomeWrapperPage();
-        }
-        else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
-            state is AuthStatePINChanged) {
+        } else if (state is AuthStateLoggedIn && !state.isPINCorrect || state is AuthStatePINChanged) {
           return const PINInputPage();
-        }
-        else if (state is AuthStateLoggedOut) {
+        } else if (state is AuthStateLoggedOut) {
           return const OnboardingPage();
         } else if (state is AuthStateInitial) {
           return const SplashPage();

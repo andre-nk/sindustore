@@ -18,10 +18,8 @@ class ProductCardDiscount extends StatelessWidget {
           : "Pilihan diskon"),
       icon: const Icon(Ionicons.chevron_down),
       iconSize: 16,
-      
-      buttonHeight: 40,
-      buttonWidth: 140,
-      itemHeight: 40,
+      dropdownWidth: double.infinity,
+      buttonWidth: double.infinity,
     );
   }
 }

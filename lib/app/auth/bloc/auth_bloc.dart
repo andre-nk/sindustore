@@ -31,6 +31,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    on<AuthEventGetUser>((event, emit) async {
+      final AuthUser user = await authRepository.currentUser();
+      if (user.isEmpty) {
+        emit(
+          const AuthStateLoggedOut(
+            isLoading: false,
+          ),
+        );
+      } else {
+        emit(AuthStateLoggedIn(user: user, isLoading: false, isPINCorrect: false));
+      }
+    });
+
     on<AuthEventEmailFormChanged>((event, emit) {
       final filledEmail = Email.dirty(event.email);
 
@@ -214,10 +227,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           isLoading: false,
         ));
       } on Exception catch (e) {
-        emit(AuthStateLoggedOut(
-          isLoading: false,
-          exception: e
-        ));
+        emit(AuthStateLoggedOut(isLoading: false, exception: e));
       }
     });
   }

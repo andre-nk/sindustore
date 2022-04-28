@@ -7,13 +7,12 @@ class ProductListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<InvoiceBloc>(create: (context) => InvoiceBloc()),
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc(AuthRepository())),
+        BlocProvider<InvoiceBloc>(
+          create: (context) => InvoiceBloc()..add(const InvoiceEventActivate()),
+        ),
         BlocProvider<ProductBloc>(
-          create: (context) => ProductBloc(ProductRepository())
-            ..add(
-              ProductEventFetchQuery(),
-            ),
+          create: (context) =>
+              ProductBloc(ProductRepository())..add(const ProductEventFetchQuery()),
         ),
       ],
       child: Scaffold(
@@ -54,7 +53,7 @@ class ProductListPage extends StatelessWidget {
                   child: BlocConsumer<ProductBloc, ProductState>(
                     listener: (context, state) {
                       if (state is ProductStateCreated) {
-                        context.read<ProductBloc>().add(ProductEventFetchQuery());
+                        context.read<ProductBloc>().add(const ProductEventFetchQuery());
                       } else if (state.exception != null) {
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()

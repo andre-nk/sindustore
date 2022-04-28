@@ -14,22 +14,13 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
     on<InvoiceEventActivate>((event, emit) async {
       try {
         final Invoice invoice = Invoice(
-          adminHandlerUID: event.adminHandlerUID,
+          adminHandlerUID: "",
           customerName: "",
-          products: [
-            InvoiceItem(
-              quantity: 1,
-              productID: event.initialProductID,
-              discount: 0,
-            )
-          ],
+          products: const [],
           status: InvoiceStatus.pending,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
-
-        //? INVOICE COULD BE GENERATED FROM HERE AND WILL BE UPDATED A LONG THE WAY
-        //? OR WE MAINTAIN THE INVOICE STATE AS A LOCAL DB BEFORE THE ADMIN REACHED CHECKOUT PAGE
 
         emit(InvoiceStateActivated(invoice: invoice, key: const Uuid().v4()));
       } on Exception catch (e) {
@@ -69,41 +60,50 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
               break;
             } else if (invoice.products[i].productID != event.productID) {
               //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
-              invoice.products.add(
-                InvoiceItem(
-                  quantity: 1,
-                  productID: event.productID,
-                  discount: 0.0,
-                ),
+              final Invoice newInvoiceModel = Invoice(
+                adminHandlerUID: invoice.adminHandlerUID,
+                customerName: invoice.adminHandlerUID,
+                products: [
+                  ...invoice.products,
+                  InvoiceItem(
+                    quantity: 1,
+                    productID: event.productID,
+                    discount: 0.0,
+                  ),
+                ],
+                status: invoice.status,
+                createdAt: invoice.createdAt,
+                updatedAt: DateTime.now(),
               );
 
               emit(InvoiceStateActivated(
-                invoice: invoice,
+                invoice: newInvoiceModel,
                 key: const Uuid().v4(),
               ));
               break;
             }
           }
         } else {
-          //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
-          invoice.products.add(
-            InvoiceItem(
-              quantity: 1,
-              productID: event.productID,
-              discount: 0.0,
-            ),
+          final Invoice newInvoiceModel = Invoice(
+            adminHandlerUID: invoice.adminHandlerUID,
+            customerName: invoice.adminHandlerUID,
+            products: [
+              InvoiceItem(
+                quantity: 1,
+                productID: event.productID,
+                discount: 0.0,
+              ),
+            ],
+            status: invoice.status,
+            createdAt: invoice.createdAt,
+            updatedAt: DateTime.now(),
           );
 
           emit(InvoiceStateActivated(
-            invoice: invoice,
+            invoice: newInvoiceModel,
             key: const Uuid().v4(),
           ));
         }
-
-        emit(InvoiceStateActivated(
-          invoice: invoice,
-          key: const Uuid().v4(),
-        ));
       } on Exception catch (e) {
         throw InvoiceStateActivated(
           invoice: event.invoice,
@@ -142,8 +142,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
               ));
               break;
             }
-          } else if (invoice.products[i].productID != event.productID) {
-            break;
           }
         }
       } on Exception catch (e) {
@@ -210,9 +208,9 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
     on<InvoiceEventDeactivate>(((event, emit) {
       try {
-        emit(const InvoiceStateDeactivated());
+        emit(const InvoiceStateInitial());
       } on Exception catch (e) {
-        throw InvoiceStateDeactivated(exception: e);
+        throw InvoiceStateInitial(exception: e);
       }
     }));
   }

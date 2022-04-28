@@ -21,8 +21,10 @@ class ProductCard extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0)
-                .copyWith(bottom: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 20.0,
+            ).copyWith(bottom: 12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,35 +64,8 @@ class ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // ProductCardDiscount(product: product, isMini: true,)
-                    BlocBuilder<InvoiceBloc, InvoiceState>(
-                      builder: (context, state) {
-                        if (state is InvoiceStateActivated &&
-                            state.invoice.products.isNotEmpty) {
-                          for (var stateProduct in state.invoice.products) {
-                            if (stateProduct.productID == product.id) {
-                              return ProductCardQuantity(
-                                activatedProduct: stateProduct,
-                              );
-                            } else {
-                              return ProductCardQuantity(
-                                deactivatedProduct: product,
-                              );
-                            }
-                          }
-                        } else if (state is InvoiceStateActivated &&
-                            state.invoice.products.isEmpty) {
-                          return ProductCardQuantity(
-                            deactivatedProduct: product,
-                          );
-                        } else if (state is InvoiceStateInitial) {
-                          return ProductCardQuantity(
-                            deactivatedProduct: product,
-                          );
-                        }
-
-                        return const SizedBox();
-                      },
+                    ProductCardQuantity(
+                      product: product,
                     )
                   ],
                 )

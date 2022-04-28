@@ -11,6 +11,10 @@ class AuthEventInitialize extends AuthEvent {
   const AuthEventInitialize();
 }
 
+class AuthEventGetUser extends AuthEvent {
+  const AuthEventGetUser();
+}
+
 class AuthEventEmailFormChanged extends AuthEvent {
   final String email;
   const AuthEventEmailFormChanged({required this.email});
