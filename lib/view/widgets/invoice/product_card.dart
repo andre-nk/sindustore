@@ -1,8 +1,10 @@
 part of "../widgets.dart";
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required this.isCheckout})
+      : super(key: key);
   final Product product;
+  final bool isCheckout;
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +14,13 @@ class ProductCard extends StatelessWidget {
           onTap: () {
             showMaterialModalBottomSheet(
               context: context,
-              builder: (context) {
+              builder: (_) {
                 return SizedBox(
-                  height: MQuery.height(0.4, context),
-                  child: ProductBottomSheet(product: product),
+                  height: MQuery.height(0.35, context),
+                  child: ProductBottomSheet(
+                    product: product,
+                    ancestorContext: context,
+                  ),
                 );
               },
             );
@@ -50,25 +55,39 @@ class ProductCard extends StatelessWidget {
                         )
                       ],
                     ),
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: AppTheme.colors.surface,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: AppTheme.colors.surface,
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        !isCheckout
+                            ? ProductCardQuantity(
+                                product: product,
+                              )
+                            : const SizedBox()
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ProductCardQuantity(
-                      product: product,
-                    )
-                  ],
-                )
+                isCheckout
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ProductCardDiscount(product: product, isMini: true),
+                          ProductCardQuantity(
+                            product: product,
+                          )
+                        ],
+                      )
+                    : const SizedBox()
               ],
             ),
           ),

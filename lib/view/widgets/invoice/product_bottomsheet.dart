@@ -1,17 +1,16 @@
 part of "../widgets.dart";
 
 class ProductBottomSheet extends StatelessWidget {
-  const ProductBottomSheet({Key? key, required this.product}) : super(key: key);
+  const ProductBottomSheet({Key? key, required this.product, required this.ancestorContext})
+      : super(key: key);
 
   final Product product;
+  final BuildContext ancestorContext;
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => InvoiceBloc()),
-        BlocProvider(create: (context) => AuthBloc(AuthRepository())),
-      ],
+    return BlocProvider.value(
+      value: BlocProvider.of<InvoiceBloc>(ancestorContext),
       child: BlocBuilder<InvoiceBloc, InvoiceState>(
         builder: (context, state) {
           return Padding(
@@ -76,7 +75,7 @@ class ProductBottomSheet extends StatelessWidget {
                     isMini: false,
                   ),
                 ),
-                
+                ProductCardQuantityLarge(product: product),
               ],
             ),
           );

@@ -19,7 +19,6 @@ import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
-import 'package:sindu_store/repository/auth/auth_repository.dart';
 import 'package:sindu_store/repository/product/tags_repository.dart';
 part "general/app_bar.dart";
 part "general/wide_button.dart";

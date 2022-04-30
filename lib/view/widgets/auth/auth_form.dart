@@ -68,14 +68,15 @@ class AuthForm extends StatelessWidget {
               ),
               FormTitle(),
               DelayedDisplay(
-                  delay: Duration(milliseconds: 250),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 4.0,
-                      bottom: 12.0,
-                    ),
-                    child: PasswordAuthInput(),
-                  )),
+                delay: Duration(milliseconds: 250),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 4.0,
+                    bottom: 12.0,
+                  ),
+                  child: PasswordAuthInput(),
+                ),
+              ),
               SubmitButton(),
             ],
           );

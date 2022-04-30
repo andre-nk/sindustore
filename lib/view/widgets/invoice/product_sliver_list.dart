@@ -48,6 +48,7 @@ class ProductSliverList extends StatelessWidget {
                   : EdgeInsets.zero,
               child: snapshot.docs[index].data() != null
                   ? ProductCard(
+                      isCheckout: false,
                       product: snapshot.docs[index].data() as Product,
                     )
                   : const SizedBox(),

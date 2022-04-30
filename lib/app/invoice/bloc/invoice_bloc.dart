@@ -46,7 +46,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         if (event.invoice.products.isNotEmpty) {
           for (var i = 0; i < invoice.products.length; i++) {
             if (invoice.products[i].productID == event.productID) {
-              //"IF EXISTS, REPLACE WITH THE SAME DATA, EXCEPT QTY + 1");
+              //IF EXISTS AND QTY IS MORE THAN 0, REPLACE WITH THE SAME DATA, EXCEPT QTY - 1
               invoice.products[i] = InvoiceItem(
                 quantity: invoice.products[i].quantity + 1,
                 productID: invoice.products[i].productID,
@@ -57,30 +57,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
                 invoice: invoice,
                 key: const Uuid().v4(),
               ));
-              break;
-            } else if (invoice.products[i].productID != event.productID) {
-              //("IF DOESN'T EXIST, ADD A NEW ONE THEN BREAK THE LOOP");
-              final Invoice newInvoiceModel = Invoice(
-                adminHandlerUID: invoice.adminHandlerUID,
-                customerName: invoice.adminHandlerUID,
-                products: [
-                  ...invoice.products,
-                  InvoiceItem(
-                    quantity: 1,
-                    productID: event.productID,
-                    discount: 0.0,
-                  ),
-                ],
-                status: invoice.status,
-                createdAt: invoice.createdAt,
-                updatedAt: DateTime.now(),
-              );
-
-              emit(InvoiceStateActivated(
-                invoice: newInvoiceModel,
-                key: const Uuid().v4(),
-              ));
-              break;
             }
           }
         } else {
