@@ -44,20 +44,36 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
         //MODIFY PRODUCT LIST
         if (event.invoice.products.isNotEmpty) {
-          for (var i = 0; i < invoice.products.length; i++) {
-            if (invoice.products[i].productID == event.productID) {
-              //IF EXISTS AND QTY IS MORE THAN 0, REPLACE WITH THE SAME DATA, EXCEPT QTY - 1
-              invoice.products[i] = InvoiceItem(
-                quantity: invoice.products[i].quantity + 1,
-                productID: invoice.products[i].productID,
-                discount: invoice.products[i].discount,
-              );
+          int targetIndex = invoice.products
+              .indexWhere((element) => element.productID == event.productID);
 
-              emit(InvoiceStateActivated(
-                invoice: invoice,
-                key: const Uuid().v4(),
-              ));
-            }
+          //EXIST
+          if (targetIndex >= 0) {
+            invoice.products[targetIndex] = InvoiceItem(
+              quantity: invoice.products[targetIndex].quantity + 1,
+              productID: invoice.products[targetIndex].productID,
+              discount: invoice.products[targetIndex].discount,
+            );
+
+            emit(InvoiceStateActivated(
+              invoice: invoice,
+              key: const Uuid().v4(),
+            ));
+
+            //DOESN'T EXIST
+          } else {
+            invoice.products.add(
+              InvoiceItem(
+                quantity: 1,
+                productID: event.productID,
+                discount: 0.0,
+              ),
+            );
+
+            emit(InvoiceStateActivated(
+              invoice: invoice,
+              key: const Uuid().v4(),
+            ));
           }
         } else {
           final Invoice newInvoiceModel = Invoice(

@@ -26,8 +26,12 @@ class ProductRepository {
           productSellPrice: 320000,
           productSoldCount: 1004,
           productStock: 23,
-          productDiscounts: const [
-            ProductDiscount(amount: -20000, discountName: "Diskon Gereja")
+          productDiscounts: [
+            ProductDiscount(
+              id: const Uuid().v4(),
+              amount: -20000,
+              discountName: "Diskon Gereja",
+            )
           ],
           tags: const ["kompor"],
           createdAt: DateTime.now(),
@@ -43,8 +47,9 @@ class ProductRepository {
 
   Future<Product> getProductByID(String productID) async {
     try {
-      final productSnapshot = await _firebaseFirestore.collection('products').doc(productID).get();
-      if(productSnapshot.exists){
+      final productSnapshot =
+          await _firebaseFirestore.collection('products').doc(productID).get();
+      if (productSnapshot.exists) {
         final Product productInstance = Product.fromJson(productSnapshot.data()!);
         return productInstance;
       } else {
@@ -72,9 +77,7 @@ class ProductRepository {
     try {
       late final Query<Product> productRef;
       if (searchQuery == "") {
-        productRef = _firebaseFirestore
-            .collection('products')
-            .withConverter<Product>(
+        productRef = _firebaseFirestore.collection('products').withConverter<Product>(
               fromFirestore: ((snapshot, options) => Product.fromJson(snapshot.data()!)),
               toFirestore: (product, _) => product.toJson(),
             );

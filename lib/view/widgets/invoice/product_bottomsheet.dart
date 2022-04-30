@@ -1,7 +1,8 @@
 part of "../widgets.dart";
 
 class ProductBottomSheet extends StatelessWidget {
-  const ProductBottomSheet({Key? key, required this.product, required this.ancestorContext})
+  const ProductBottomSheet(
+      {Key? key, required this.product, required this.ancestorContext})
       : super(key: key);
 
   final Product product;
@@ -75,7 +76,10 @@ class ProductBottomSheet extends StatelessWidget {
                     isMini: false,
                   ),
                 ),
-                ProductCardQuantityLarge(product: product),
+                SizedBox(
+                  width: double.infinity,
+                  child: ProductCardQuantityLarge(product: product),
+                ),
               ],
             ),
           );

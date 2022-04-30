@@ -153,7 +153,7 @@ class ProductCardQuantityLarge extends StatelessWidget {
           //INVOICE CONTAINS X PRODUCT
           if (containedProducts.isNotEmpty) {
             return Container(
-              width: MQuery.width(0.4, context),
+              width: double.infinity,
               padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

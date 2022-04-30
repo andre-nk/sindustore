@@ -8,6 +8,7 @@ part of 'product_discount.dart';
 
 ProductDiscount _$ProductDiscountFromJson(Map<String, dynamic> json) =>
     ProductDiscount(
+      id: const Uuid().v4(),
       amount: (json['amount'] as num).toDouble(),
       discountName: json['discountName'] as String,
     );
