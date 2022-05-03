@@ -14,9 +14,9 @@ class DiscountEventFetch extends DiscountEvent {
 }
 
 class DiscountEventSelect extends DiscountEvent {
-  final String discountID;
+  final ProductDiscount productDiscount;
 
-  const DiscountEventSelect({required this.discountID});
+  const DiscountEventSelect({required this.productDiscount});
 }
 
 class DiscountEventDelete extends DiscountEvent {

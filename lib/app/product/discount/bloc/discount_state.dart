@@ -23,8 +23,8 @@ class DiscountStateLoaded extends DiscountState {
 }
 
 class DiscountStateActive extends DiscountState {
-  final String discountID;
+  final ProductDiscount productDiscount;
 
-  const DiscountStateActive({required this.discountID, Exception? exception})
+  const DiscountStateActive({required this.productDiscount, Exception? exception})
       : super(exception: exception);
 }

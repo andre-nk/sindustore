@@ -40,6 +40,7 @@ class AppTypography {
 class DefaultAppTheme {
   ThemeData appTheme() {
     return ThemeData(
+      useMaterial3: true,
       colorScheme: const ColorScheme(
         primary: Color(0xFF1A2C50),
         onPrimary: Color(0xFF1A2C50),

@@ -20,7 +20,7 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
     });
 
     on<DiscountEventSelect>((event, emit) {
-      emit(DiscountStateActive(discountID: event.discountID));
+      emit(DiscountStateActive(productDiscount: event.productDiscount));
     });
   }
 }

@@ -16,7 +16,7 @@ class ProductCard extends StatelessWidget {
               context: context,
               builder: (_) {
                 return SizedBox(
-                  height: MQuery.height(0.35, context),
+                  height: MQuery.height(0.425, context),
                   child: ProductBottomSheet(
                     product: product,
                     ancestorContext: context,

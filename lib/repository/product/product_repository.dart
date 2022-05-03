@@ -29,9 +29,9 @@ class ProductRepository {
           productDiscounts: [
             ProductDiscount(
               id: const Uuid().v4(),
-              amount: -20000,
-              discountName: "Diskon Gereja",
-            )
+              amount: -0,
+              discountName: "Tanpa diskon",
+            ),
           ],
           tags: const ["kompor"],
           createdAt: DateTime.now(),
@@ -40,7 +40,7 @@ class ProductRepository {
 
         await productRef.add(sampleProduct);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception(e);
     }
   }
