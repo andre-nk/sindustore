@@ -9,9 +9,14 @@ class DiscountRepository {
 
   Future<List<ProductDiscount>> fetchProductDiscounts(String productID) async {
     try {
-      final productInstance = await _firebaseFirestore.collection('products').doc(productID).get();
-      if (productInstance.data() != null) {
-        List<Map<String, dynamic>> productRawDiscounts = productInstance.data()!["productDiscounts"];
+      final productInstance = await _firebaseFirestore.collection('products').where('id', isEqualTo: productID).get();
+
+      print(productInstance);
+
+      if (productInstance.docs.first.exists) {
+        print("exists");
+
+        List<Map<String, dynamic>> productRawDiscounts = productInstance.docs.first.data()["productDiscounts"];
         List<ProductDiscount> productDiscounts = productRawDiscounts.map<ProductDiscount>((discount){
           return ProductDiscount.fromJson(discount);
         }).toList();

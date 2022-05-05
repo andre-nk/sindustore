@@ -78,7 +78,6 @@ class ProductListPage extends StatelessWidget {
                           query: state.query,
                           builder: (context, snapshot, _) {
                             return CustomScrollView(
-                              physics: BouncingScrollPhysics(),
                               slivers: [
                                 const ProductSliverAppBar(),
                                 ProductSliverList(snapshot: snapshot)
