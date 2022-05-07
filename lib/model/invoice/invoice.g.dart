@@ -20,7 +20,7 @@ Invoice _$InvoiceFromJson(Map<String, dynamic> json) => Invoice(
 Map<String, dynamic> _$InvoiceToJson(Invoice instance) => <String, dynamic>{
       'adminHandlerUID': instance.adminHandlerUID,
       'customerName': instance.customerName,
-      'products': instance.products,
+      'products': instance.products.map((e) => e.toJson()).toList(),
       'status': _$InvoiceStatusEnumMap[instance.status],
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),

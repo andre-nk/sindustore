@@ -12,10 +12,16 @@ class ProductSliverAppBar extends StatelessWidget {
             "Pilih produk",
             style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
           ),
-          leading: IconButton(
-            icon: const Icon(Ionicons.chevron_back),
-            onPressed: () {
-              Navigator.pop(context);
+          leading: BlocBuilder<InvoiceBloc, InvoiceState>(
+            builder: (context, state) {
+              return IconButton(
+                icon: const Icon(Ionicons.chevron_back),
+                onPressed: () {
+                  if(state is InvoiceStateActivated){
+                    print(state.invoice.toJson());
+                  }
+                },
+              );
             },
           ),
           actions: [
