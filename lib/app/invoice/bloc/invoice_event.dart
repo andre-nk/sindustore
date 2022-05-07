@@ -34,7 +34,7 @@ class InvoiceEventRemoveItem extends InvoiceEvent {
 class InvoiceEventEditDiscount extends InvoiceEvent {
   final Invoice invoice;
   final String productID;
-  final ProductDiscount productDiscount;
+  final double productDiscount;
 
   const InvoiceEventEditDiscount(
       {required this.invoice, required this.productID, required this.productDiscount});

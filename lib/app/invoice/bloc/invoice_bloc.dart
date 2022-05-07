@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
 import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/invoice/invoice_status.dart';
-import 'package:sindu_store/model/product/product_discount.dart';
 import 'package:uuid/uuid.dart';
 
 part 'invoice_event.dart';
@@ -150,25 +149,61 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         //COPY
         Invoice invoice = event.invoice;
 
-        //MODIFY PRODUCT LIST (SPECIFICALLY ON DISCOUNT FIELD)
-        for (var i = 0; i < invoice.products.length; i++) {
-          InvoiceItem product = invoice.products[i];
+        //MODIFY PRODUCT LIST
+        if (event.invoice.products.isNotEmpty) {
+          int targetIndex = invoice.products
+              .indexWhere((element) => element.productID == event.productID);
 
-          if (product.productID == event.productID) {
-            product = InvoiceItem(
-              quantity: product.quantity,
-              productID: product.productID,
-              discount: event.productDiscount.amount,
+          //EXIST
+          if (targetIndex >= 0) {
+            invoice.products[targetIndex] = InvoiceItem(
+              quantity: invoice.products[targetIndex].quantity,
+              productID: invoice.products[targetIndex].productID,
+              discount: event.productDiscount,
             );
-          } else if (product.productID != event.productID) {
-            //IF DOESN'T EXIST, BREAK THE LOOP AND DO NOTHING (EMIT THE SAME STATE)
-            break;
-          }
-        }
 
-        emit(InvoiceStateActivated(invoice: invoice, key: const Uuid().v4()));
+            emit(InvoiceStateActivated(
+              invoice: invoice,
+              key: const Uuid().v4(),
+            ));
+
+            //DOESN'T EXIST
+          } else {
+            invoice.products.add(
+              InvoiceItem(
+                quantity: 1,
+                productID: event.productID,
+                discount: event.productDiscount,
+              ),
+            );
+
+            emit(InvoiceStateActivated(
+              invoice: invoice,
+              key: const Uuid().v4(),
+            ));
+          }
+        } else {
+          final Invoice newInvoiceModel = Invoice(
+            adminHandlerUID: invoice.adminHandlerUID,
+            customerName: invoice.adminHandlerUID,
+            products: [
+              InvoiceItem(
+                quantity: 1,
+                productID: event.productID,
+                discount: event.productDiscount,
+              ),
+            ],
+            status: invoice.status,
+            createdAt: invoice.createdAt,
+            updatedAt: DateTime.now(),
+          );
+
+          emit(InvoiceStateActivated(
+            invoice: newInvoiceModel,
+            key: const Uuid().v4(),
+          ));
+        }
       } on Exception catch (e) {
-        //? THE ERROR WILL MAINTAIN PREVIOUS INVOICE STATE AS WELL THE EXCEPTION
         throw InvoiceStateActivated(
           invoice: event.invoice,
           exception: e,
