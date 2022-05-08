@@ -48,3 +48,9 @@ class InvoiceEventMarkStatus extends InvoiceEvent {
 }
 
 class InvoiceEventDeactivate extends InvoiceEvent {}
+
+class InvoiceEventCreate extends InvoiceEvent {
+  final Invoice invoice;
+
+  const InvoiceEventCreate({required this.invoice});
+}

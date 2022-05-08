@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/model/product/product_discount.dart';
 
 class DiscountRepository {
@@ -7,17 +8,30 @@ class DiscountRepository {
   DiscountRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
-  Future<List<ProductDiscount>> fetchProductDiscounts(String productID) async {
+  Future<void> createDiscount(String productID, ProductDiscount discount) async {
     try {
-      final productInstance = await _firebaseFirestore.collection('products').where('id', isEqualTo: productID).get();
+      final productInstance = await _firebaseFirestore
+          .collection('products')
+          .where('id', isEqualTo: productID)
+          .get();
 
       if (productInstance.docs.first.exists) {
-        List<Map<String, dynamic>> productRawDiscounts = productInstance.docs.first.data()["productDiscounts"];
-        List<ProductDiscount> productDiscounts = productRawDiscounts.map<ProductDiscount>((discount){
-          return ProductDiscount.fromJson(discount);
-        }).toList();
+        Product prevProduct = Product.fromJson(productInstance.docs.first.data());
+        String docReference = productInstance.docs.first.id;
 
-        return productDiscounts;
+        await _firebaseFirestore.collection('products').doc(docReference).update(Product(
+              id: prevProduct.id,
+              productName: prevProduct.productName,
+              productCoverURL: prevProduct.productCoverURL,
+              productBuyPrice: prevProduct.productBuyPrice,
+              productSellPrice: prevProduct.productSellPrice,
+              productSoldCount: prevProduct.productSoldCount,
+              productStock: prevProduct.productSoldCount,
+              productDiscounts: [...prevProduct.productDiscounts, discount],
+              tags: prevProduct.tags,
+              createdAt: prevProduct.createdAt,
+              updatedAt: DateTime.now(),
+            ).toJson());
       } else {
         throw Exception("Product by this ID is not found!");
       }

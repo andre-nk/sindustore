@@ -17,8 +17,22 @@ class ProductSliverAppBar extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
-                  if(state is InvoiceStateActivated){
-                    print(state.invoice.toJson());
+                  if (state is InvoiceStateActivated) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          shape:  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12.0),
+                            ),
+                          ),
+                          title: Text("Simpan nota ini?")
+                        );
+                      },
+                    );
+                  } else if (state is InvoiceStateInitial) {
+                    Navigator.pop(context);
                   }
                 },
               );

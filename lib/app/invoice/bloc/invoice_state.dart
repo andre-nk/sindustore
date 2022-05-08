@@ -25,3 +25,9 @@ class InvoiceStateActivated extends InvoiceState {
     Exception? exception,
   }) : super(exception: exception);
 }
+
+class InvoiceStateCreated extends InvoiceState {}
+
+class InvoiceStateFailed extends InvoiceState {
+  const InvoiceStateFailed({required Exception exception}) : super(exception: exception);
+}

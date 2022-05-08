@@ -3,13 +3,14 @@ import 'package:equatable/equatable.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
 import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/invoice/invoice_status.dart';
+import 'package:sindu_store/repository/invoice/invoice_repository.dart';
 import 'package:uuid/uuid.dart';
 
 part 'invoice_event.dart';
 part 'invoice_state.dart';
 
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
-  InvoiceBloc() : super(const InvoiceStateInitial()) {
+  InvoiceBloc(InvoiceRepository invoiceRepository) : super(const InvoiceStateInitial()) {
     on<InvoiceEventActivate>((event, emit) async {
       try {
         final Invoice invoice = Invoice(
@@ -240,5 +241,14 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         throw InvoiceStateInitial(exception: e);
       }
     }));
+
+    on<InvoiceEventCreate>((event, emit) async {
+      try {
+        await invoiceRepository.createInvoice(invoice: event.invoice);
+        emit(InvoiceStateCreated());
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
   }
 }

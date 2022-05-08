@@ -66,10 +66,15 @@ class ProductCardDiscount extends StatelessWidget {
                           value: state is InvoiceStateActivated &&
                                   state.invoice.products.isNotEmpty
                               ? state.invoice.products
-                                      .where((element) => element.productID == product.id)
-                                      .isNotEmpty && state.invoice.products
-                                      .where((element) => element.productID == product.id)
-                                      .first.discount != 0
+                                          .where((element) =>
+                                              element.productID == product.id)
+                                          .isNotEmpty &&
+                                      state.invoice.products
+                                              .where((element) =>
+                                                  element.productID == product.id)
+                                              .first
+                                              .discount !=
+                                          0
                                   ? state.invoice.products
                                       .where((element) => element.productID == product.id)
                                       .first
@@ -98,7 +103,14 @@ class ProductCardDiscount extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ProductDiscountModal(productID: product.id);
+                          },
+                        );
+                      },
                       splashRadius: 16,
                       icon: const Center(
                         child: Icon(Ionicons.add_circle_outline),
