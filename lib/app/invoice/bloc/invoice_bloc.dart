@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
 import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/invoice/invoice_status.dart';
@@ -10,11 +11,14 @@ part 'invoice_event.dart';
 part 'invoice_state.dart';
 
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   InvoiceBloc(InvoiceRepository invoiceRepository) : super(const InvoiceStateInitial()) {
     on<InvoiceEventActivate>((event, emit) async {
       try {
         final Invoice invoice = Invoice(
-          adminHandlerUID: "",
+          adminHandlerUID: _firebaseAuth.currentUser!.uid,
           customerName: "",
           products: const [],
           status: InvoiceStatus.pending,

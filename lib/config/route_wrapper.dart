@@ -13,4 +13,17 @@ class RouteWrapper {
       ),
     );
   }
+
+  static Future removeAllAndPush(BuildContext context, {required Widget child}) {
+    return Navigator.pushAndRemoveUntil(
+      context,
+      PageTransition(
+        curve: Curves.bounceOut,
+        opaque: true,
+        type: PageTransitionType.rightToLeftWithFade,
+        child: child,
+      ),
+      (route) => false,
+    );
+  }
 }

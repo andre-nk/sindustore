@@ -12,26 +12,24 @@ class ProductSliverAppBar extends StatelessWidget {
             "Pilih produk",
             style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
           ),
-          leading: BlocBuilder<InvoiceBloc, InvoiceState>(
+          leading: BlocConsumer<InvoiceBloc, InvoiceState>(
+            listener: (context, state) {
+              if(state is InvoiceStateCreated){
+                RouteWrapper.removeAllAndPush(context, child: const HomeWrapperPage());
+              }
+            },
             builder: (context, state) {
               return IconButton(
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
-                  if (state is InvoiceStateActivated) {
+                  if (state is InvoiceStateActivated && state.invoice.products.isNotEmpty) {
                     showDialog(
                       context: context,
-                      builder: (context) {
-                        return const AlertDialog(
-                          shape:  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                          ),
-                          title: Text("Simpan nota ini?")
-                        );
+                      builder: (_) {
+                        return InvoiceBackModal(invoice: state.invoice, ancestorContext: context,);
                       },
                     );
-                  } else if (state is InvoiceStateInitial) {
+                  } else {
                     Navigator.pop(context);
                   }
                 },
