@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
@@ -11,7 +12,6 @@ part 'invoice_event.dart';
 part 'invoice_state.dart';
 
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
-
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   InvoiceBloc(InvoiceRepository invoiceRepository) : super(const InvoiceStateInitial()) {
@@ -250,6 +250,16 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
       try {
         await invoiceRepository.createInvoice(invoice: event.invoice);
         emit(InvoiceStateCreated());
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
+
+    on<InvoiceEventFetchQuery>((event, emit) async {
+      try {
+        emit(InvoiceStateQueryFetching());
+        final Query<Invoice> query = await invoiceRepository.fetchInvoiceQuery();
+        emit(InvoiceStateQueryLoaded(query: query));
       } on Exception catch (e) {
         emit(InvoiceStateFailed(exception: e));
       }

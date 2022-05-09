@@ -12,12 +12,25 @@ class InvoiceRepository {
     try {
       await _firebaseFirestore
           .collection('invoices')
-          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .doc()
           .set(
             invoice.toJson(),
           );
     } on Exception catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  Future<Query<Invoice>> fetchInvoiceQuery() async {
+    try {
+      final productRef = _firebaseFirestore.collection('invoices').withConverter<Invoice>(
+            fromFirestore: ((snapshot, options) => Invoice.fromJson(snapshot.data()!)),
+            toFirestore: (invoice, _) => invoice.toJson(),
+          );
+
+      return productRef;
+    } on Exception catch (e) {
+      throw Exception(e);
     }
   }
 }

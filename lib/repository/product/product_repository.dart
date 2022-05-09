@@ -46,11 +46,13 @@ class ProductRepository {
   }
 
   Future<Product> getProductByID(String productID) async {
+    print("test2");
+
     try {
-      final productSnapshot =
-          await _firebaseFirestore.collection('products').doc(productID).get();
-      if (productSnapshot.exists) {
-        final Product productInstance = Product.fromJson(productSnapshot.data()!);
+      final productSnapshot = await _firebaseFirestore.collection('products').where('id', isEqualTo: productID).get();
+
+      if (productSnapshot.docs.first.exists) {
+        final Product productInstance = Product.fromJson(productSnapshot.docs.first.data());
         return productInstance;
       } else {
         throw Exception("No product found");

@@ -26,3 +26,9 @@ class ProductEventFilter extends ProductEvent {
 
   const ProductEventFilter({required this.filterTag});
 }
+
+class ProductEventFetchByID extends ProductEvent {
+  final String productID;
+
+  const ProductEventFetchByID({required this.productID});
+}

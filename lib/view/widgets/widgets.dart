@@ -23,6 +23,7 @@ import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/repository/auth/auth_exceptions.dart';
 import 'package:sindu_store/repository/product/discount_repository.dart';
+import 'package:sindu_store/repository/product/product_repository.dart';
 import 'package:sindu_store/repository/product/tags_repository.dart';
 import 'package:sindu_store/view/screens/screens.dart';
 part "general/app_bar.dart";
@@ -37,6 +38,9 @@ part "auth/auth_form_button.dart";
 
 part "home/custom_fab.dart";
 part "home/custom_bottom_navbar.dart";
+part "home/main_box.dart";
+part "home/dashboard_invoice_list.dart";
+part "home/dashboard_invoice_card.dart";
 
 part 'invoice/product_list_appbar.dart';
 part 'invoice/product_list_fab.dart';

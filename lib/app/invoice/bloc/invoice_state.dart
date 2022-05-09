@@ -28,6 +28,14 @@ class InvoiceStateActivated extends InvoiceState {
 
 class InvoiceStateCreated extends InvoiceState {}
 
+class InvoiceStateQueryLoaded extends InvoiceState {
+  final Query query;
+  const InvoiceStateQueryLoaded({Exception? exception, required this.query})
+      : super(exception: exception);
+}
+
+class InvoiceStateQueryFetching extends InvoiceState {}
+
 class InvoiceStateFailed extends InvoiceState {
   const InvoiceStateFailed({required Exception exception}) : super(exception: exception);
 }

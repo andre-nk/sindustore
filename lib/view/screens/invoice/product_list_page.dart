@@ -8,7 +8,8 @@ class ProductListPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<InvoiceBloc>(
-          create: (context) => InvoiceBloc(InvoiceRepository())..add(const InvoiceEventActivate()),
+          create: (context) =>
+              InvoiceBloc(InvoiceRepository())..add(const InvoiceEventActivate()),
         ),
         BlocProvider<ProductBloc>(
           create: (context) =>
@@ -70,22 +71,7 @@ class ProductListPage extends StatelessWidget {
                       }
                     },
                     builder: (context, state) {
-                      if (state is ProductStateFetching) {
-                        return const LoadingIndicator();
-                      } else if (state is ProductStateQueryLoaded) {
-                        return FirestoreQueryBuilder(
-                          pageSize: 10,
-                          query: state.query,
-                          builder: (context, snapshot, _) {
-                            return CustomScrollView(
-                              slivers: [
-                                const ProductSliverAppBar(),
-                                ProductSliverList(snapshot: snapshot)
-                              ],
-                            );
-                          },
-                        );
-                      } else if (state is ProductStateQueryLoaded) {
+                      if (state is ProductStateQueryLoaded) {
                         return FirestoreQueryBuilder(
                           pageSize: 10,
                           query: state.query,

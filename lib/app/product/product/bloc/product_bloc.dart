@@ -32,7 +32,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventSearchActive>(((event, emit) async {
       try {
         emit(const ProductStateFetching());
-        final Query<Product> query = await productRepository.searchProductQuery(event.searchQuery);
+        final Query<Product> query =
+            await productRepository.searchProductQuery(event.searchQuery);
         emit(ProductStateQueryLoaded(query: query));
       } on Exception catch (e) {
         throw ProductStateFetching(exception: e);
@@ -42,10 +43,27 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventFilter>((event, emit) async {
       try {
         emit(const ProductStateFetching());
-        final Query<Product> query = await productRepository.filterProductQuery(event.filterTag);
-         emit(ProductStateQueryLoaded(query: query));
+        final Query<Product> query =
+            await productRepository.filterProductQuery(event.filterTag);
+        emit(ProductStateQueryLoaded(query: query));
       } on Exception catch (e) {
         throw ProductStateFetching(exception: e);
+      }
+    });
+
+    on<ProductEventFetchByID>((event, emit) async {
+      print("test");
+
+      try {
+        emit(const ProductStateFetching());
+        final Product productInstance =
+            await productRepository.getProductByID(event.productID);
+
+        print(productInstance.productName);
+
+        emit(ProductStateByIDLoaded(product: productInstance));
+      } on Exception catch (e) {
+        emit(ProductStateFetching(exception: e));
       }
     });
   }

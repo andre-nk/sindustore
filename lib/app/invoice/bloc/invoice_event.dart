@@ -54,3 +54,5 @@ class InvoiceEventCreate extends InvoiceEvent {
 
   const InvoiceEventCreate({required this.invoice});
 }
+
+class InvoiceEventFetchQuery extends InvoiceEvent {}
