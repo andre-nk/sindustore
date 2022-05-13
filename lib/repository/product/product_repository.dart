@@ -46,8 +46,6 @@ class ProductRepository {
   }
 
   Future<Product> getProductByID(String productID) async {
-    print("test2");
-
     try {
       final productSnapshot = await _firebaseFirestore.collection('products').where('id', isEqualTo: productID).get();
 

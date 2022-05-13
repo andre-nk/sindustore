@@ -41,7 +41,7 @@ class ProductCardDiscount extends StatelessWidget {
                         ),
                       ),
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton2<double>(
+                        child: DropdownButton<double>(
                           hint: Text(
                             'Select Item',
                             style: TextStyle(
@@ -92,9 +92,6 @@ class ProductCardDiscount extends StatelessWidget {
                                   );
                             }
                           },
-                          buttonHeight: 40,
-                          buttonWidth: 140,
-                          itemHeight: 40,
                         ),
                       ),
                     ),

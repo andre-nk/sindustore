@@ -52,14 +52,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     });
 
     on<ProductEventFetchByID>((event, emit) async {
-      print("test");
-
       try {
         emit(const ProductStateFetching());
         final Product productInstance =
             await productRepository.getProductByID(event.productID);
-
-        print(productInstance.productName);
 
         emit(ProductStateByIDLoaded(product: productInstance));
       } on Exception catch (e) {

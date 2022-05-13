@@ -118,7 +118,6 @@ class ProductDiscountModal extends StatelessWidget {
                             title: "Tambah",
                             onPressed: () {
                               if (state.discountName.isNotEmpty) {
-                                print(state.discountName + " " + state.amount.toString());
                                 context.read<DiscountBloc>().add(
                                       DiscountEventCreate(
                                         productID: productID,
@@ -127,7 +126,7 @@ class ProductDiscountModal extends StatelessWidget {
                                       ),
                                     );
                               } else {
-                                print("can't");
+
                               }
                             },
                           ),

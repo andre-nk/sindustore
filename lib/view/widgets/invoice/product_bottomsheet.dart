@@ -59,76 +59,79 @@ class ProductBottomSheet extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 2.0),
                                 child: BlocBuilder<InvoiceBloc, InvoiceState>(
-                          builder: (context, invoiceState) {
-                            if (invoiceState is InvoiceStateActivated &&
-                                invoiceState.invoice.products.isNotEmpty) {
-                              List<InvoiceItem> filteredItems = invoiceState
-                                  .invoice.products
-                                  .where((element) => element.productID == product.id)
-                                  .toList();
+                                  builder: (context, invoiceState) {
+                                    if (invoiceState is InvoiceStateActivated &&
+                                        invoiceState.invoice.products.isNotEmpty) {
+                                      List<InvoiceItem> filteredItems = invoiceState
+                                          .invoice.products
+                                          .where((element) =>
+                                              element.productID == product.id)
+                                          .toList();
 
-                              if (filteredItems.isNotEmpty && filteredItems.first.discount != 0) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        right: 8.0,
-                                      ),
-                                      child: Text(
+                                      if (filteredItems.isNotEmpty &&
+                                          filteredItems.first.discount != 0) {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 8.0,
+                                              ),
+                                              child: Text(
+                                                NumberFormat.simpleCurrency(
+                                                  locale: 'id_ID',
+                                                  decimalDigits: 0,
+                                                ).format(
+                                                  product.productSellPrice.toInt(),
+                                                ),
+                                                style: AppTheme.text.footnote.copyWith(
+                                                  fontSize: 12,
+                                                  color: AppTheme.colors.outline,
+                                                  decoration: TextDecoration.lineThrough,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              NumberFormat.simpleCurrency(
+                                                locale: 'id_ID',
+                                                decimalDigits: 0,
+                                              ).format(
+                                                product.productSellPrice.toInt() +
+                                                    invoiceState.invoice.products
+                                                        .where((element) =>
+                                                            element.productID ==
+                                                            product.id)
+                                                        .first
+                                                        .discount,
+                                              ),
+                                              style: AppTheme.text.subtitle,
+                                            )
+                                          ],
+                                        );
+                                      } else {
+                                        return Text(
+                                          NumberFormat.simpleCurrency(
+                                            locale: 'id_ID',
+                                            decimalDigits: 0,
+                                          ).format(
+                                            product.productSellPrice.toInt(),
+                                          ),
+                                          style: AppTheme.text.subtitle,
+                                        );
+                                      }
+                                    } else {
+                                      return Text(
                                         NumberFormat.simpleCurrency(
                                           locale: 'id_ID',
                                           decimalDigits: 0,
                                         ).format(
                                           product.productSellPrice.toInt(),
                                         ),
-                                        style: AppTheme.text.footnote.copyWith(
-                                          fontSize: 12,
-                                          color: AppTheme.colors.outline,
-                                          decoration: TextDecoration.lineThrough,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      NumberFormat.simpleCurrency(
-                                        locale: 'id_ID',
-                                        decimalDigits: 0,
-                                      ).format(
-                                        product.productSellPrice.toInt() +
-                                            invoiceState.invoice.products
-                                                .where((element) =>
-                                                    element.productID == product.id)
-                                                .first
-                                                .discount,
-                                      ),
-                                      style: AppTheme.text.subtitle,
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return Text(
-                                  NumberFormat.simpleCurrency(
-                                    locale: 'id_ID',
-                                    decimalDigits: 0,
-                                  ).format(
-                                    product.productSellPrice.toInt(),
-                                  ),
-                                  style: AppTheme.text.subtitle,
-                                );
-                              }
-                            } else {
-                              return Text(
-                                NumberFormat.simpleCurrency(
-                                  locale: 'id_ID',
-                                  decimalDigits: 0,
-                                ).format(
-                                  product.productSellPrice.toInt(),
+                                        style: AppTheme.text.subtitle,
+                                      );
+                                    }
+                                  },
                                 ),
-                                style: AppTheme.text.subtitle,
-                              );
-                            }
-                          },
-                        )
                               ),
                             ],
                           ),

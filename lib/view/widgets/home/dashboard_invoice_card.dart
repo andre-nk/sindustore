@@ -161,6 +161,31 @@ class DashboardInvoiceCard extends StatelessWidget {
                 },
               ),
             ),
+          ),
+          BlocProvider<InvoiceValueCubit>(
+            create: (context) => InvoiceValueCubit(
+              invoiceRepository: InvoiceRepository(),
+            )..sumInvoice(invoice),
+            child: BlocConsumer<InvoiceValueCubit, InvoiceValueState>(
+              listener: ((context, state) {
+                if (state is InvoiceValueStateFailed) {
+                  print(state.exception);
+                }
+              }),
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      NumberFormat.simpleCurrency(
+                        locale: 'id_ID',
+                        decimalDigits: 0,
+                      ).format(state.invoiceValue),
+                    ),
+                  ],
+                );
+              },
+            ),
           )
         ],
       ),
