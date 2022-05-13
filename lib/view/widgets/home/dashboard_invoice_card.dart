@@ -20,7 +20,7 @@ class DashboardInvoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0).copyWith(bottom: 12.0),
       decoration: BoxDecoration(
         color: AppTheme.colors.background,
         boxShadow: [
@@ -107,7 +107,7 @@ class DashboardInvoiceCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  state.product.productName,
+                                  "${state.product.productName} (${invoice.products[index].quantity}x)" ,
                                   style: AppTheme.text.footnote.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -166,23 +166,43 @@ class DashboardInvoiceCard extends StatelessWidget {
             create: (context) => InvoiceValueCubit(
               invoiceRepository: InvoiceRepository(),
             )..sumInvoice(invoice),
-            child: BlocConsumer<InvoiceValueCubit, InvoiceValueState>(
-              listener: ((context, state) {
-                if (state is InvoiceValueStateFailed) {
-                  print(state.exception);
-                }
-              }),
+            child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
               builder: (context, state) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      NumberFormat.simpleCurrency(
-                        locale: 'id_ID',
-                        decimalDigits: 0,
-                      ).format(state.invoiceValue),
-                    ),
-                  ],
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        NumberFormat.simpleCurrency(
+                          locale: 'id_ID',
+                          decimalDigits: 0,
+                        ).format(state.invoiceValue),
+                        style:
+                            AppTheme.text.paragraph.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            primary: AppTheme.colors.primary,
+                            shape: const StadiumBorder(),
+                            elevation: 0,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Bayar",
+                              style: AppTheme.text.footnote.copyWith(
+                                color: AppTheme.colors.secondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
             ),

@@ -9,14 +9,7 @@ class MainBox extends StatelessWidget {
       margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
         color: AppTheme.colors.background,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[900]!.withOpacity(0.075),
-            spreadRadius: 10,
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: AppTheme.colors.outline, width: 1.25),
         borderRadius: const BorderRadius.all(
           Radius.circular(12),
         ),
