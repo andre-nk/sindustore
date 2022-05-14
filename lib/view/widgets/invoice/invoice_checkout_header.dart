@@ -1,7 +1,9 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutHeader extends StatelessWidget {
-  const InvoiceCheckoutHeader({Key? key}) : super(key: key);
+  const InvoiceCheckoutHeader({Key? key, this.invoice}) : super(key: key);
+
+  final Invoice? invoice;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,11 @@ class InvoiceCheckoutHeader extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
-                    "24 April 2022, 12:55",
+                    invoice != null
+                    ? DateFormat.Hm().format(invoice!.createdAt) +
+                        ", " +
+                        DateFormat.yMd().format(invoice!.createdAt)
+                    : "Belum dirilis",
                     style: AppTheme.text.subtitle,
                   ),
                 ),

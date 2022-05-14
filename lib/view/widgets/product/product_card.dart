@@ -26,8 +26,8 @@ class ProductCard extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: isCheckout ? 0.0 : 24.0,
               vertical: 20.0,
             ).copyWith(bottom: 12.0),
             child: Column(
@@ -54,7 +54,8 @@ class ProductCard extends StatelessWidget {
                                   .where((element) => element.productID == product.id)
                                   .toList();
 
-                              if (filteredItems.isNotEmpty && filteredItems.first.discount != 0) {
+                              if (filteredItems.isNotEmpty &&
+                                  filteredItems.first.discount != 0) {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -130,31 +131,13 @@ class ProductCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
-                        !isCheckout
-                            ? ProductCardQuantity(
-                                product: product,
-                              )
-                            : const SizedBox()
+                        ProductCardQuantity(
+                          product: product,
+                        )
                       ],
                     ),
                   ],
                 ),
-                isCheckout
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ProductCardDiscount(
-                            product: product,
-                            isMini: true,
-                            ancestorContext: context,
-                          ),
-                          ProductCardQuantity(
-                            product: product,
-                          )
-                        ],
-                      )
-                    : const SizedBox()
               ],
             ),
           ),

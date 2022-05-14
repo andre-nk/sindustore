@@ -1,7 +1,8 @@
 part of "../widgets.dart";
 
 class InvoiceProductListAppBar extends StatelessWidget {
-  const InvoiceProductListAppBar({Key? key, this.existingInvoice, this.existingInvoiceUID})
+  const InvoiceProductListAppBar(
+      {Key? key, this.existingInvoice, this.existingInvoiceUID})
       : super(key: key);
 
   final Invoice? existingInvoice;
@@ -39,10 +40,6 @@ class InvoiceProductListAppBar extends StatelessWidget {
                         },
                       );
                     } else if (existingInvoice != null &&
-                        existingInvoice != state.invoice &&
-                        state.invoice.products.isEmpty) {
-                      print("Delete invoice?");
-                    } else if (existingInvoice != null &&
                         existingInvoice == state.invoice) {
                       Navigator.pop(context);
                     } else if (state.invoice.products.isNotEmpty) {
@@ -55,6 +52,8 @@ class InvoiceProductListAppBar extends StatelessWidget {
                           );
                         },
                       );
+                    } else {
+                      Navigator.pop(context);
                     }
                   } else {
                     Navigator.pop(context);

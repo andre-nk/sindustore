@@ -31,3 +31,9 @@ class ProductStateByIDLoaded extends ProductState {
 
   const ProductStateByIDLoaded({required this.product});
 }
+
+class ProductStateInvoiceLoaded extends ProductState {
+  final List<Product> invoiceProduct;
+
+  const ProductStateInvoiceLoaded({required this.invoiceProduct});
+}

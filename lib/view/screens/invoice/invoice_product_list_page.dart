@@ -97,7 +97,7 @@ class InvoiceProductListPage extends StatelessWidget {
                           },
                         );
                       } else {
-                        return const LoadingIndicator();
+                        return const CustomLoadingIndicator();
                       }
                     },
                   ),

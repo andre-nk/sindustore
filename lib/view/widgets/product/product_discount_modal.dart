@@ -138,7 +138,7 @@ class ProductDiscountModal extends StatelessWidget {
               } else if (state is DiscountStateFailed) {
                 return const SizedBox();
               } else {
-                return const LoadingIndicator();
+                return const CustomLoadingIndicator();
               }
             },
           ),

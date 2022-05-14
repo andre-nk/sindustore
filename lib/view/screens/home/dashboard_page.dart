@@ -27,7 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: BlocBuilder<InvoiceBloc, InvoiceState>(
           builder: (context, state) {
             if (state is InvoiceStateQueryFetching) {
-              return const LoadingIndicator();
+              return const CustomLoadingIndicator();
             } else if (state is InvoiceStateQueryLoaded) {
               return FirestoreQueryBuilder(
                 pageSize: 5,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/model/product/product_discount.dart';
 import 'package:uuid/uuid.dart';
@@ -47,10 +48,14 @@ class ProductRepository {
 
   Future<Product> getProductByID(String productID) async {
     try {
-      final productSnapshot = await _firebaseFirestore.collection('products').where('id', isEqualTo: productID).get();
+      final productSnapshot = await _firebaseFirestore
+          .collection('products')
+          .where('id', isEqualTo: productID)
+          .get();
 
       if (productSnapshot.docs.first.exists) {
-        final Product productInstance = Product.fromJson(productSnapshot.docs.first.data());
+        final Product productInstance =
+            Product.fromJson(productSnapshot.docs.first.data());
         return productInstance;
       } else {
         throw Exception("No product found");
@@ -68,6 +73,27 @@ class ProductRepository {
           );
 
       return productRef;
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<Product>> fetchInvoiceItemsQuery(List<InvoiceItem> invoiceItems) async {
+    try {
+      List<Product> invoiceProductInstances = [];
+
+      for (var item in invoiceItems) {
+        QuerySnapshot snapshot = await _firebaseFirestore
+            .collection('products')
+            .where('id', isEqualTo: item.productID)
+            .get();
+        Product productInstance =
+            Product.fromJson(snapshot.docs.first.data() as Map<String, dynamic>);
+
+        invoiceProductInstances.add(productInstance);
+      }
+
+      return invoiceProductInstances;
     } on Exception catch (e) {
       throw Exception(e);
     }

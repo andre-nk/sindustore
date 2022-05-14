@@ -32,3 +32,9 @@ class ProductEventFetchByID extends ProductEvent {
 
   const ProductEventFetchByID({required this.productID});
 }
+
+class ProductEventInvoiceFetch extends ProductEvent {
+  final List<InvoiceItem> invoiceItems;
+
+  const ProductEventInvoiceFetch({required this.invoiceItems});
+}

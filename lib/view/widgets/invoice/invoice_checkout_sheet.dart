@@ -1,7 +1,9 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutSheet extends StatelessWidget {
-  const InvoiceCheckoutSheet({Key? key}) : super(key: key);
+  const InvoiceCheckoutSheet({Key? key, required this.invoice}) : super(key: key);
+
+  final Invoice invoice;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 ),
                 child: Text(
-                  "Pending",
+                  invoice.status.name.capitalize(),
                   style: AppTheme.text.footnote
                       .copyWith(color: Colors.white, fontWeight: FontWeight.w400),
                 ),
@@ -43,9 +45,30 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                   "Total:",
                   style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                 ),
-                Text(
-                  "Rp0",
-                  style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
+                BlocBuilder<InvoiceBloc, InvoiceState>(
+                  builder: (context, state) {
+                    if (state is InvoiceStateActivated) {
+                      return BlocProvider(
+                        create: (context) => InvoiceValueCubit(
+                          invoiceRepository: InvoiceRepository(),
+                        )..sumInvoice(state.invoice),
+                        child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
+                          builder: (context, state) {
+                            return Text(
+                              NumberFormat.simpleCurrency(
+                                locale: 'id_ID',
+                                decimalDigits: 0,
+                              ).format(state.invoiceValue),
+                              style: AppTheme.text.subtitle
+                                  .copyWith(fontWeight: FontWeight.w500),
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
                 ),
               ],
             ),

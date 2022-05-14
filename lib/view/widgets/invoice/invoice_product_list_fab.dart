@@ -12,10 +12,18 @@ class InvoiceProductListFAB extends StatelessWidget {
           width: MQuery.width(0.9, context),
           child: FloatingActionButton.extended(
             onPressed: () {
-              // context.read<ProductBloc>().add(const ProductEventGenerateRandom());
-              // RouteWrapper.push(context, child: const InvoiceCheckoutPage());
+              if (state is InvoiceStateActivated && state.invoice.products.isNotEmpty) {
+                RouteWrapper.push(
+                  context,
+                  child: InvoiceCheckoutPage(
+                    ancestorContext: context,
+                  ),
+                );
+              }
             },
-            backgroundColor: AppTheme.colors.primary,
+            backgroundColor: state is InvoiceStateActivated && state.invoice.products.isNotEmpty
+                ? AppTheme.colors.primary
+                : AppTheme.colors.primary.withOpacity(0.8),
             label: SizedBox(
               width: MQuery.width(0.75, context),
               child: Row(

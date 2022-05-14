@@ -19,20 +19,21 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-          padding: EdgeInsets.zero,
-          iconSize: 24,
-          splashRadius: 24,
-          onPressed: primaryButtonOnPressed ??
-              () {
-                Navigator.of(context).pop();
-              },
-          icon: overridePrimaryButtonIcon ??
-              const Icon(
-                Ionicons.chevron_back,
-                size: 24,
-              )),
+        padding: EdgeInsets.zero,
+        iconSize: 24,
+        splashRadius: 24,
+        onPressed: primaryButtonOnPressed ??
+            () {
+              Navigator.of(context).pop();
+            },
+        icon: overridePrimaryButtonIcon ??
+            const Icon(
+              Ionicons.chevron_back,
+              size: 24,
+            ),
+      ),
       leadingWidth: MQuery.width(0.15, context),
-      titleSpacing: MQuery.width(0.02, context),
+      titleSpacing: MQuery.width(0, context),
       backgroundColor: AppTheme.colors.background,
       title: SizedBox(
         width: double.infinity,
