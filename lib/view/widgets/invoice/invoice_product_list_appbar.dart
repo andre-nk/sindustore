@@ -1,7 +1,11 @@
 part of "../widgets.dart";
 
-class ProductSliverAppBar extends StatelessWidget {
-  const ProductSliverAppBar({Key? key}) : super(key: key);
+class InvoiceProductListAppBar extends StatelessWidget {
+  const InvoiceProductListAppBar({Key? key, this.existingInvoice, this.existingInvoiceUID})
+      : super(key: key);
+
+  final Invoice? existingInvoice;
+  final String? existingInvoiceUID;
 
   @override
   Widget build(BuildContext context) {
@@ -9,12 +13,12 @@ class ProductSliverAppBar extends StatelessWidget {
       builder: (context, state) {
         return SliverAppBar(
           title: Text(
-            "Pilih produk",
+            existingInvoice != null ? "Perbarui nota" : "Pilih produk",
             style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
           ),
           leading: BlocConsumer<InvoiceBloc, InvoiceState>(
             listener: (context, state) {
-              if(state is InvoiceStateCreated){
+              if (state is InvoiceStateCreated) {
                 RouteWrapper.removeAllAndPush(context, child: const HomeWrapperPage());
               }
             },
@@ -22,13 +26,36 @@ class ProductSliverAppBar extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
-                  if (state is InvoiceStateActivated && state.invoice.products.isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return InvoiceBackModal(invoice: state.invoice, ancestorContext: context,);
-                      },
-                    );
+                  if (state is InvoiceStateActivated) {
+                    if (existingInvoice != null && existingInvoice != state.invoice) {
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return InvoiceBackModal(
+                            invoice: state.invoice,
+                            existingInvoiceUID: existingInvoiceUID,
+                            ancestorContext: context,
+                          );
+                        },
+                      );
+                    } else if (existingInvoice != null &&
+                        existingInvoice != state.invoice &&
+                        state.invoice.products.isEmpty) {
+                      print("Delete invoice?");
+                    } else if (existingInvoice != null &&
+                        existingInvoice == state.invoice) {
+                      Navigator.pop(context);
+                    } else if (state.invoice.products.isNotEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return InvoiceBackModal(
+                            invoice: state.invoice,
+                            ancestorContext: context,
+                          );
+                        },
+                      );
+                    }
                   } else {
                     Navigator.pop(context);
                   }
@@ -102,7 +129,7 @@ class ProductSliverAppBar extends StatelessWidget {
                             ),
                           ),
                         ),
-                        ProductFilterTags(state: state)
+                        InvoiceProductFilterTags(state: state)
                       ],
                     ),
                   ),

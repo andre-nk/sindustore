@@ -24,6 +24,30 @@ class InvoiceRepository {
     }
   }
 
+  Future<void> updateInvoice({required Invoice invoice, required String invoiceUID}) async {
+    try {
+      await _firebaseFirestore
+          .collection('invoices')
+          .doc(invoiceUID)
+          .update(
+            invoice.toJson(),
+          );
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> deleteInvoice({required String invoiceUID}) async {
+    try {
+      await _firebaseFirestore
+          .collection('invoices')
+          .doc(invoiceUID)
+          .delete();
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<Query<Invoice>> fetchInvoiceQuery() async {
     try {
       final productRef = _firebaseFirestore.collection('invoices').withConverter<Invoice>(
@@ -44,8 +68,6 @@ class InvoiceRepository {
       for (var invoiceItem in invoice.products) {
         final Product productByID = await _productRepository.getProductByID(invoiceItem.productID);
         invoiceValue += (productByID.productSellPrice - invoiceItem.discount) * invoiceItem.quantity;
-
-        print(invoiceValue);
       } 
 
       return invoiceValue;

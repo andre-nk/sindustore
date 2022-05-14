@@ -1,7 +1,7 @@
 part of "../widgets.dart";
 
-class ProductFAB extends StatelessWidget {
-  const ProductFAB({Key? key}) : super(key: key);
+class InvoiceProductListFAB extends StatelessWidget {
+  const InvoiceProductListFAB({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

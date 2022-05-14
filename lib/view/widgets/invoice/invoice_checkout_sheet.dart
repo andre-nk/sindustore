@@ -1,7 +1,7 @@
 part of "../widgets.dart";
 
-class CheckoutSheet extends StatelessWidget {
-  const CheckoutSheet({Key? key}) : super(key: key);
+class InvoiceCheckoutSheet extends StatelessWidget {
+  const InvoiceCheckoutSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

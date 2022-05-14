@@ -14,7 +14,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
               flex: 1,
               child: ListView(
                 children: [
-                  const CheckoutHeader(),
+                  const InvoiceCheckoutHeader(),
                   Container(
                     margin: EdgeInsets.only(
                       top: MQuery.height(0.025, context),
@@ -64,7 +64,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
               ),
             ),
             const Positioned(
-              child: CheckoutSheet(),
+              child: InvoiceCheckoutSheet(),
               bottom: 0,
             ),
           ],

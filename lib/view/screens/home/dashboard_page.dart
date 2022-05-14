@@ -23,7 +23,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       body: BlocProvider(
         create: (context) =>
-            InvoiceBloc(InvoiceRepository())..add(InvoiceEventFetchQuery()),
+            InvoiceBloc(InvoiceRepository())..add(InvoiceEventFetchQuery(),),
         child: BlocBuilder<InvoiceBloc, InvoiceState>(
           builder: (context, state) {
             if (state is InvoiceStateQueryFetching) {

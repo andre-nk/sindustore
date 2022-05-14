@@ -64,8 +64,9 @@ class DashboardInvoiceList extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: MQuery.width(0.05, context),
             ).copyWith(bottom: index == snapshot.docs.length + 1 ? 32.0 : 0.0),
-            child: DashboardInvoiceCard(
+            child: InvoiceCard(
               index: index - 1,
+              invoiceUID: snapshot.docs[index - 2].id,
               invoice: (snapshot.docs[index - 2].data() as Invoice),
             ),
           );

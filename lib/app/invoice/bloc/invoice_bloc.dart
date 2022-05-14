@@ -34,7 +34,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
     on<InvoiceEventRead>((event, emit) {
       try {
-        //? OR PASS THE INVOICE ID FOR THE REPOSITORY FETCH
         emit(InvoiceStateActivated(invoice: event.invoice, key: const Uuid().v4()));
       } on Exception catch (e) {
         throw InvoiceStateInitial(exception: e);
@@ -250,6 +249,24 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
       try {
         await invoiceRepository.createInvoice(invoice: event.invoice);
         emit(InvoiceStateCreated());
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
+
+    on<InvoiceEventUpdate>((event, emit) async {
+      try {
+        await invoiceRepository.updateInvoice(invoice: event.invoice, invoiceUID: event.invoiceUID);
+        emit(InvoiceStateCreated());
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
+
+    on<InvoiceEventDelete>((event, emit) async {
+      try {
+        await invoiceRepository.deleteInvoice(invoiceUID: event.invoiceUID);
+        emit(state);
       } on Exception catch (e) {
         emit(InvoiceStateFailed(exception: e));
       }

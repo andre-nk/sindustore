@@ -1,16 +1,25 @@
 part of "../screens.dart";
 
-class ProductListPage extends StatelessWidget {
-  const ProductListPage({Key? key}) : super(key: key);
+class InvoiceProductListPage extends StatelessWidget {
+  const InvoiceProductListPage({Key? key, this.existingInvoice, this.existingInvoiceUID})
+      : super(key: key);
+
+  final Invoice? existingInvoice;
+  final String? existingInvoiceUID;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<InvoiceBloc>(
-          create: (context) =>
-              InvoiceBloc(InvoiceRepository())..add(const InvoiceEventActivate()),
-        ),
+        existingInvoice != null
+            ? BlocProvider<InvoiceBloc>(
+                create: (context) => InvoiceBloc(InvoiceRepository())
+                  ..add(InvoiceEventRead(invoice: existingInvoice!)),
+              )
+            : BlocProvider<InvoiceBloc>(
+                create: (context) =>
+                    InvoiceBloc(InvoiceRepository())..add(const InvoiceEventActivate()),
+              ),
         BlocProvider<ProductBloc>(
           create: (context) =>
               ProductBloc(ProductRepository())..add(const ProductEventFetchQuery()),
@@ -18,7 +27,7 @@ class ProductListPage extends StatelessWidget {
       ],
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: const ProductFAB(),
+        floatingActionButton: const InvoiceProductListFAB(),
         body: SafeArea(
           child: BlocProvider<SliverCubit>(
             create: (context) => SliverCubit(),
@@ -78,8 +87,11 @@ class ProductListPage extends StatelessWidget {
                           builder: (context, snapshot, _) {
                             return CustomScrollView(
                               slivers: [
-                                const ProductSliverAppBar(),
-                                ProductSliverList(snapshot: snapshot)
+                                InvoiceProductListAppBar(
+                                  existingInvoice: existingInvoice,
+                                  existingInvoiceUID: existingInvoiceUID,
+                                ),
+                                InvoiceProductSliverList(snapshot: snapshot)
                               ],
                             );
                           },

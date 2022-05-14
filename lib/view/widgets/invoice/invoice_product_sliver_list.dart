@@ -1,7 +1,7 @@
 part of "../widgets.dart";
 
-class ProductSliverList extends StatelessWidget {
-  const ProductSliverList({Key? key, required this.snapshot}) : super(key: key);
+class InvoiceProductSliverList extends StatelessWidget {
+  const InvoiceProductSliverList({Key? key, required this.snapshot}) : super(key: key);
 
   final FirestoreQueryBuilderSnapshot snapshot;
 

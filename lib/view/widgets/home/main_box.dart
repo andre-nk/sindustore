@@ -67,7 +67,7 @@ class MainBox extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    RouteWrapper.push(context, child: const ProductListPage());
+                    RouteWrapper.push(context, child: const InvoiceProductListPage());
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

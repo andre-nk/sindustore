@@ -1,7 +1,7 @@
 part of "../widgets.dart";
 
-class ProductFilterTags extends StatelessWidget {
-  const ProductFilterTags({Key? key, required this.state}) : super(key: key);
+class InvoiceProductFilterTags extends StatelessWidget {
+  const InvoiceProductFilterTags({Key? key, required this.state}) : super(key: key);
 
   final SliverState state;
 

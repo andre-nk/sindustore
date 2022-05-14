@@ -55,4 +55,18 @@ class InvoiceEventCreate extends InvoiceEvent {
   const InvoiceEventCreate({required this.invoice});
 }
 
+class InvoiceEventUpdate extends InvoiceEvent {
+  final Invoice invoice;
+  final String invoiceUID;
+
+  const InvoiceEventUpdate({required this.invoice, required this.invoiceUID});
+}
+
+class InvoiceEventDelete extends InvoiceEvent {
+  final String invoiceUID;
+
+  const InvoiceEventDelete({required this.invoiceUID});
+}
+
+
 class InvoiceEventFetchQuery extends InvoiceEvent {}

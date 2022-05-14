@@ -1,9 +1,15 @@
 part of "../widgets.dart";
 
 class InvoiceBackModal extends StatelessWidget {
-  const InvoiceBackModal({Key? key, required this.invoice, required this.ancestorContext}) : super(key: key);
+  const InvoiceBackModal({
+    Key? key,
+    required this.invoice,
+    required this.ancestorContext,
+    this.existingInvoiceUID,
+  }) : super(key: key);
 
   final Invoice invoice;
+  final String? existingInvoiceUID;
   final BuildContext ancestorContext;
 
   @override
@@ -26,17 +32,26 @@ class InvoiceBackModal extends StatelessWidget {
           },
           child: Text(
             "Hapus",
-            style: AppTheme.text.subtitle.copyWith(
-              color: AppTheme.colors.error
-            ),
+            style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.error),
           ),
         ),
         TextButton(
           onPressed: () {
-            ancestorContext.read<InvoiceBloc>().add(InvoiceEventCreate(invoice: invoice));
+            if (existingInvoiceUID != null) {
+              ancestorContext.read<InvoiceBloc>().add(
+                    InvoiceEventUpdate(
+                      invoice: invoice,
+                      invoiceUID: existingInvoiceUID!,
+                    ),
+                  );
+            } else {
+              ancestorContext
+                  .read<InvoiceBloc>()
+                  .add(InvoiceEventCreate(invoice: invoice));
+            }
           },
           child: Text(
-            "Simpan",
+            existingInvoiceUID != null ? "Perbarui" : "Simpan",
             style: AppTheme.text.subtitle.copyWith(
               color: AppTheme.colors.tertiary,
             ),
