@@ -1,11 +1,16 @@
 part of "../screens.dart";
 
 class InvoiceProductListPage extends StatelessWidget {
-  const InvoiceProductListPage({Key? key, this.existingInvoice, this.existingInvoiceUID})
-      : super(key: key);
+  const InvoiceProductListPage({
+    Key? key,
+    this.existingInvoice,
+    this.existingInvoiceUID,
+    this.dashboardSearchQuery,
+  }) : super(key: key);
 
   final Invoice? existingInvoice;
   final String? existingInvoiceUID;
+  final Query? dashboardSearchQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,9 @@ class InvoiceProductListPage extends StatelessWidget {
       ],
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: const InvoiceProductListFAB(),
+        floatingActionButton: InvoiceProductListFAB(
+          existingInvoiceUID: existingInvoiceUID,
+        ),
         body: SafeArea(
           child: BlocProvider<SliverCubit>(
             create: (context) => SliverCubit(),
@@ -83,7 +90,7 @@ class InvoiceProductListPage extends StatelessWidget {
                       if (state is ProductStateQueryLoaded) {
                         return FirestoreQueryBuilder(
                           pageSize: 10,
-                          query: state.query,
+                          query: dashboardSearchQuery ?? state.query,
                           builder: (context, snapshot, _) {
                             return CustomScrollView(
                               slivers: [

@@ -1,15 +1,13 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutSheet extends StatelessWidget {
-  const InvoiceCheckoutSheet({Key? key, required this.invoice}) : super(key: key);
-
-  final Invoice invoice;
+  const InvoiceCheckoutSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MQuery.width(1, context),
-      height: MQuery.height(0.215, context),
+      height: MQuery.height(0.225, context),
       padding: EdgeInsets.all(MQuery.width(0.05, context)),
       child: Column(
         children: [
@@ -21,18 +19,70 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                 "Status nota",
                 style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                decoration: BoxDecoration(
-                  color: AppTheme.colors.tertiary,
-                  borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                ),
-                child: Text(
-                  invoice.status.name.capitalize(),
-                  style: AppTheme.text.footnote
-                      .copyWith(color: Colors.white, fontWeight: FontWeight.w400),
-                ),
-              )
+              BlocBuilder<InvoiceBloc, InvoiceState>(
+                builder: (context, state) {
+                  if (state is InvoiceStateActivated) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                      decoration: BoxDecoration(
+                        color: state.invoice.status == InvoiceStatus.cancelled ||
+                                state.invoice.status == InvoiceStatus.loan
+                            ? AppTheme.colors.error
+                            : state.invoice.status == InvoiceStatus.hold ||
+                                    state.invoice.status == InvoiceStatus.returned
+                                ? AppTheme.colors.outline
+                                : state.invoice.status == InvoiceStatus.paid
+                                    ? AppTheme.colors.success
+                                    : AppTheme.colors.tertiary,
+                        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<InvoiceStatus>(
+                          icon: const SizedBox(),
+                          style: AppTheme.text.footnote.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          isDense: true,
+                          alignment: Alignment.center,
+                          items: [
+                            InvoiceStatus.cancelled,
+                            InvoiceStatus.pending,
+                            InvoiceStatus.loan,
+                            InvoiceStatus.paid,
+                            InvoiceStatus.hold,
+                            InvoiceStatus.returned,
+                          ]
+                              .map(
+                                (item) => DropdownMenuItem<InvoiceStatus>(
+                                  value: item,
+                                  child: Text(
+                                    item.name.capitalize(),
+                                    style: AppTheme.text.footnote.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          value: state.invoice.status,
+                          onChanged: (value) {
+                            context.read<InvoiceBloc>().add(
+                                  InvoiceEventMarkStatus(
+                                    invoice: state.invoice,
+                                    status: value!,
+                                  ),
+                                );
+                          },
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
             ],
           ),
           Padding(

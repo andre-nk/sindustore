@@ -81,7 +81,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         } else {
           final Invoice newInvoiceModel = Invoice(
             adminHandlerUID: invoice.adminHandlerUID,
-            customerName: invoice.adminHandlerUID,
+            customerName: event.invoice.customerName,
             products: [
               InvoiceItem(
                 quantity: 1,
@@ -189,7 +189,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         } else {
           final Invoice newInvoiceModel = Invoice(
             adminHandlerUID: invoice.adminHandlerUID,
-            customerName: invoice.adminHandlerUID,
+            customerName: event.invoice.customerName,
             products: [
               InvoiceItem(
                 quantity: 1,
@@ -218,16 +218,16 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
     on<InvoiceEventMarkStatus>((event, emit) {
       try {
-        final Invoice invoice = Invoice(
-          adminHandlerUID: event.invoice.adminHandlerUID,
-          customerName: event.invoice.customerName,
-          products: event.invoice.products,
-          status: event.status,
-          createdAt: event.invoice.createdAt,
-          updatedAt: DateTime.now(),
-        );
+        final Invoice updatedInvoice = Invoice(
+            adminHandlerUID: event.invoice.adminHandlerUID,
+            customerName: event.invoice.customerName,
+            products: event.invoice.products,
+            status: event.status,
+            createdAt: event.invoice.createdAt,
+            updatedAt: event.invoice.updatedAt,
+          );
 
-        emit(InvoiceStateActivated(invoice: invoice, key: const Uuid().v4()));
+        emit(InvoiceStateActivated(invoice: updatedInvoice, key: const Uuid().v4()));
       } on Exception catch (e) {
         throw InvoiceStateActivated(
           invoice: event.invoice,
@@ -256,8 +256,28 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
     on<InvoiceEventUpdate>((event, emit) async {
       try {
-        await invoiceRepository.updateInvoice(invoice: event.invoice, invoiceUID: event.invoiceUID);
+        await invoiceRepository.updateInvoice(
+          invoice: event.invoice,
+          invoiceUID: event.invoiceUID,
+        );
         emit(InvoiceStateCreated());
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
+
+    on<InvoiceEventUpdateCustomerName>((event, emit) {
+      try {
+        final Invoice updatedInvoice = Invoice(
+            adminHandlerUID: event.invoice.adminHandlerUID,
+            customerName: event.newCustomerName,
+            products: event.invoice.products,
+            status: event.invoice.status,
+            createdAt: event.invoice.createdAt,
+            updatedAt: event.invoice.updatedAt,
+          );
+
+        emit(InvoiceStateActivated(invoice: updatedInvoice, key: const Uuid().v4()));
       } on Exception catch (e) {
         emit(InvoiceStateFailed(exception: e));
       }

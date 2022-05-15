@@ -24,20 +24,41 @@ class MainBox extends StatelessWidget {
               left: 3,
               right: 4,
             ),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: Icon(
-                    Ionicons.search,
-                    size: 20,
-                    color: AppTheme.colors.primary,
-                  ),
-                ),
-                border: InputBorder.none,
-                hintText: "Cari produk di toko...",
-                hintStyle:
-                    AppTheme.text.subtitle.copyWith(color: AppTheme.colors.outline),
+            child: BlocProvider(
+              create: (context) => ProductBloc(ProductRepository()),
+              child: BlocConsumer<ProductBloc, ProductState>(
+                listener: (context, state) {
+                  if (state is ProductStateQueryLoaded) {
+                    RouteWrapper.push(context,
+                        child: InvoiceProductListPage(
+                          dashboardSearchQuery: state.query,
+                        ));
+                  }
+                },
+                builder: (context, state) {
+                  return TextField(
+                    onSubmitted: (value) {
+                      context.read<ProductBloc>().add(
+                            ProductEventSearchActive(searchQuery: value),
+                          );
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: Icon(
+                          Ionicons.search,
+                          size: 20,
+                          color: AppTheme.colors.primary,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      hintText: "Cari produk di toko...",
+                      hintStyle: AppTheme.text.subtitle.copyWith(
+                        color: AppTheme.colors.outline,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

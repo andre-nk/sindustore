@@ -68,5 +68,13 @@ class InvoiceEventDelete extends InvoiceEvent {
   const InvoiceEventDelete({required this.invoiceUID});
 }
 
+class InvoiceEventUpdateCustomerName extends InvoiceEvent {
+  final Invoice invoice;
+  final String newCustomerName;
+
+  const InvoiceEventUpdateCustomerName({required this.invoice, required this.newCustomerName});
+
+}
+
 
 class InvoiceEventFetchQuery extends InvoiceEvent {}

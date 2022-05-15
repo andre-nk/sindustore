@@ -189,10 +189,8 @@ class InvoiceCheckoutPage extends StatelessWidget {
                           ],
                         ),
                   state is InvoiceStateActivated
-                      ? Positioned(
-                          child: InvoiceCheckoutSheet(
-                            invoice: state.invoice,
-                          ),
+                      ? const Positioned(
+                          child: InvoiceCheckoutSheet(),
                           bottom: 0,
                         )
                       : const SizedBox()

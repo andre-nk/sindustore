@@ -1,7 +1,9 @@
 part of "../widgets.dart";
 
 class InvoiceProductListFAB extends StatelessWidget {
-  const InvoiceProductListFAB({Key? key}) : super(key: key);
+  const InvoiceProductListFAB({Key? key, required this.existingInvoiceUID}) : super(key: key);
+
+  final String? existingInvoiceUID;
 
   @override
   Widget build(BuildContext context) {
