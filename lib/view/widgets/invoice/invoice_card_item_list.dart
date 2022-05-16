@@ -59,7 +59,7 @@ class InvoiceCardItemList extends StatelessWidget {
                                           locale: 'id_ID',
                                           decimalDigits: 0,
                                         ).format(
-                                          state.product.productSellPrice -
+                                          state.product.productSellPrice +
                                               invoice.products[index].discount,
                                         ),
                                       ),

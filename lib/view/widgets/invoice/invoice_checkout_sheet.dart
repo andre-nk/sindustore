@@ -125,9 +125,39 @@ class InvoiceCheckoutSheet extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 24.0),
-            child: WideButton(
-              title: "Konfirmasi dan cetak nota",
-              onPressed: () {},
+            child: BlocProvider(
+              create: (context) => PrinterBloc(
+                BlueThermalPrinter.instance,
+                ProductRepository(),
+                InvoiceRepository(),
+              )..add(PrinterEventScan()),
+              child: BlocConsumer<PrinterBloc, PrinterState>(
+                listener: (context, state) {
+                  if (state is PrinterStatePermissionError) {
+                    context.read<PrinterBloc>().add(PrinterEventRequestPermission());
+                  }
+                },
+                builder: (context, state) {
+                  return WideButton(
+                    title: "Konfirmasi dan cetak nota",
+                    onPressed: () {
+                      if (state is PrinterStateLoaded &&
+                          context.read<InvoiceBloc>().state is InvoiceStateActivated) {
+                        context.read<PrinterBloc>().add(
+                              PrinterEventPrint(
+                                invoice: (context.read<InvoiceBloc>().state
+                                        as InvoiceStateActivated)
+                                    .invoice,
+                                device: state.devices
+                                    .where((element) => element.name == "MPT-II")
+                                    .first,
+                              ),
+                            );
+                      }
+                    },
+                  );
+                },
+              ),
             ),
           )
         ],

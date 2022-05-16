@@ -1,3 +1,4 @@
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:deep_collection/deep_collection.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/invoice/bloc/invoice_bloc.dart';
 import 'package:sindu_store/app/invoice/cubit/invoice_cubit.dart';
 import 'package:sindu_store/app/navigation/cubit/navigation_cubit.dart';
+import 'package:sindu_store/app/printer/bloc/printer_bloc.dart';
 import 'package:sindu_store/app/product/discount/bloc/discount_bloc.dart';
 import 'package:sindu_store/app/product/product/bloc/product_bloc.dart';
 import 'package:sindu_store/app/product/tags/bloc/tags_bloc.dart';

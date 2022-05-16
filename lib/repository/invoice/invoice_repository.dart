@@ -67,7 +67,7 @@ class InvoiceRepository {
 
       for (var invoiceItem in invoice.products) {
         final Product productByID = await _productRepository.getProductByID(invoiceItem.productID);
-        invoiceValue += (productByID.productSellPrice - invoiceItem.discount) * invoiceItem.quantity;
+        invoiceValue += (productByID.productSellPrice + invoiceItem.discount) * invoiceItem.quantity;
       } 
 
       return invoiceValue;
