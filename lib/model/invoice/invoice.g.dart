@@ -28,9 +28,5 @@ Map<String, dynamic> _$InvoiceToJson(Invoice instance) => <String, dynamic>{
 
 const _$InvoiceStatusEnumMap = {
   InvoiceStatus.pending: 'pending',
-  InvoiceStatus.loan: 'loan',
   InvoiceStatus.paid: 'paid',
-  InvoiceStatus.cancelled: 'cancelled',
-  InvoiceStatus.hold: 'hold',
-  InvoiceStatus.returned: 'returned',
 };

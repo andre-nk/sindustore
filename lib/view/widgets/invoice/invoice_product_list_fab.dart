@@ -1,8 +1,9 @@
 part of "../widgets.dart";
 
 class InvoiceProductListFAB extends StatelessWidget {
-  const InvoiceProductListFAB({Key? key, required this.existingInvoiceUID}) : super(key: key);
+  const InvoiceProductListFAB({Key? key, this.existingInvoiceUID, this.existingInvoice}) : super(key: key);
 
+  final Invoice? existingInvoice;  
   final String? existingInvoiceUID;
 
   @override
@@ -19,6 +20,7 @@ class InvoiceProductListFAB extends StatelessWidget {
                   context,
                   child: InvoiceCheckoutPage(
                     ancestorContext: context,
+                    existingInvoiceUID: existingInvoiceUID,
                   ),
                 );
               }

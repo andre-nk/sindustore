@@ -73,8 +73,13 @@ class InvoiceEventUpdateCustomerName extends InvoiceEvent {
   final String newCustomerName;
 
   const InvoiceEventUpdateCustomerName({required this.invoice, required this.newCustomerName});
-
 }
 
 
-class InvoiceEventFetchQuery extends InvoiceEvent {}
+class InvoiceEventFetchActiveQuery extends InvoiceEvent {}
+
+class InvoiceEventFetchQueryByDate extends InvoiceEvent {
+  final DateTime dateTime;
+
+  const InvoiceEventFetchQueryByDate(this.dateTime);
+}

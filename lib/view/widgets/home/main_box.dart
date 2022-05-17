@@ -29,10 +29,12 @@ class MainBox extends StatelessWidget {
               child: BlocConsumer<ProductBloc, ProductState>(
                 listener: (context, state) {
                   if (state is ProductStateQueryLoaded) {
-                    RouteWrapper.push(context,
-                        child: InvoiceProductListPage(
-                          dashboardSearchQuery: state.query,
-                        ));
+                    RouteWrapper.push(
+                      context,
+                      child: InvoiceProductListPage(
+                        dashboardSearchQuery: state.query,
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
@@ -103,7 +105,9 @@ class MainBox extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    RouteWrapper.push(context, child: const InvoiceListPage());
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

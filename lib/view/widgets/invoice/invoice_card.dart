@@ -82,7 +82,9 @@ class InvoiceCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
                     decoration: BoxDecoration(
-                      color: AppTheme.colors.tertiary,
+                      color: invoice.status == InvoiceStatus.paid
+                          ? AppTheme.colors.success
+                          : AppTheme.colors.tertiary,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(4.0),
                       ),

@@ -33,6 +33,7 @@ class InvoiceProductListPage extends StatelessWidget {
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: InvoiceProductListFAB(
+          existingInvoice: existingInvoice,
           existingInvoiceUID: existingInvoiceUID,
         ),
         body: SafeArea(

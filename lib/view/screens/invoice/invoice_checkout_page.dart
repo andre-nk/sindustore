@@ -2,11 +2,11 @@ part of "../screens.dart";
 
 class InvoiceCheckoutPage extends StatelessWidget {
   const InvoiceCheckoutPage(
-      {Key? key, required this.ancestorContext, this.existingInvoice})
+      {Key? key, required this.ancestorContext, this.existingInvoiceUID})
       : super(key: key);
 
   final BuildContext ancestorContext;
-  final Invoice? existingInvoice;
+  final String? existingInvoiceUID;
 
   @override
   Widget build(BuildContext context) {
@@ -189,8 +189,11 @@ class InvoiceCheckoutPage extends StatelessWidget {
                           ],
                         ),
                   state is InvoiceStateActivated
-                      ? const Positioned(
-                          child: InvoiceCheckoutSheet(),
+                      ? Positioned(
+                          child: InvoiceCheckoutSheet(
+                            invoice: state.invoice,
+                            existingInvoiceUID: existingInvoiceUID,
+                          ),
                           bottom: 0,
                         )
                       : const SizedBox()

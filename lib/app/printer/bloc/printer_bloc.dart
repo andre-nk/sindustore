@@ -94,7 +94,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           printerInstance.connect(event.device);
         }
 
-        await printInvoice(event);
+        // await printInvoice(event);
         emit(PrinterStatePrinted());
       } on Exception catch (_) {
         emit(const PrinterStateFailed());

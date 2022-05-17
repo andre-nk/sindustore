@@ -30,6 +30,10 @@ class InvoiceStateCreated extends InvoiceState {}
 
 class InvoiceStateQueryLoaded extends InvoiceState {
   final Query query;
+
+  @override
+  List<Object> get props => [query];
+
   const InvoiceStateQueryLoaded({Exception? exception, required this.query})
       : super(exception: exception);
 }

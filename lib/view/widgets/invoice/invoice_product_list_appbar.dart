@@ -28,7 +28,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
                   if (state is InvoiceStateActivated) {
-                    if (existingInvoice != null && existingInvoice != state.invoice) {
+                    if (existingInvoice != null) {
                       showDialog(
                         context: context,
                         builder: (_) {
@@ -39,10 +39,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
                           );
                         },
                       );
-                    } else if (existingInvoice != null &&
-                        existingInvoice == state.invoice) {
-                      Navigator.pop(context);
-                    } else if (state.invoice.products.isNotEmpty) {
+                    } else if (existingInvoice == null && state.invoice.products.isNotEmpty) {
                       showDialog(
                         context: context,
                         builder: (_) {
@@ -71,7 +68,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
                   size: 22,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  RouteWrapper.push(context, child: const InvoiceListPage());
                 },
               ),
             ),

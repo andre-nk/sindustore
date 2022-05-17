@@ -1,7 +1,11 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutSheet extends StatelessWidget {
-  const InvoiceCheckoutSheet({Key? key}) : super(key: key);
+  const InvoiceCheckoutSheet({Key? key, required this.invoice, this.existingInvoiceUID})
+      : super(key: key);
+
+  final Invoice invoice;
+  final String? existingInvoiceUID;
 
   @override
   Widget build(BuildContext context) {
@@ -23,66 +27,26 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                 builder: (context, state) {
                   if (state is InvoiceStateActivated) {
                     return Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
                       decoration: BoxDecoration(
-                        color: state.invoice.status == InvoiceStatus.cancelled ||
-                                state.invoice.status == InvoiceStatus.loan
-                            ? AppTheme.colors.error
-                            : state.invoice.status == InvoiceStatus.hold ||
-                                    state.invoice.status == InvoiceStatus.returned
-                                ? AppTheme.colors.outline
-                                : state.invoice.status == InvoiceStatus.paid
-                                    ? AppTheme.colors.success
-                                    : AppTheme.colors.tertiary,
-                        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<InvoiceStatus>(
-                          icon: const SizedBox(),
-                          style: AppTheme.text.footnote.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          isDense: true,
-                          alignment: Alignment.center,
-                          items: [
-                            InvoiceStatus.cancelled,
-                            InvoiceStatus.pending,
-                            InvoiceStatus.loan,
-                            InvoiceStatus.paid,
-                            InvoiceStatus.hold,
-                            InvoiceStatus.returned,
-                          ]
-                              .map(
-                                (item) => DropdownMenuItem<InvoiceStatus>(
-                                  value: item,
-                                  child: Text(
-                                    item.name.capitalize(),
-                                    style: AppTheme.text.footnote.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          value: state.invoice.status,
-                          onChanged: (value) {
-                            context.read<InvoiceBloc>().add(
-                                  InvoiceEventMarkStatus(
-                                    invoice: state.invoice,
-                                    status: value!,
-                                  ),
-                                );
-                          },
+                        color: state.invoice.status == InvoiceStatus.paid
+                            ? AppTheme.colors.success
+                            : AppTheme.colors.tertiary,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(4.0),
                         ),
+                      ),
+                      child: Text(
+                        state.invoice.status.name.capitalize(),
+                        style: AppTheme.text.footnote.copyWith(color: Colors.white),
                       ),
                     );
                   } else {
                     return const SizedBox();
                   }
                 },
-              ),
+              )
             ],
           ),
           Padding(
@@ -135,6 +99,38 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                 listener: (context, state) {
                   if (state is PrinterStatePermissionError) {
                     context.read<PrinterBloc>().add(PrinterEventRequestPermission());
+                  } else if (state is PrinterStatePrinted) {
+                    Invoice invoiceInstance = Invoice(
+                      adminHandlerUID: invoice.adminHandlerUID,
+                      customerName: invoice.customerName,
+                      products: invoice.products,
+                      status: InvoiceStatus.paid,
+                      createdAt: invoice.createdAt,
+                      updatedAt: invoice.updatedAt,
+                    );
+
+                    if (existingInvoiceUID != null) {
+                      context.read<InvoiceBloc>().add(
+                            InvoiceEventUpdate(
+                              invoice: invoiceInstance,
+                              invoiceUID: existingInvoiceUID!,
+                            ),
+                          );
+                    } else {
+                      context.read<InvoiceBloc>().add(
+                            InvoiceEventCreate(invoice: invoiceInstance),
+                          );
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppTheme.colors.success,
+                        content: Text(
+                          "Nota berhasil dicetak!",
+                          style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {

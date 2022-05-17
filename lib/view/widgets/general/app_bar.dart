@@ -5,6 +5,7 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
   final Icon? overridePrimaryButtonIcon;
   final VoidCallback? primaryButtonOnPressed;
   final Widget? secondaryButton;
+  final Widget? singleAction;
 
   const GeneralAppBar({
     Key? key,
@@ -12,6 +13,7 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
     this.overridePrimaryButtonIcon,
     this.primaryButtonOnPressed,
     this.secondaryButton,
+    this.singleAction,
   }) : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
           ],
         ),
       ),
+      actions: [singleAction ?? const SizedBox()],
     );
   }
 

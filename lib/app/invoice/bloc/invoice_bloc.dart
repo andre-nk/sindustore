@@ -292,10 +292,20 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
       }
     });
 
-    on<InvoiceEventFetchQuery>((event, emit) async {
+    on<InvoiceEventFetchActiveQuery>((event, emit) async {
       try {
         emit(InvoiceStateQueryFetching());
-        final Query<Invoice> query = await invoiceRepository.fetchInvoiceQuery();
+        final Query<Invoice> query = await invoiceRepository.fetchActiveInvoiceQuery();
+        emit(InvoiceStateQueryLoaded(query: query));
+      } on Exception catch (e) {
+        emit(InvoiceStateFailed(exception: e));
+      }
+    });
+
+    on<InvoiceEventFetchQueryByDate>((event, emit) async {
+      try {
+        emit(InvoiceStateQueryFetching());
+        final Query<Invoice> query = await invoiceRepository.fetchInvoiceQueryByDate(event.dateTime);
         emit(InvoiceStateQueryLoaded(query: query));
       } on Exception catch (e) {
         emit(InvoiceStateFailed(exception: e));

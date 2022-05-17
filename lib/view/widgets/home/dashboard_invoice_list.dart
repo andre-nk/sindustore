@@ -52,9 +52,14 @@ class DashboardInvoiceList extends StatelessWidget {
                   "Nota aktif",
                   style: AppTheme.text.h3,
                 ),
-                Text(
-                  "lihat semua",
-                  style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
+                InkWell(
+                  onTap: (){
+                    RouteWrapper.push(context, child: const InvoiceListPage());
+                  },
+                  child: Text(
+                    "lihat semua",
+                    style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
+                  ),
                 )
               ],
             ),
