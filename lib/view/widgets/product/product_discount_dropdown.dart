@@ -79,8 +79,12 @@ class ProductCardDiscount extends StatelessWidget {
                                       .where((element) => element.productID == product.id)
                                       .first
                                       .discount
-                                  : product.productDiscounts.first.amount
-                              : product.productDiscounts.first.amount,
+                                  : product.productDiscounts.isEmpty
+                                      ? 0.0
+                                      : product.productDiscounts.first.amount
+                              : product.productDiscounts.isEmpty
+                                  ? 0.0
+                                  : product.productDiscounts.first.amount,
                           onChanged: (value) {
                             if (value != null && state is InvoiceStateActivated) {
                               context.read<InvoiceBloc>().add(

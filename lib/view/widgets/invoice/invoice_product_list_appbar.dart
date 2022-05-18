@@ -27,7 +27,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
-                  if (state is InvoiceStateActivated) {
+                  if (state is InvoiceStateActivated && state.invoice.status != InvoiceStatus.paid) {
                     if (existingInvoice != null) {
                       showDialog(
                         context: context,

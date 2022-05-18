@@ -11,7 +11,7 @@ class SheetsBloc extends Bloc<SheetsEvent, SheetsState> {
     on<SheetsEventInsertInvoice>((event, emit) async {
       try {
         emit(SheetsStateLoading());
-        await sheetsRepository.insertInvoice(event.invoice);
+        await sheetsRepository.insertAndInitializeInvoice(event.invoice);
         emit(SheetsStateSuccess());
       } on Exception catch (e) {
         emit(SheetsStateFailed(e));

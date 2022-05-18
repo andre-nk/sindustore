@@ -1,9 +1,10 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
-import 'package:uuid/uuid.dart';
+import 'package:sindu_store/model/product/product.dart';
+import 'package:sindu_store/repository/product/product_repository.dart';
 
 class SheetsRepository {
-  final gSheetCredentials = {
+  final _gSheetCredentials = {
     "type": "service_account",
     "project_id": "sindustore-dev",
     "private_key_id": "365a9ac3f0c183fb794caae855d35dcef8232277",
@@ -18,23 +19,70 @@ class SheetsRepository {
         "https://www.googleapis.com/robot/v1/metadata/x509/gsheets%40sindustore-dev.iam.gserviceaccount.com"
   };
 
-  Future<void> insertInvoice(Invoice invoice) async {
-    try {
-      final gsheets = GSheets(gSheetCredentials);
-      // fetch spreadsheet by its id
-      final ss =
-          await gsheets.spreadsheet("1Wh8BB5t0cKA5yyHKwIjgYjUkYBHZl7LphR5BDiGsiKg");
+  final _productRepository = ProductRepository();
 
-      // get worksheet by its title
-      var invoiceSheet = ss.worksheetByTitle('invoices');
-      if(invoiceSheet != null){
-        await invoiceSheet.values.insertValue('Nota ${const Uuid().v4()}', column: 1, row: 2);
-        await invoiceSheet.values.insertValue(invoice.adminHandlerUID, column: 2, row: 2);
-      } else {
-        throw Exception("Worksheet can't be found");
+  Future<void> insertAndInitializeInvoice(Invoice invoice) async {
+    try {
+      final gsheets = GSheets(_gSheetCredentials);
+      final ss = await gsheets.spreadsheet(
+        "1Wh8BB5t0cKA5yyHKwIjgYjUkYBHZl7LphR5BDiGsiKg",
+      );
+
+      Worksheet? invoiceSheet = ss.worksheetByTitle(
+        DateTime.now().toString().substring(0, 10),
+      );
+
+      if (invoiceSheet == null) {
+        invoiceSheet = await ss.addWorksheet(
+          DateTime.now().toString().substring(0, 10),
+          rows: 1,
+        );
+
+        await invoiceSheet.values.appendRow([
+          "Nama Produk",
+          "Jumlah Pembelian",
+          "Harga Satuan",
+          "Diskon",
+          "Total Harga Jual",
+          "Harga Beli",
+          "Laba",
+        ]);
+      }
+
+      await _insertInvoice(invoice, invoiceSheet);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> _insertInvoice(Invoice invoice, Worksheet invoiceSheet) async {
+    try {
+      for (var item in invoice.products) {
+        final Product itemInstance = await _productRepository.getProductByID(
+          item.productID,
+        );
+
+        // "Nama Produk",
+        //   "Jumlah Pembelian",
+        //   "Harga Satuan",
+        //   "Diskon"
+        //   "Total Harga Jual",
+        //   "Harga Beli",
+        //   "Laba",
+
+        await invoiceSheet.values.appendRow([
+          itemInstance.productName,
+          item.quantity,
+          itemInstance.productSellPrice,
+          item.discount,
+          ((itemInstance.productSellPrice + item.discount) * item.quantity),
+          (itemInstance.productBuyPrice * item.quantity),
+          ((itemInstance.productSellPrice + item.discount) * item.quantity) -
+              (itemInstance.productBuyPrice * item.quantity),
+        ]);
       }
     } catch (e) {
-      print(e.toString());
+      rethrow;
     }
   }
 }

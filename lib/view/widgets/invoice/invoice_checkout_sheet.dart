@@ -148,24 +148,29 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                       }
                     },
                     builder: (context, state) {
-                      return WideButton(
-                        title: "Konfirmasi dan cetak nota",
-                        onPressed: () {
-                          if (state is PrinterStateLoaded &&
-                              context.read<InvoiceBloc>().state
-                                  is InvoiceStateActivated) {
-                            context.read<PrinterBloc>().add(
-                                  PrinterEventPrint(
-                                    invoice: (context.read<InvoiceBloc>().state
-                                            as InvoiceStateActivated)
-                                        .invoice,
-                                    device: state.devices
-                                        .where((element) => element.name == "MPT-II")
-                                        .first,
-                                  ),
-                                );
-                          }
-                        },
+                      return Opacity(
+                        opacity: invoice.status != InvoiceStatus.paid ? 1.0 : 0.5,
+                        child: WideButton(
+                          title: "Konfirmasi dan cetak nota",
+                          onPressed: () {
+                            if (invoice.status != InvoiceStatus.paid) {
+                              if (state is PrinterStateLoaded &&
+                                  context.read<InvoiceBloc>().state
+                                      is InvoiceStateActivated) {
+                                context.read<PrinterBloc>().add(
+                                      PrinterEventPrint(
+                                        invoice: (context.read<InvoiceBloc>().state
+                                                as InvoiceStateActivated)
+                                            .invoice,
+                                        device: state.devices
+                                            .where((element) => element.name == "MPT-II")
+                                            .first,
+                                      ),
+                                    );
+                              }
+                            }
+                          },
+                        ),
                       );
                     },
                   );

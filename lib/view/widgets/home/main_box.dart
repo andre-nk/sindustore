@@ -74,18 +74,21 @@ class MainBox extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 8.0),
-                        child: Icon(Ionicons.cart_outline, size: 24),
-                      ),
-                      Text("Restock"),
-                    ],
+                Opacity(
+                  opacity: 0.5,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 8.0),
+                          child: Icon(Ionicons.cart_outline, size: 24),
+                        ),
+                        Text("Restock"),
+                      ],
+                    ),
                   ),
                 ),
                 TextButton(
