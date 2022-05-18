@@ -89,67 +89,84 @@ class InvoiceCheckoutSheet extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 24.0),
-            child: BlocProvider(
-              create: (context) => PrinterBloc(
-                BlueThermalPrinter.instance,
-                ProductRepository(),
-                InvoiceRepository(),
-              )..add(PrinterEventScan()),
-              child: BlocConsumer<PrinterBloc, PrinterState>(
-                listener: (context, state) {
-                  if (state is PrinterStatePermissionError) {
-                    context.read<PrinterBloc>().add(PrinterEventRequestPermission());
-                  } else if (state is PrinterStatePrinted) {
-                    Invoice invoiceInstance = Invoice(
-                      adminHandlerUID: invoice.adminHandlerUID,
-                      customerName: invoice.customerName,
-                      products: invoice.products,
-                      status: InvoiceStatus.paid,
-                      createdAt: invoice.createdAt,
-                      updatedAt: invoice.updatedAt,
-                    );
-
-                    if (existingInvoiceUID != null) {
-                      context.read<InvoiceBloc>().add(
-                            InvoiceEventUpdate(
-                              invoice: invoiceInstance,
-                              invoiceUID: existingInvoiceUID!,
-                            ),
-                          );
-                    } else {
-                      context.read<InvoiceBloc>().add(
-                            InvoiceEventCreate(invoice: invoiceInstance),
-                          );
-                    }
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: AppTheme.colors.success,
-                        content: Text(
-                          "Nota berhasil dicetak!",
-                          style: AppTheme.text.subtitle.copyWith(color: Colors.white),
-                        ),
-                      ),
-                    );
-                  }
-                },
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => PrinterBloc(
+                    BlueThermalPrinter.instance,
+                    ProductRepository(),
+                    InvoiceRepository(),
+                  )..add(PrinterEventScan()),
+                ),
+                BlocProvider(
+                  create: (context) => SheetsBloc(
+                    SheetsRepository(),
+                  ),
+                )
+              ],
+              child: BlocBuilder<SheetsBloc, SheetsState>(
                 builder: (context, state) {
-                  return WideButton(
-                    title: "Konfirmasi dan cetak nota",
-                    onPressed: () {
-                      if (state is PrinterStateLoaded &&
-                          context.read<InvoiceBloc>().state is InvoiceStateActivated) {
-                        context.read<PrinterBloc>().add(
-                              PrinterEventPrint(
-                                invoice: (context.read<InvoiceBloc>().state
-                                        as InvoiceStateActivated)
-                                    .invoice,
-                                device: state.devices
-                                    .where((element) => element.name == "MPT-II")
-                                    .first,
-                              ),
-                            );
+                  return BlocConsumer<PrinterBloc, PrinterState>(
+                    listener: (context, state) {
+                      if (state is PrinterStatePermissionError) {
+                        context.read<PrinterBloc>().add(PrinterEventRequestPermission());
+                      } else if (state is PrinterStatePrinted) {
+                        Invoice invoiceInstance = Invoice(
+                          adminHandlerUID: invoice.adminHandlerUID,
+                          customerName: invoice.customerName,
+                          products: invoice.products,
+                          status: InvoiceStatus.paid,
+                          createdAt: invoice.createdAt,
+                          updatedAt: invoice.updatedAt,
+                        );
+
+                        if (existingInvoiceUID != null) {
+                          context.read<InvoiceBloc>().add(
+                                InvoiceEventUpdate(
+                                  invoice: invoiceInstance,
+                                  invoiceUID: existingInvoiceUID!,
+                                ),
+                              );
+                        } else {
+                          context.read<InvoiceBloc>().add(
+                                InvoiceEventCreate(invoice: invoiceInstance),
+                              );
+                        }
+
+                        context.read<SheetsBloc>().add(SheetsEventInsertInvoice(invoice));
+
+                        //TODO: PROPER ERROR HANDLING
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: AppTheme.colors.success,
+                            content: Text(
+                              "Nota berhasil dicetak!",
+                              style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                            ),
+                          ),
+                        );
                       }
+                    },
+                    builder: (context, state) {
+                      return WideButton(
+                        title: "Konfirmasi dan cetak nota",
+                        onPressed: () {
+                          if (state is PrinterStateLoaded &&
+                              context.read<InvoiceBloc>().state
+                                  is InvoiceStateActivated) {
+                            context.read<PrinterBloc>().add(
+                                  PrinterEventPrint(
+                                    invoice: (context.read<InvoiceBloc>().state
+                                            as InvoiceStateActivated)
+                                        .invoice,
+                                    device: state.devices
+                                        .where((element) => element.name == "MPT-II")
+                                        .first,
+                                  ),
+                                );
+                          }
+                        },
+                      );
                     },
                   );
                 },
