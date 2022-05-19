@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sindu_store/app/auth/bloc/auth_bloc.dart';
 import 'package:sindu_store/app/bloc_observer.dart';
@@ -12,10 +13,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  BlocOverrides.runZoned(
-    () => runApp(const App()),
-    blocObserver: AppBlocObserver(),
-  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: AppTheme.colors.primary),
+    );
+
+    BlocOverrides.runZoned(
+      () => runApp(const App()),
+      blocObserver: AppBlocObserver(),
+    );
+  });
 }
 
 class App extends StatelessWidget {
@@ -46,7 +54,8 @@ class AppView extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
           return const HomeWrapperPage();
-        } else if (state is AuthStateLoggedIn && !state.isPINCorrect || state is AuthStatePINChanged) {
+        } else if (state is AuthStateLoggedIn && !state.isPINCorrect ||
+            state is AuthStatePINChanged) {
           return const PINInputPage();
         } else if (state is AuthStateLoggedOut) {
           return const OnboardingPage();

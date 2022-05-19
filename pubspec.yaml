@@ -27,6 +27,7 @@ dependencies:
   intl: ^0.17.0
   ionicons: ^0.1.2
   json_annotation: ^4.4.0
+  json_table: ^2.0.1
   local_auth: ^1.1.11
   logger: ^1.1.0
   modal_bottom_sheet: ^2.0.1

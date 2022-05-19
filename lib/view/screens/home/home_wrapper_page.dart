@@ -5,14 +5,22 @@ class HomeWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NavigationCubit>(
-      create: (context) => NavigationCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NavigationCubit>(
+          create: (context) => NavigationCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(AuthRepository())..add(const AuthEventInitialize()),
+        ),
+      ],
       child: BlocBuilder<NavigationCubit, int>(
         builder: (context, state) {
           return Scaffold(
             body: state == 0 ? const DashboardPage() : const ProfilePage(),
             floatingActionButton: const CustomFAB(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
             bottomNavigationBar: const CustomBottomNavbar(),
           );
         },

@@ -17,6 +17,10 @@ class SheetsStateFailed extends SheetsState {
   const SheetsStateFailed(this.exception);
 }
 
-class SheetsStateSuccess extends SheetsState{}
+class SheetsStateSuccess extends SheetsState{
+  final List<Map<String, dynamic>> recordItems;
+
+  const SheetsStateSuccess({required this.recordItems});
+}
 
 

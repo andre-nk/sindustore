@@ -34,7 +34,7 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
               size: 24,
             ),
       ),
-      leadingWidth: MQuery.width(0.15, context),
+      leadingWidth: 56,
       titleSpacing: MQuery.width(0, context),
       backgroundColor: AppTheme.colors.background,
       title: SizedBox(

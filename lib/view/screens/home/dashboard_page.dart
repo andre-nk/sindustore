@@ -1,29 +1,16 @@
 part of "../screens.dart";
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
-
-  static Page page() => const MaterialPage<void>(child: DashboardPage());
-
-  @override
-  State<DashboardPage> createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: AppTheme.colors.primary),
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) =>
-            InvoiceBloc(InvoiceRepository())..add(InvoiceEventFetchActiveQuery(),),
+        create: (context) => InvoiceBloc(InvoiceRepository())
+          ..add(
+            InvoiceEventFetchActiveQuery(),
+          ),
         child: BlocBuilder<InvoiceBloc, InvoiceState>(
           builder: (context, state) {
             if (state is InvoiceStateQueryFetching) {
@@ -50,7 +37,8 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         Positioned(
                           top: 48,
-                          child: Image.asset("assets/logo_yellow.png", height: 48),
+                          child:
+                              Image.asset("assets/logo_yellow.png", height: 48),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -72,8 +60,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                         height: MQuery.height(0.125, context),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 36.0, bottom: 8.0),
+                                        padding: const EdgeInsets.only(
+                                            top: 36.0, bottom: 8.0),
                                         child: Text(
                                           "Tidak ada nota aktif!",
                                           style: AppTheme.text.h3,

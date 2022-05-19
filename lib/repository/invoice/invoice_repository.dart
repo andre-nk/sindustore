@@ -8,7 +8,8 @@ class InvoiceRepository {
   final ProductRepository _productRepository = ProductRepository();
   final FirebaseFirestore _firebaseFirestore;
 
-  InvoiceRepository({FirebaseFirestore? firebaseFirestore, FirebaseAuth? firebaseAuth})
+  InvoiceRepository(
+      {FirebaseFirestore? firebaseFirestore, FirebaseAuth? firebaseAuth})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   Future<void> createInvoice({required Invoice invoice}) async {
@@ -46,7 +47,8 @@ class InvoiceRepository {
           .collection('invoices')
           .where('status', isEqualTo: 'pending')
           .withConverter<Invoice>(
-            fromFirestore: ((snapshot, options) => Invoice.fromJson(snapshot.data()!)),
+            fromFirestore: ((snapshot, options) =>
+                Invoice.fromJson(snapshot.data()!)),
             toFirestore: (invoice, _) => invoice.toJson(),
           );
 
@@ -68,10 +70,14 @@ class InvoiceRepository {
           )
           .where(
             "createdAt",
-            isLessThanOrEqualTo: dateTime.add(Duration(hours: 24 - dateTime.hour)).toString().substring(0, 10),
+            isLessThanOrEqualTo: dateTime
+                .add(Duration(hours: 24 - dateTime.hour))
+                .toString()
+                .substring(0, 10),
           )
           .withConverter<Invoice>(
-            fromFirestore: ((snapshot, options) => Invoice.fromJson(snapshot.data()!)),
+            fromFirestore: ((snapshot, options) =>
+                Invoice.fromJson(snapshot.data()!)),
             toFirestore: (invoice, _) => invoice.toJson(),
           );
 
@@ -88,8 +94,8 @@ class InvoiceRepository {
       for (var invoiceItem in invoice.products) {
         final Product productByID =
             await _productRepository.getProductByID(invoiceItem.productID);
-        invoiceValue +=
-            (productByID.productSellPrice + invoiceItem.discount) * invoiceItem.quantity;
+        invoiceValue += (productByID.productSellPrice + invoiceItem.discount) *
+            invoiceItem.quantity;
       }
 
       return invoiceValue;

@@ -1,7 +1,8 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutSheet extends StatelessWidget {
-  const InvoiceCheckoutSheet({Key? key, required this.invoice, this.existingInvoiceUID})
+  const InvoiceCheckoutSheet(
+      {Key? key, required this.invoice, this.existingInvoiceUID})
       : super(key: key);
 
   final Invoice invoice;
@@ -21,14 +22,15 @@ class InvoiceCheckoutSheet extends StatelessWidget {
             children: [
               Text(
                 "Status nota",
-                style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
+                style: AppTheme.text.subtitle
+                    .copyWith(fontWeight: FontWeight.w500),
               ),
               BlocBuilder<InvoiceBloc, InvoiceState>(
                 builder: (context, state) {
                   if (state is InvoiceStateActivated) {
                     return Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6.0, horizontal: 10.0),
                       decoration: BoxDecoration(
                         color: state.invoice.status == InvoiceStatus.paid
                             ? AppTheme.colors.success
@@ -39,7 +41,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                       ),
                       child: Text(
                         state.invoice.status.name.capitalize(),
-                        style: AppTheme.text.footnote.copyWith(color: Colors.white),
+                        style: AppTheme.text.footnote
+                            .copyWith(color: Colors.white),
                       ),
                     );
                   } else {
@@ -57,7 +60,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
               children: [
                 Text(
                   "Total:",
-                  style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
+                  style: AppTheme.text.subtitle
+                      .copyWith(fontWeight: FontWeight.w500),
                 ),
                 BlocBuilder<InvoiceBloc, InvoiceState>(
                   builder: (context, state) {
@@ -66,7 +70,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                         create: (context) => InvoiceValueCubit(
                           invoiceRepository: InvoiceRepository(),
                         )..sumInvoice(state.invoice),
-                        child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
+                        child:
+                            BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
                           builder: (context, state) {
                             return Text(
                               NumberFormat.simpleCurrency(
@@ -104,74 +109,72 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                   ),
                 )
               ],
-              child: BlocBuilder<SheetsBloc, SheetsState>(
-                builder: (context, state) {
-                  return BlocConsumer<PrinterBloc, PrinterState>(
-                    listener: (context, state) {
-                      if (state is PrinterStatePermissionError) {
-                        context.read<PrinterBloc>().add(PrinterEventRequestPermission());
-                      } else if (state is PrinterStatePrinted) {
-                        Invoice invoiceInstance = Invoice(
-                          adminHandlerUID: invoice.adminHandlerUID,
-                          customerName: invoice.customerName,
-                          products: invoice.products,
-                          status: InvoiceStatus.paid,
-                          createdAt: invoice.createdAt,
-                          updatedAt: invoice.updatedAt,
-                        );
+              child: BlocConsumer<PrinterBloc, PrinterState>(
+                listener: (context, state) {
+                  if (state is PrinterStatePermissionError) {
+                    context
+                        .read<PrinterBloc>()
+                        .add(PrinterEventRequestPermission());
+                  } else if (state is PrinterStatePrinted) {
+                    Invoice invoiceInstance = Invoice(
+                      adminHandlerUID: invoice.adminHandlerUID,
+                      customerName: invoice.customerName,
+                      products: invoice.products,
+                      status: InvoiceStatus.paid,
+                      createdAt: invoice.createdAt,
+                      updatedAt: invoice.updatedAt,
+                    );
 
-                        if (existingInvoiceUID != null) {
-                          context.read<InvoiceBloc>().add(
-                                InvoiceEventUpdate(
-                                  invoice: invoiceInstance,
-                                  invoiceUID: existingInvoiceUID!,
-                                ),
-                              );
-                        } else {
-                          context.read<InvoiceBloc>().add(
-                                InvoiceEventCreate(invoice: invoiceInstance),
-                              );
-                        }
-
-                        context.read<SheetsBloc>().add(SheetsEventInsertInvoice(invoice));
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: AppTheme.colors.success,
-                            content: Text(
-                              "Nota berhasil dicetak!",
-                              style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                    if (existingInvoiceUID != null) {
+                      context.read<InvoiceBloc>().add(
+                            InvoiceEventUpdate(
+                              invoice: invoiceInstance,
+                              invoiceUID: existingInvoiceUID!,
                             ),
-                          ),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      return Opacity(
-                        opacity: invoice.status != InvoiceStatus.paid ? 1.0 : 0.5,
-                        child: WideButton(
-                          title: "Konfirmasi dan cetak nota",
-                          onPressed: () {
-                            if (invoice.status != InvoiceStatus.paid) {
-                              if (state is PrinterStateLoaded &&
-                                  context.read<InvoiceBloc>().state
-                                      is InvoiceStateActivated) {
-                                context.read<PrinterBloc>().add(
-                                      PrinterEventPrint(
-                                        invoice: (context.read<InvoiceBloc>().state
-                                                as InvoiceStateActivated)
-                                            .invoice,
-                                        device: state.devices
-                                            .where((element) => element.name == "MPT-II")
-                                            .first,
-                                      ),
-                                    );
-                              }
-                            }
-                          },
+                          );
+                    } else {
+                      context.read<InvoiceBloc>().add(
+                            InvoiceEventCreate(invoice: invoiceInstance),
+                          );
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppTheme.colors.success,
+                        content: Text(
+                          "Nota berhasil dicetak!",
+                          style: AppTheme.text.subtitle
+                              .copyWith(color: Colors.white),
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Opacity(
+                    opacity: invoice.status != InvoiceStatus.paid ? 1.0 : 0.5,
+                    child: WideButton(
+                      title: "Konfirmasi dan cetak nota",
+                      onPressed: () {
+                        if (invoice.status != InvoiceStatus.paid) {
+                          if (state is PrinterStateLoaded &&
+                              context.read<InvoiceBloc>().state
+                                  is InvoiceStateActivated) {
+                            context.read<PrinterBloc>().add(
+                                  PrinterEventPrint(
+                                    invoice: (context.read<InvoiceBloc>().state
+                                            as InvoiceStateActivated)
+                                        .invoice,
+                                    device: state.devices
+                                        .where((element) =>
+                                            element.name == "MPT-II")
+                                        .first,
+                                  ),
+                                );
+                          }
+                        }
+                      },
+                    ),
                   );
                 },
               ),

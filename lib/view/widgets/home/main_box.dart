@@ -77,13 +77,16 @@ class MainBox extends StatelessWidget {
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     return Opacity(
-                      opacity: state is AuthStateLoggedIn && state.user.role != UserRoles.worker
-                      ? 1.0
-                      : 0.5,
+                      opacity: state is AuthStateLoggedIn &&
+                              state.user.role != UserRoles.worker
+                          ? 1.0
+                          : 0.5,
                       child: TextButton(
                         onPressed: () {
-                          if(state is AuthStateLoggedIn && state.user.role != UserRoles.worker){
-                            RouteWrapper.push(context, child: const ArchivePage());
+                          if (state is AuthStateLoggedIn &&
+                              state.user.role != UserRoles.worker) {
+                            RouteWrapper.push(context,
+                                child: const ArchivePage());
                           }
                         },
                         child: Column(
@@ -92,7 +95,8 @@ class MainBox extends StatelessWidget {
                           children: const [
                             Padding(
                               padding: EdgeInsets.only(bottom: 8.0),
-                              child: Icon(Ionicons.file_tray_outline, size: 26),
+                              child:
+                                  Icon(Ionicons.file_tray_outline, size: 26),
                             ),
                             Text("Arsip"),
                           ],
@@ -103,7 +107,8 @@ class MainBox extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    RouteWrapper.push(context, child: const InvoiceProductListPage());
+                    RouteWrapper.push(context,
+                        child: const InvoiceProductListPage());
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,7 +146,8 @@ class MainBox extends StatelessWidget {
                     children: const [
                       Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
-                        child: Icon(Ionicons.information_circle_outline, size: 24),
+                        child:
+                            Icon(Ionicons.information_circle_outline, size: 24),
                       ),
                       Text("Informasi"),
                     ],

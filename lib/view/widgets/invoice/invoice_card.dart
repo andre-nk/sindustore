@@ -64,7 +64,7 @@ class InvoiceCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Nota - 0" + index.toString(),
+                        "Nota " + index.toString(),
                         style:
                             AppTheme.text.paragraph.copyWith(fontWeight: FontWeight.w600),
                       ),

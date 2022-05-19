@@ -7,8 +7,8 @@ abstract class SheetsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SheetsEventInsertInvoice extends SheetsEvent {
-  final Invoice invoice;
+class SheetsEventFetchRecord extends SheetsEvent {
+  final DateTime dateTime;
 
-  const SheetsEventInsertInvoice(this.invoice);
+  const SheetsEventFetchRecord(this.dateTime);
 }
