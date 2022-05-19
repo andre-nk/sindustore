@@ -36,4 +36,6 @@ part 'invoice/invoice_product_list_page.dart';
 part 'invoice/invoice_checkout_page.dart';
 part 'invoice/invoice_list_page.dart';
 
+part 'archive/archive_page.dart';
+
 part 'splash/splash_page.dart';

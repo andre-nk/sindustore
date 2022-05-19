@@ -45,7 +45,7 @@ class InvoiceCardValue extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "Bayar",
+                        invoice.status == InvoiceStatus.paid ? "Detail" : "Bayar",
                         style: AppTheme.text.footnote.copyWith(
                           color: AppTheme.colors.secondary,
                           fontWeight: FontWeight.w500,

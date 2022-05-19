@@ -60,12 +60,16 @@ class InvoiceRepository {
     try {
       final productRef = _firebaseFirestore
           .collection('invoices')
-          .where(
-            'createdAt',
-            isGreaterThanOrEqualTo: dateTime.toString().substring(0, 10),
-          )
           .orderBy('createdAt', descending: true)
           .orderBy('status', descending: true)
+          .where(
+            "createdAt",
+            isGreaterThan: dateTime.toString().substring(0, 10),
+          )
+          .where(
+            "createdAt",
+            isLessThanOrEqualTo: dateTime.add(Duration(hours: 24 - dateTime.hour)).toString().substring(0, 10),
+          )
           .withConverter<Invoice>(
             fromFirestore: ((snapshot, options) => Invoice.fromJson(snapshot.data()!)),
             toFirestore: (invoice, _) => invoice.toJson(),

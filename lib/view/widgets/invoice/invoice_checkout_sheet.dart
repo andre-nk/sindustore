@@ -135,7 +135,6 @@ class InvoiceCheckoutSheet extends StatelessWidget {
 
                         context.read<SheetsBloc>().add(SheetsEventInsertInvoice(invoice));
 
-                        //TODO: PROPER ERROR HANDLING
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: AppTheme.colors.success,

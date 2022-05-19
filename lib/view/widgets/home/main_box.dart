@@ -74,22 +74,32 @@ class MainBox extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Opacity(
-                  opacity: 0.5,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 8.0),
-                          child: Icon(Ionicons.cart_outline, size: 24),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return Opacity(
+                      opacity: state is AuthStateLoggedIn && state.user.role != UserRoles.worker
+                      ? 1.0
+                      : 0.5,
+                      child: TextButton(
+                        onPressed: () {
+                          if(state is AuthStateLoggedIn && state.user.role != UserRoles.worker){
+                            RouteWrapper.push(context, child: const ArchivePage());
+                          }
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 8.0),
+                              child: Icon(Ionicons.file_tray_outline, size: 26),
+                            ),
+                            Text("Arsip"),
+                          ],
                         ),
-                        Text("Restock"),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
                 TextButton(
                   onPressed: () {

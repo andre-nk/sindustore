@@ -8,7 +8,7 @@ class InvoiceListPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => InvoiceBloc(InvoiceRepository())
         ..add(
-          InvoiceEventFetchActiveQuery(),
+          InvoiceEventFetchQueryByDate(DateTime.now()),
         ),
       child: Scaffold(
         appBar: GeneralAppBar(
@@ -109,11 +109,23 @@ class InvoiceListPage extends StatelessWidget {
                         ),
                       );
                     } else {
-                      snapshot.docs.forEach((element) {
-                        print(element.data());
-                      });
-
-                      return SizedBox();
+                      return ListView.builder(
+                        itemCount: snapshot.docs.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: MQuery.width(0.05, context),
+                            ).copyWith(
+                              bottom: index == snapshot.docs.length - 1 ? 24.0 : 0.0,
+                            ),
+                            child: InvoiceCard(
+                              index: index - 1,
+                              invoiceUID: snapshot.docs[index].id,
+                              invoice: (snapshot.docs[index].data() as Invoice),
+                            ),
+                          );
+                        },
+                      );
                     }
                   },
                 );
