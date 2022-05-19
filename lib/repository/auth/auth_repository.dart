@@ -140,6 +140,20 @@ class AuthRepository {
     }
   }
 
+  Future<void> resetPassword() async {
+    try {
+      if (_firebaseAuth.currentUser != null && _firebaseAuth.currentUser!.email != null) {
+        await _firebaseAuth.sendPasswordResetEmail(
+          email: _firebaseAuth.currentUser!.email!,
+        );
+      } else {
+        throw Exception("Error!");
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<bool> validatePIN({required String pin}) async {
     final _currentUser = await currentUser();
 

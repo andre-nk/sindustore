@@ -223,9 +223,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthEventSignOut>((event, emit) async {
       try {
+        await authRepository.signOut();
         emit(const AuthStateLoggedOut(
           isLoading: false,
         ));
+      } on Exception catch (e) {
+        emit(AuthStateLoggedOut(isLoading: false, exception: e));
+      }
+    });
+
+    on<AuthEventResetPassword>((event, emit) async {
+      try {
+        await authRepository.resetPassword();
       } on Exception catch (e) {
         emit(AuthStateLoggedOut(isLoading: false, exception: e));
       }

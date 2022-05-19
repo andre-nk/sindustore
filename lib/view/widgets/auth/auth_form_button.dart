@@ -5,7 +5,12 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state){
+        if(state is AuthStateLoggedIn){
+          RouteWrapper.removeAllAndPush(context, child: const HomeWrapperPage());
+        }
+      },
       builder: (context, state) {
         return WideButton(
           title: "Lanjut",

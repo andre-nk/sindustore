@@ -14,8 +14,7 @@ class SheetsRepository {
     try {
       final invoicesRef = await _firebaseFirestore
           .collection('invoices')
-          .orderBy('createdAt', descending: true)
-          .orderBy('status', descending: true)
+          .orderBy('createdAt', descending: false)
           .where(
             "createdAt",
             isGreaterThan: dateTime.toString().substring(0, 10),
@@ -27,6 +26,7 @@ class SheetsRepository {
                 .toString()
                 .substring(0, 10),
           )
+          .where('status', isEqualTo: 'paid')
           .get();
 
       List<Map<String, dynamic>> recordItems = [];
@@ -37,23 +37,22 @@ class SheetsRepository {
         for (var invoice in invoicesRef.docs) {
           final Invoice invoiceInstance = Invoice.fromJson(invoice.data());
           for (var invoiceItem in invoiceInstance.products) {
-            final Product productInstance =
-                await _productRepository.getProductByID(
+            final Product productInstance = await _productRepository.getProductByID(
               invoiceItem.productID,
             );
             recordItems.add({
               "Nama Produk": productInstance.productName,
               "Jumlah": invoiceItem.quantity,
-              "Harga Jual": NumberFormat('#,###,000')
-                  .format(productInstance.productSellPrice),
+              "Harga Jual":
+                  NumberFormat('#,###,000').format(productInstance.productSellPrice),
               "Diskon": invoiceItem.discount != 0
                   ? NumberFormat('#,###,000').format(invoiceItem.discount)
                   : invoiceItem.discount,
               "Total Harga Jual": NumberFormat('#,###,000').format(
                   ((productInstance.productSellPrice + invoiceItem.discount) *
                       invoiceItem.quantity)),
-              "Total Harga Beli": NumberFormat('#,###,000').format(
-                  (productInstance.productBuyPrice * invoiceItem.quantity)),
+              "Total Harga Beli": NumberFormat('#,###,000')
+                  .format((productInstance.productBuyPrice * invoiceItem.quantity)),
               "Laba": NumberFormat('#,###,000').format(
                   ((productInstance.productSellPrice + invoiceItem.discount) *
                           invoiceItem.quantity) -
@@ -61,14 +60,12 @@ class SheetsRepository {
               "Waktu": DateFormat.Hm().format(invoiceInstance.createdAt)
             });
 
-            totalRevenue +=
-                ((productInstance.productSellPrice + invoiceItem.discount) *
-                    invoiceItem.quantity);
+            totalRevenue += ((productInstance.productSellPrice + invoiceItem.discount) *
+                invoiceItem.quantity);
 
-            totalProfit +=
-                ((productInstance.productSellPrice + invoiceItem.discount) *
-                        invoiceItem.quantity) -
-                    (productInstance.productBuyPrice * invoiceItem.quantity);
+            totalProfit += ((productInstance.productSellPrice + invoiceItem.discount) *
+                    invoiceItem.quantity) -
+                (productInstance.productBuyPrice * invoiceItem.quantity);
           }
         }
 

@@ -141,71 +141,76 @@ class _ArchivePageState extends State<ArchivePage> {
                   final jsonRecordData = state.recordItems
                       .sublist(0, state.recordItems.length - 1);
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      JsonTable(
-                        jsonRecordData,
-                        tableHeaderBuilder: (value) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18.0,
-                              vertical: 10.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              border: Border.all(
-                                width: 0.5,
-                                color: AppTheme.colors.outline,
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        JsonTable(
+                          jsonRecordData,
+                          tableHeaderBuilder: (value) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18.0,
+                                vertical: 10.0,
                               ),
-                            ),
-                            child: Text(
-                              value ?? "_header_",
-                              textAlign: TextAlign.center,
-                              style: AppTheme.text.subtitle
-                                  .copyWith(fontWeight: FontWeight.w500),
-                            ),
-                          );
-                        },
-                        tableCellBuilder: (value) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18.0,
-                              vertical: 10.0,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 0.5,
-                                color: AppTheme.colors.outline,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: AppTheme.colors.outline,
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              value,
-                              textAlign: TextAlign.center,
-                              style: AppTheme.text.subtitle,
-                            ),
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                        child: Text(
-                          "Total Pendapatan: ${state.recordItems.last["Total Pendapatan"]}",
-                          style: AppTheme.text.paragraph,
+                              child: Text(
+                                value ?? "_header_",
+                                textAlign: TextAlign.center,
+                                style: AppTheme.text.subtitle
+                                    .copyWith(fontWeight: FontWeight.w500),
+                              ),
+                            );
+                          },
+                          tableCellBuilder: (value) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18.0,
+                                vertical: 10.0,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: AppTheme.colors.outline,
+                                ),
+                              ),
+                              child: Text(
+                                value,
+                                textAlign: TextAlign.center,
+                                style: AppTheme.text.subtitle,
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6.0, left: 16.0),
-                        child: Text(
-                          "Total Laba: ${state.recordItems.last["Total Laba"]}",
-                          style: AppTheme.text.paragraph,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0, left: 16.0),
+                          child: Text(
+                            "Total Pendapatan: ${state.recordItems.last["Total Pendapatan"]}",
+                            style: AppTheme.text.paragraph,
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0, left: 16.0, bottom: 16.0),
+                          child: Text(
+                            "Total Laba: ${state.recordItems.last["Total Laba"]}",
+                            style: AppTheme.text.paragraph,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
               } else if (state is SheetsStateLoading) {
                 return const CustomLoadingIndicator();
+              } else if (state is SheetsStateFailed) {
+                print(state.exception);
+                return const SizedBox();
               } else {
                 return const SizedBox();
               }
