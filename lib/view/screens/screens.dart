@@ -21,12 +21,14 @@ import 'package:sindu_store/app/ui_helpers/sliver_app_bar/cubit/sliver_cubit.dar
 import 'package:sindu_store/config/media_query.dart';
 import 'package:sindu_store/config/theme.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
+import 'package:sindu_store/model/product/product_discount.dart';
 import 'package:sindu_store/model/user/user_roles.dart';
 import 'package:sindu_store/repository/invoice/invoice_repository.dart';
 import 'package:sindu_store/repository/product/product_repository.dart';
 import 'package:sindu_store/repository/sheets/sheets_repository.dart';
 import 'package:sindu_store/view/widgets/widgets.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
+import 'package:uuid/uuid.dart';
 
 part 'auth/onboarding_page.dart';
 part 'auth/pin_input_page.dart';
@@ -41,6 +43,8 @@ part 'invoice/invoice_product_list_page.dart';
 part 'invoice/invoice_checkout_page.dart';
 part 'invoice/invoice_list_page.dart';
 
-part 'archive/archive_page.dart';
+part 'record/record_page.dart';
+
+part 'product/product_editor_page.dart';
 
 part 'splash/splash_page.dart';

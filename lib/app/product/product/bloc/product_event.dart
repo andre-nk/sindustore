@@ -7,8 +7,20 @@ abstract class ProductEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ProductEventGenerateRandom extends ProductEvent {
-  const ProductEventGenerateRandom();
+class ProductEventCreateProduct extends ProductEvent {
+  final String productName;
+  final double productBuyPrice;
+  final double productSellPrice;
+  final List<String> tags;
+  final List<ProductDiscount> productDiscounts;
+
+  const ProductEventCreateProduct({
+    required this.productName,
+    required this.productBuyPrice,
+    required this.productSellPrice,
+    required this.tags,
+    required this.productDiscounts,
+  });
 }
 
 class ProductEventFetchQuery extends ProductEvent {

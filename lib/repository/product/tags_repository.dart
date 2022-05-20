@@ -12,9 +12,12 @@ class TagsRepository {
 
       final query = await _firebaseFirestore.collection('products').get();
       for (var element in query.docs) {
-        String tagInstance = (element.data()["tags"] as List<dynamic>).cast<String>().first;
-        if(!(tags.contains(tagInstance))){
-          tags.add(tagInstance);
+        if ((element.data()["tags"] as List<dynamic>).isNotEmpty) {
+          String tagInstance =
+              (element.data()["tags"] as List<dynamic>).cast<String>().first;
+          if (!(tags.contains(tagInstance))) {
+            tags.add(tagInstance);
+          }
         }
       }
 

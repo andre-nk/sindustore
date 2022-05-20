@@ -111,7 +111,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   return Center(
                     child: SizedBox(
                       height: MQuery.height(0.5, context),
-                      width: MQuery.width(0.75, context),
+                      width: MQuery.width(0.8, context),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -124,12 +124,12 @@ class _ArchivePageState extends State<ArchivePage> {
                               padding:
                                   const EdgeInsets.only(top: 36.0, bottom: 8.0),
                               child: Text(
-                                "Tidak ada nota aktif!",
+                                "Belum ada riwayat penjualan!",
                                 style: AppTheme.text.h3,
                               ),
                             ),
                             Text(
-                              "Coba buat nota di atas",
+                              "Silahkan buat nota melalui Beranda",
                               style: AppTheme.text.subtitle,
                             ),
                           ],

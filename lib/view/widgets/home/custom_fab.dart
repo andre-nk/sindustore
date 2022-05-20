@@ -20,7 +20,9 @@ class CustomFAB extends StatelessWidget {
       ),
       child: FloatingActionButton(
         elevation: 0,
-        onPressed: () {},
+        onPressed: () {
+          RouteWrapper.push(context, child: const InvoiceProductListPage());
+        },
         child: Icon(
           Ionicons.add,
           color: AppTheme.colors.secondary,

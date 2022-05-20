@@ -27,7 +27,8 @@ class InvoiceProductListAppBar extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
-                  if (state is InvoiceStateActivated && state.invoice.status != InvoiceStatus.paid) {
+                  if (state is InvoiceStateActivated &&
+                      state.invoice.status != InvoiceStatus.paid) {
                     if (existingInvoice != null) {
                       showDialog(
                         context: context,
@@ -39,7 +40,8 @@ class InvoiceProductListAppBar extends StatelessWidget {
                           );
                         },
                       );
-                    } else if (existingInvoice == null && state.invoice.products.isNotEmpty) {
+                    } else if (existingInvoice == null &&
+                        state.invoice.products.isNotEmpty) {
                       showDialog(
                         context: context,
                         builder: (_) {
@@ -60,6 +62,15 @@ class InvoiceProductListAppBar extends StatelessWidget {
             },
           ),
           actions: [
+            IconButton(
+              icon: const Icon(
+                Ionicons.add_circle_outline,
+                size: 24,
+              ),
+              onPressed: () {
+                RouteWrapper.push(context, child: const ProductEditorPage());
+              },
+            ),
             Container(
               margin: const EdgeInsets.only(right: 8.0),
               child: IconButton(

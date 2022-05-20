@@ -3,17 +3,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sindu_store/model/invoice/invoice_item.dart';
 import 'package:sindu_store/model/product/product.dart';
+import 'package:sindu_store/model/product/product_discount.dart';
 import 'package:sindu_store/repository/product/product_repository.dart';
+import 'package:uuid/uuid.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc(ProductRepository productRepository) : super(const ProductStateInitial()) {
-    on<ProductEventGenerateRandom>((event, emit) async {
+    on<ProductEventCreateProduct>((event, emit) async {
       try {
         emit(const ProductStateFetching());
-        await productRepository.generateRandomProducts();
+        await productRepository.createProduct(
+          Product(
+            id: const Uuid().v4(),
+            productName: event.productName,
+            productCoverURL: "",
+            productBuyPrice: event.productBuyPrice,
+            productSellPrice: event.productSellPrice,
+            productSoldCount: 0,
+            productStock: 0,
+            productDiscounts: event.productDiscounts,
+            tags: event.tags,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
         emit(const ProductStateCreated());
       } on Exception catch (error) {
         emit(ProductStateFetching(exception: error));
@@ -67,7 +83,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventInvoiceFetch>((event, emit) async {
       try {
         emit(const ProductStateFetching());
-        final List<Product> invoiceProducts = await productRepository.fetchInvoiceItemsQuery(event.invoiceItems);
+        final List<Product> invoiceProducts =
+            await productRepository.fetchInvoiceItemsQuery(event.invoiceItems);
 
         emit(ProductStateInvoiceLoaded(invoiceProduct: invoiceProducts));
       } on Exception catch (e) {
