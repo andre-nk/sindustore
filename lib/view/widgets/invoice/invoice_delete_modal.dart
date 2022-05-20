@@ -24,16 +24,25 @@ class InvoiceDeleteModal extends StatelessWidget {
         "Hati-hati, data nota ini tidak dapat dikembalikan setelah terhapus!",
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            context.read<InvoiceBloc>().add(InvoiceEventDelete(invoiceUID: invoiceUID));
-            Navigator.pop(ancestorContext);
-          },
-          child: Text(
-            "Hapus",
-            style: AppTheme.text.subtitle.copyWith(
-              color: AppTheme.colors.error,
-            ),
+        BlocProvider(
+          create: (context) => InvoiceBloc(InvoiceRepository()),
+          child: BlocBuilder<InvoiceBloc, InvoiceState>(
+            builder: (context, state) {
+              return TextButton(
+                onPressed: () {
+                  context
+                      .read<InvoiceBloc>()
+                      .add(InvoiceEventDelete(invoiceUID: invoiceUID));
+                  Navigator.pop(ancestorContext);
+                },
+                child: Text(
+                  "Hapus",
+                  style: AppTheme.text.subtitle.copyWith(
+                    color: AppTheme.colors.error,
+                  ),
+                ),
+              );
+            },
           ),
         ),
         TextButton(

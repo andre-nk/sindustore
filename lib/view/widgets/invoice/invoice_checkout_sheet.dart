@@ -110,6 +110,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                 listener: (context, state) {
                   if (state is PrinterStatePermissionError) {
                     context.read<PrinterBloc>().add(PrinterEventRequestPermission());
+                  } else if (state is PrinterStatePermissionGranted) {
+                    context.read<PrinterBloc>().add(PrinterEventScan());
                   } else if (state is PrinterStatePrinted) {
                     Invoice invoiceInstance = Invoice(
                       adminHandlerUID: invoice.adminHandlerUID,
@@ -154,16 +156,22 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                           if (state is PrinterStateLoaded &&
                               context.read<InvoiceBloc>().state
                                   is InvoiceStateActivated) {
-                            context.read<PrinterBloc>().add(
-                                  PrinterEventPrint(
-                                    invoice: (context.read<InvoiceBloc>().state
-                                            as InvoiceStateActivated)
-                                        .invoice,
-                                    device: state.devices
-                                        .where((element) => element.name == "MPT-II")
-                                        .first,
-                                  ),
-                                );
+                            if (state.devices
+                                .where((element) => element.name == "MPT-II")
+                                .isNotEmpty) {
+                              context.read<PrinterBloc>().add(
+                                    PrinterEventPrint(
+                                      invoice: (context.read<InvoiceBloc>().state
+                                              as InvoiceStateActivated)
+                                          .invoice,
+                                      device: state.devices
+                                          .where((element) => element.name == "MPT-II")
+                                          .first,
+                                    ),
+                                  );
+                            } else {
+                              print("Empty!");
+                            }
                           }
                         }
                       },
