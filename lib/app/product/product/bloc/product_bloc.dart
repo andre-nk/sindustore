@@ -12,7 +12,7 @@ part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc(ProductRepository productRepository) : super(const ProductStateInitial()) {
-    on<ProductEventCreateProduct>((event, emit) async {
+    on<ProductEventCreate>((event, emit) async {
       try {
         emit(const ProductStateFetching());
         await productRepository.createProduct(
@@ -30,7 +30,41 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             updatedAt: DateTime.now(),
           ),
         );
-        emit(const ProductStateCreated());
+        emit(const ProductStateSuccess());
+      } on Exception catch (error) {
+        emit(ProductStateFetching(exception: error));
+      }
+    });
+
+    on<ProductEventUpdate>((event, emit) async {
+      try {
+        emit(const ProductStateFetching());
+        await productRepository.updateProduct(
+          Product(
+            id: event.existingProductID,
+            productName: event.productName,
+            productCoverURL: "",
+            productBuyPrice: event.productBuyPrice,
+            productSellPrice: event.productSellPrice,
+            productSoldCount: 0,
+            productStock: 0,
+            productDiscounts: event.productDiscounts,
+            tags: event.tags,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
+        emit(const ProductStateSuccess());
+      } on Exception catch (error) {
+        emit(ProductStateFetching(exception: error));
+      }
+    });
+
+    on<ProductEventDelete>((event, emit) async {
+      try {
+        emit(const ProductStateFetching());
+        await productRepository.deleteProduct(event.productID);
+        emit(const ProductStateSuccess());
       } on Exception catch (error) {
         emit(ProductStateFetching(exception: error));
       }

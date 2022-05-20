@@ -70,7 +70,7 @@ class InvoiceProductListPage extends StatelessWidget {
                   },
                   child: BlocConsumer<ProductBloc, ProductState>(
                     listener: (context, state) {
-                      if (state is ProductStateCreated) {
+                      if (state is ProductStateSuccess) {
                         context.read<ProductBloc>().add(const ProductEventFetchQuery());
                       } else if (state.exception != null) {
                         ScaffoldMessenger.of(context)

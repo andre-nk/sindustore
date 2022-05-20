@@ -18,6 +18,32 @@ class ProductRepository {
     }
   }
 
+  Future<void> updateProduct(Product productInstance) async {
+    try {
+      final productRef = _firebaseFirestore.collection('products');
+      final productByID = await productRef.where('id', isEqualTo: productInstance.id).get();
+
+      if (productByID.docs.isNotEmpty) {
+        await productRef.doc(productByID.docs.first.id).update(productInstance.toJson());
+      }
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> deleteProduct(String productID) async {
+    try {
+      final productRef = _firebaseFirestore.collection('products');
+      final productByID = await productRef.where('id', isEqualTo: productID).get();
+
+      if (productByID.docs.isNotEmpty) {
+        await productRef.doc(productByID.docs.first.id).delete();
+      }
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<Product> getProductByID(String productID) async {
     try {
       final productSnapshot = await _firebaseFirestore

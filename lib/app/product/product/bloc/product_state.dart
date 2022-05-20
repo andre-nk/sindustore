@@ -22,8 +22,8 @@ class ProductStateQueryLoaded extends ProductState {
       : super(exception: exception);
 }
 
-class ProductStateCreated extends ProductState {
-  const ProductStateCreated({Exception? exception}) : super(exception: exception);
+class ProductStateSuccess extends ProductState {
+  const ProductStateSuccess({Exception? exception}) : super(exception: exception);
 }
 
 class ProductStateByIDLoaded extends ProductState {

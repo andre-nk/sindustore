@@ -7,20 +7,45 @@ abstract class ProductEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ProductEventCreateProduct extends ProductEvent {
+class ProductEventCreate extends ProductEvent {
   final String productName;
   final double productBuyPrice;
   final double productSellPrice;
   final List<String> tags;
   final List<ProductDiscount> productDiscounts;
 
-  const ProductEventCreateProduct({
+  const ProductEventCreate({
     required this.productName,
     required this.productBuyPrice,
     required this.productSellPrice,
     required this.tags,
     required this.productDiscounts,
   });
+}
+
+class ProductEventUpdate extends ProductEvent {
+  final String existingProductID;
+  final String productName;
+  final double productBuyPrice;
+  final double productSellPrice;
+  final List<String> tags;
+  final List<ProductDiscount> productDiscounts;
+
+  const ProductEventUpdate({
+    required this.existingProductID,
+    required this.productName,
+    required this.productBuyPrice,
+    required this.productSellPrice,
+    required this.tags,
+    required this.productDiscounts,
+  });
+}
+
+class ProductEventDelete extends ProductEvent{
+  final String productID;
+
+  const ProductEventDelete(this.productID);
+
 }
 
 class ProductEventFetchQuery extends ProductEvent {

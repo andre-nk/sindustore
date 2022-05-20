@@ -137,8 +137,20 @@ class ProductBottomSheet extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Icon(
-                        Ionicons.create_outline,
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          RouteWrapper.push(
+                            context,
+                            child: ProductEditorPage(
+                              existingProduct: product,
+                            ),
+                          );
+                        },
+                        splashRadius: 24.0,
+                        icon: const Icon(
+                          Ionicons.create_outline,
+                        ),
                       ),
                     ],
                   ),
