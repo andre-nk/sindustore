@@ -1,25 +1,25 @@
 part of 'invoice_cubit.dart';
 
 abstract class InvoiceValueState extends Equatable {
-  const InvoiceValueState({required this.invoiceValue});
-  final double invoiceValue;
+  const InvoiceValueState();
 
   @override
   List<Object> get props => [];
 }
 
-class InvoiceValueStateInitial extends InvoiceValueState {
-  const InvoiceValueStateInitial() : super(invoiceValue: 0.0);
-}
+class InvoiceValueStateInitial extends InvoiceValueState {}
 
 class InvoiceValueStateLoaded extends InvoiceValueState {
-  const InvoiceValueStateLoaded({required double invoiceValue})
-      : super(invoiceValue: invoiceValue);
+  final double invoiceValue;
+
+  @override
+  List<Object> get props => [invoiceValue];
+
+  const InvoiceValueStateLoaded({required this.invoiceValue});
 }
 
 class InvoiceValueStateFailed extends InvoiceValueState {
   final Exception exception;
 
-  const InvoiceValueStateFailed({required double invoiceValue, required this.exception})
-      : super(invoiceValue: invoiceValue);
+  const InvoiceValueStateFailed({required this.exception});
 }

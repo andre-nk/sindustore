@@ -23,7 +23,7 @@ class InvoiceCardValue extends StatelessWidget {
                   NumberFormat.simpleCurrency(
                     locale: 'id_ID',
                     decimalDigits: 0,
-                  ).format(state.invoiceValue),
+                  ).format(state is InvoiceValueStateLoaded ? state.invoiceValue : 0.0),
                   style: AppTheme.text.paragraph.copyWith(fontWeight: FontWeight.w600),
                 ),
                 SizedBox(

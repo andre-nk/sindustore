@@ -526,19 +526,20 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
               child: BlocConsumer<ProductBloc, ProductState>(
                 listener: (context, state) {
                   if (state is ProductStateSuccess) {
-                    Navigator.pop(context);
-                  } else if (state is ProductStateFetching) {
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(
                         SnackBar(
-                          backgroundColor: AppTheme.colors.error,
+                          backgroundColor: AppTheme.colors.success,
                           content: Text(
-                            state.exception.toString(),
-                            style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                            widget.existingProduct != null ? "Produk berhasil diperbarui!" : "Produk berhasil disimpan!",
+                            style: AppTheme.text.subtitle.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       );
+                    Navigator.pop(context);
                   }
                 },
                 builder: (context, state) {
@@ -594,20 +595,6 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                           );
                       } else {
                         if (widget.existingProduct != null) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(
-                                backgroundColor: AppTheme.colors.success,
-                                content: Text(
-                                  "Produk berhasil diperbarui!",
-                                  style: AppTheme.text.subtitle.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-
                           context.read<ProductBloc>().add(
                                 ProductEventUpdate(
                                   existingProductID: widget.existingProduct!.id,
@@ -621,20 +608,6 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                 ),
                               );
                         } else {
-                          ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              backgroundColor: AppTheme.colors.success,
-                              content: Text(
-                                "Produk berhasil disimpan!",
-                                style: AppTheme.text.subtitle.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          );
-
                           context.read<ProductBloc>().add(
                                 ProductEventCreate(
                                   productName: productNameController.text,

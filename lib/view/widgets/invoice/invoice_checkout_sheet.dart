@@ -68,17 +68,35 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                         create: (context) => InvoiceValueCubit(
                           invoiceRepository: InvoiceRepository(),
                         )..sumInvoice(state.invoice),
-                        child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
-                          builder: (context, state) {
-                            return Text(
-                              NumberFormat.simpleCurrency(
-                                locale: 'id_ID',
-                                decimalDigits: 0,
-                              ).format(state.invoiceValue),
-                              style: AppTheme.text.subtitle
-                                  .copyWith(fontWeight: FontWeight.w500),
-                            );
+                        child: BlocListener<InvoiceBloc, InvoiceState>(
+                          listener: (context, state) {
+                            if (state is InvoiceStateActivated) {
+                              context.read<InvoiceValueCubit>().sumInvoice(state.invoice);
+                            }
                           },
+                          child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
+                            builder: (context, state) {
+                              if (state is InvoiceValueStateLoaded) {
+                                return Text(
+                                  NumberFormat.simpleCurrency(
+                                    locale: 'id_ID',
+                                    decimalDigits: 0,
+                                  ).format(state.invoiceValue),
+                                  style: AppTheme.text.subtitle
+                                      .copyWith(fontWeight: FontWeight.w500),
+                                );
+                              } else {
+                                return Text(
+                                  NumberFormat.simpleCurrency(
+                                    locale: 'id_ID',
+                                    decimalDigits: 0,
+                                  ).format(0),
+                                  style: AppTheme.text.subtitle
+                                      .copyWith(fontWeight: FontWeight.w500),
+                                );
+                              }
+                            },
+                          ),
                         ),
                       );
                     } else {
@@ -145,10 +163,6 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                       ),
                     );
                   } else if (state is PrinterStateFailed) {
-                    print((state.customMessage ?? "No custom message") +
-                        " | " +
-                        state.e.toString());
-
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: AppTheme.colors.error,

@@ -17,7 +17,7 @@ class InvoiceStateActivated extends InvoiceState {
   final String key;
 
   @override
-  List<Object> get props => [key];
+  List<Object> get props => [key, invoice];
 
   const InvoiceStateActivated({
     required this.invoice,
