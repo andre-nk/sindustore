@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Samsung P615",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "RR2N7004L4J"
+        },
+        {
+            "name": "Samsung A52",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "RR8R40FF8XK"
+        },
+        {
+            "name": "sindustore (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "sindustore (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Devices",
+            "configurations": [
+                "Samsung A52",      
+                "Samsung P615",    
+            ]
+        }
+    ]
+}

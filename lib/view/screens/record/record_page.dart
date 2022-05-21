@@ -209,8 +209,7 @@ class _ArchivePageState extends State<ArchivePage> {
               } else if (state is SheetsStateLoading) {
                 return const CustomLoadingIndicator();
               } else if (state is SheetsStateFailed) {
-                print(state.exception);
-                return const SizedBox();
+                return const CustomLoadingIndicator();
               } else {
                 return const SizedBox();
               }

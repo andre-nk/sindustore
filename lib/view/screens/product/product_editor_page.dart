@@ -528,28 +528,86 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                   if (state is ProductStateSuccess) {
                     Navigator.pop(context);
                   } else if (state is ProductStateFetching) {
-                    print(state.exception);
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          backgroundColor: AppTheme.colors.error,
+                          content: Text(
+                            state.exception.toString(),
+                            style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                          ),
+                        ),
+                      );
                   }
                 },
                 builder: (context, state) {
                   return WideButton(
                     onPressed: () {
                       if (productNameController.text.isEmpty) {
-                        print("todo: snackbar title");
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              backgroundColor: AppTheme.colors.error,
+                              content: Text(
+                                "Form nama produk harus diisi!",
+                                style:
+                                    AppTheme.text.subtitle.copyWith(color: Colors.white),
+                              ),
+                            ),
+                          );
                       } else if (productBuyPriceController.text.isEmpty ||
                           double.parse(productBuyPriceController.text
                                   .replaceAll('.', '')
                                   .replaceAll('-', '')) <=
                               0) {
-                        print("todo: snackbar buy");
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              backgroundColor: AppTheme.colors.error,
+                              content: Text(
+                                "Form harga beli produk harus diisi!",
+                                style:
+                                    AppTheme.text.subtitle.copyWith(color: Colors.white),
+                              ),
+                            ),
+                          );
                       } else if (productSellPriceController.text.isEmpty ||
                           double.parse(productSellPriceController.text
                                   .replaceAll('.', '')
                                   .replaceAll('-', '')) <=
                               0) {
-                        print("todo: snackbar sell");
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              backgroundColor: AppTheme.colors.error,
+                              content: Text(
+                                "Form harga jual produk harus diisi!",
+                                style: AppTheme.text.subtitle.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
                       } else {
                         if (widget.existingProduct != null) {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                backgroundColor: AppTheme.colors.success,
+                                content: Text(
+                                  "Produk berhasil diperbarui!",
+                                  style: AppTheme.text.subtitle.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+
                           context.read<ProductBloc>().add(
                                 ProductEventUpdate(
                                   existingProductID: widget.existingProduct!.id,
@@ -563,6 +621,20 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                 ),
                               );
                         } else {
+                          ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              backgroundColor: AppTheme.colors.success,
+                              content: Text(
+                                "Produk berhasil disimpan!",
+                                style: AppTheme.text.subtitle.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+
                           context.read<ProductBloc>().add(
                                 ProductEventCreate(
                                   productName: productNameController.text,

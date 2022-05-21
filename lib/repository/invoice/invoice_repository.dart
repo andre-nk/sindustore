@@ -17,8 +17,8 @@ class InvoiceRepository {
       await _firebaseFirestore.collection('invoices').doc().set(
             invoice.toJson(),
           );
-    } on Exception catch (e) {
-      throw Exception(e.toString());
+    } on FirebaseException catch (e) {
+      throw Exception(e.message);
     }
   }
 

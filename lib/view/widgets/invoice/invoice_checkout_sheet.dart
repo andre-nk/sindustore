@@ -144,38 +144,97 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                         ),
                       ),
                     );
+                  } else if (state is PrinterStateFailed) {
+                    print((state.customMessage ?? "No custom message") +
+                        " | " +
+                        state.e.toString());
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppTheme.colors.error,
+                        content: Text(
+                          state.customMessage ?? state.e.toString(),
+                          style: AppTheme.text.subtitle.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
                   return Opacity(
                     opacity: invoice.status != InvoiceStatus.paid ? 1.0 : 0.5,
-                    child: WideButton(
-                      title: "Konfirmasi dan cetak nota",
-                      onPressed: () {
-                        if (invoice.status != InvoiceStatus.paid) {
-                          if (state is PrinterStateLoaded &&
-                              context.read<InvoiceBloc>().state
-                                  is InvoiceStateActivated) {
-                            if (state.devices
-                                .where((element) => element.name == "MPT-II")
-                                .isNotEmpty) {
-                              context.read<PrinterBloc>().add(
-                                    PrinterEventPrint(
-                                      invoice: (context.read<InvoiceBloc>().state
-                                              as InvoiceStateActivated)
-                                          .invoice,
-                                      device: state.devices
-                                          .where((element) => element.name == "MPT-II")
-                                          .first,
-                                    ),
-                                  );
-                            } else {
-                              print("Empty!");
-                            }
-                          }
-                        }
-                      },
-                    ),
+                    child: state is PrinterStateConnecting
+                        ? const CustomLoadingIndicator()
+                        : WideButton(
+                            title: "Konfirmasi dan cetak nota",
+                            onPressed: () {
+                              if (invoice.status != InvoiceStatus.paid) {
+                                if ((state is PrinterStateLoaded) &&
+                                    state.devices != null) {
+                                  if (state.devices!
+                                      .where((element) => element.name == "MPT-II")
+                                      .isNotEmpty) {
+                                    context.read<PrinterBloc>().add(
+                                          PrinterEventPrint(
+                                            invoice: (context.read<InvoiceBloc>().state
+                                                    as InvoiceStateActivated)
+                                                .invoice,
+                                            device: state.devices!
+                                                .where(
+                                                    (element) => element.name == "MPT-II")
+                                                .first,
+                                          ),
+                                        );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: AppTheme.colors.error,
+                                          content: Text(
+                                            "Printer tidak dapat ditemukan",
+                                            style: AppTheme.text.subtitle.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                  }
+                                } else if (state is PrinterStateFailed &&
+                                    state.devices != null) {
+                                  if (state.devices!
+                                      .where((element) => element.name == "MPT-II")
+                                      .isNotEmpty) {
+                                    context.read<PrinterBloc>().add(
+                                          PrinterEventPrint(
+                                            invoice: (context.read<InvoiceBloc>().state
+                                                    as InvoiceStateActivated)
+                                                .invoice,
+                                            device: state.devices!
+                                                .where(
+                                                    (element) => element.name == "MPT-II")
+                                                .first,
+                                          ),
+                                        );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: AppTheme.colors.error,
+                                          content: Text(
+                                            "Printer tidak dapat ditemukan",
+                                            style: AppTheme.text.subtitle.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                  }
+                                }
+                              }
+                            },
+                          ),
                   );
                 },
               ),
