@@ -1,4 +1,4 @@
-package com.example.sindu_store
+package com.andrenk.sindu_store
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterFragmentActivity

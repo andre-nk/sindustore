@@ -23,13 +23,11 @@ dependencies:
   flutter_svg: ^1.0.3
   flutterfire_ui: ^0.4.0+3
   formz: ^0.4.1
-  gsheets: ^0.4.2
   intl: ^0.17.0
   ionicons: ^0.1.2
   json_annotation: ^4.4.0
   json_table: ^2.0.1
   local_auth: ^1.1.11
-  logger: ^1.1.0
   modal_bottom_sheet: ^2.0.1
   numeric_keyboard: ^1.1.0
   page_transition: ^2.0.5

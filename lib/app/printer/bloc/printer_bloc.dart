@@ -5,7 +5,6 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
 import 'package:sindu_store/model/product/product.dart';
@@ -74,7 +73,9 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
 
       printerInstance.printCustom("SINAR DUNIA ELEKTRIK", 1, 1);
       printerInstance.printCustom(
-          "Jl. Ahmad Yani, no. 76, Wonosobo, 56311 | Telp: (0286) 321146 | WA: 0812-8005-1677", 0, 1);
+          "Jl. Ahmad Yani, no. 76, Wonosobo, 56311 | Telp: (0286) 321146 | WA: 0812-8005-1677",
+          0,
+          1);
       printerInstance.printCustom("--------------------------------", 1, 1);
       printerInstance.printCustom(
           "TANGGAL   : ${DateFormat.Hm().format(event.invoice.createdAt) + ", " + DateFormat.yMd().format(event.invoice.createdAt)}",
@@ -85,7 +86,8 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       printerInstance.printLeftRight("Produk (Qty)", "Harga", 1);
 
       for (var product in event.invoice.products) {
-        Product productInstance = await productRepository.getProductByID(product.productID);
+        Product productInstance =
+            await productRepository.getProductByID(product.productID);
 
         printerInstance.printCustom("${productInstance.productName} ", 1, 0);
 
@@ -132,12 +134,6 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       try {
         emit(PrinterStateConnecting(devices: state.devices));
 
-        Logger().i("PRE-PRINT");
-        Logger().d(await printerInstance.isOn);
-        Logger().d(await printerInstance.isAvailable);
-        Logger().d(await printerInstance.isConnected);
-        Logger().d(await printerInstance.isDeviceConnected(event.device));
-
         final preStatus = [
           await printerInstance.isDeviceConnected(event.device),
           await printerInstance.isOn,
@@ -146,19 +142,11 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         ];
 
         if (preStatus.every((element) => element == true)) {
-          Logger().i("All passed!");
           await _printInvoice(event);
           await printerInstance.disconnect();
 
           emit(const PrinterStatePrinted());
         } else {
-          for (var i = 0; i < preStatus.length; i++) {
-            if (preStatus[i] == false) {
-              Logger().i("Failed test index: " + i.toString());
-            }
-          }
-
-          Logger().i("Connecting...");
           await printerInstance.connect(event.device);
 
           final postStatus = [
@@ -169,13 +157,18 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           ];
 
           if (postStatus.every((element) => element == true)) {
-            Logger().i("Connection success. Try printing again, please...");
             await _printInvoice(event);
             await printerInstance.disconnect();
 
             emit(const PrinterStatePrinted());
           } else {
-            Logger().i("Connection failed. Try printing again, please...");
+            emit(
+              PrinterStateFailed(
+                Exception(),
+                customMessage: "Printer gagal terhubung! Coba lagi!",
+                devices: state.devices,
+              ),
+            );
           }
         }
       } on PlatformException catch (e) {

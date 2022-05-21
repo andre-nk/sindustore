@@ -630,13 +630,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.11"
-  logger:
-    dependency: "direct main"
-    description:
-      name: logger
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   logging:
     dependency: transitive
     description:
