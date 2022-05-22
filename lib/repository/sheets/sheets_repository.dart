@@ -37,9 +37,11 @@ class SheetsRepository {
         for (var invoice in invoicesRef.docs) {
           final Invoice invoiceInstance = Invoice.fromJson(invoice.data());
           for (var invoiceItem in invoiceInstance.products) {
+            
             final Product productInstance = await _productRepository.getProductByID(
               invoiceItem.productID,
             );
+
             recordItems.add({
               "Nama Produk": productInstance.productName,
               "Jumlah": invoiceItem.quantity,

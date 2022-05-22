@@ -137,6 +137,7 @@ class ProfilePage extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               context.read<AuthBloc>().add(AuthEventSignOut());
+                              RouteWrapper.removeAllAndPush(context, child: const OnboardingPage());
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
