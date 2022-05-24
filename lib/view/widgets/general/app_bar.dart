@@ -43,7 +43,7 @@ class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            AutoSizeText(
               title,
               textAlign: TextAlign.center,
               style: AppTheme.text.paragraph

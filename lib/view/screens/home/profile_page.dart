@@ -54,7 +54,7 @@ class ProfilePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          AutoSizeText(
                             "Profil",
                             style: AppTheme.text.title,
                           ),
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 16.0),
-                                      child: Text(
+                                      child: AutoSizeText(
                                         state.user.name,
                                         style: AppTheme.text.subtitle.copyWith(
                                           fontWeight: FontWeight.w500,
@@ -103,7 +103,7 @@ class ProfilePage extends StatelessWidget {
                                       Radius.circular(4.0),
                                     ),
                                   ),
-                                  child: Text(
+                                  child: AutoSizeText(
                                     state.user.role.name.capitalize(),
                                     style: AppTheme.text.footnote.copyWith(
                                       color: state.user.role == UserRoles.owner
@@ -125,7 +125,7 @@ class ProfilePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     "Setel ulang password",
                                     style: AppTheme.text.subtitle,
                                   ),
@@ -143,7 +143,7 @@ class ProfilePage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
+                                AutoSizeText(
                                   "Keluar dari akun",
                                   style: AppTheme.text.subtitle.copyWith(
                                     color: AppTheme.colors.error,

@@ -30,7 +30,7 @@ class InvoiceCardItemList extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            AutoSizeText(
                               "${state.product.productName} (${invoice.products[index].quantity}x)",
                               style: AppTheme.text.footnote.copyWith(
                                 fontWeight: FontWeight.w500,
@@ -41,7 +41,7 @@ class InvoiceCardItemList extends StatelessWidget {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(right: 8.0),
-                                        child: Text(
+                                        child: AutoSizeText(
                                           NumberFormat.simpleCurrency(
                                             locale: 'id_ID',
                                             decimalDigits: 0,
@@ -54,7 +54,7 @@ class InvoiceCardItemList extends StatelessWidget {
                                               decoration: TextDecoration.lineThrough),
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         NumberFormat.simpleCurrency(
                                           locale: 'id_ID',
                                           decimalDigits: 0,
@@ -65,7 +65,7 @@ class InvoiceCardItemList extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : Text(
+                                : AutoSizeText(
                                     NumberFormat.simpleCurrency(
                                       locale: 'id_ID',
                                       decimalDigits: 0,

@@ -78,7 +78,7 @@ class InvoiceProductListPage extends StatelessWidget {
                           ..showSnackBar(
                             SnackBar(
                               backgroundColor: AppTheme.colors.error,
-                              content: Text(
+                              content: AutoSizeText(
                                 state.exception.toString(),
                                 style:
                                     AppTheme.text.subtitle.copyWith(color: Colors.white),

@@ -7,7 +7,7 @@ class QRScanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
+        child: AutoSizeText(
           "Woi, ini QR",
           style: Theme.of(context).textTheme.displayLarge,
         )

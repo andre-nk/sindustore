@@ -62,12 +62,12 @@ class DashboardPage extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             top: 36.0, bottom: 8.0),
-                                        child: Text(
+                                        child: AutoSizeText(
                                           "Tidak ada nota aktif!",
                                           style: AppTheme.text.h3,
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         "Coba buat nota di atas",
                                         style: AppTheme.text.subtitle,
                                       ),

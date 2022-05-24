@@ -19,7 +19,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              AutoSizeText(
                 "Status nota",
                 style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
               ),
@@ -39,7 +39,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                           Radius.circular(4.0),
                         ),
                       ),
-                      child: Text(
+                      child: AutoSizeText(
                         state.invoice.status.name.capitalize(),
                         style: AppTheme.text.footnote.copyWith(color: Colors.white),
                       ),
@@ -57,7 +57,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                AutoSizeText(
                   "Total:",
                   style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -77,7 +77,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                           child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
                             builder: (context, state) {
                               if (state is InvoiceValueStateLoaded) {
-                                return Text(
+                                return AutoSizeText(
                                   NumberFormat.simpleCurrency(
                                     locale: 'id_ID',
                                     decimalDigits: 0,
@@ -86,7 +86,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                       .copyWith(fontWeight: FontWeight.w500),
                                 );
                               } else {
-                                return Text(
+                                return AutoSizeText(
                                   NumberFormat.simpleCurrency(
                                     locale: 'id_ID',
                                     decimalDigits: 0,
@@ -156,7 +156,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: AppTheme.colors.success,
-                        content: Text(
+                        content: AutoSizeText(
                           "Nota berhasil dicetak!",
                           style: AppTheme.text.subtitle.copyWith(color: Colors.white),
                         ),
@@ -166,7 +166,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: AppTheme.colors.error,
-                        content: Text(
+                        content: AutoSizeText(
                           state.customMessage ?? state.e.toString(),
                           style: AppTheme.text.subtitle.copyWith(color: Colors.white),
                         ),
@@ -205,7 +205,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                       ..showSnackBar(
                                         SnackBar(
                                           backgroundColor: AppTheme.colors.error,
-                                          content: Text(
+                                          content: AutoSizeText(
                                             "Printer tidak dapat ditemukan",
                                             style: AppTheme.text.subtitle.copyWith(
                                               color: Colors.white,
@@ -236,7 +236,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                       ..showSnackBar(
                                         SnackBar(
                                           backgroundColor: AppTheme.colors.error,
-                                          content: Text(
+                                          content: AutoSizeText(
                                             "Printer tidak dapat ditemukan",
                                             style: AppTheme.text.subtitle.copyWith(
                                               color: Colors.white,

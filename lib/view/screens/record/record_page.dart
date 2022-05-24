@@ -79,7 +79,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                 secondary: Colors.black,
                               ),
                             ),
-                            child: child ?? const Text(""),
+                            child: child ?? const AutoSizeText(""),
                           );
                         },
                         initialDate: pickedDateTime ?? DateTime.now(),
@@ -123,12 +123,12 @@ class _ArchivePageState extends State<ArchivePage> {
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 36.0, bottom: 8.0),
-                              child: Text(
+                              child: AutoSizeText(
                                 "Belum ada riwayat penjualan!",
                                 style: AppTheme.text.h3,
                               ),
                             ),
-                            Text(
+                            AutoSizeText(
                               "Silahkan buat nota melalui Beranda",
                               style: AppTheme.text.subtitle,
                             ),
@@ -160,7 +160,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                   color: AppTheme.colors.outline,
                                 ),
                               ),
-                              child: Text(
+                              child: AutoSizeText(
                                 value ?? "_header_",
                                 textAlign: TextAlign.center,
                                 style: AppTheme.text.subtitle
@@ -180,7 +180,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                   color: AppTheme.colors.outline,
                                 ),
                               ),
-                              child: Text(
+                              child: AutoSizeText(
                                 value,
                                 textAlign: TextAlign.center,
                                 style: AppTheme.text.subtitle,
@@ -190,14 +190,14 @@ class _ArchivePageState extends State<ArchivePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                          child: Text(
+                          child: AutoSizeText(
                             "Total Pendapatan: ${state.recordItems.last["Total Pendapatan"]}",
                             style: AppTheme.text.paragraph,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 6.0, left: 16.0, bottom: 16.0),
-                          child: Text(
+                          child: AutoSizeText(
                             "Total Laba: ${state.recordItems.last["Total Laba"]}",
                             style: AppTheme.text.paragraph,
                           ),

@@ -116,7 +116,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
+                  child: AutoSizeText(
                     "Nama produk",
                     style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                   ),
@@ -154,7 +154,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
+                    child: AutoSizeText(
                       "Harga Beli:",
                       style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                     ),
@@ -168,7 +168,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                         isDense: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 16.0),
-                          child: Text(
+                          child: AutoSizeText(
                             "Rp",
                             style: AppTheme.text.subtitle,
                           ),
@@ -202,7 +202,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
+                    child: AutoSizeText(
                       "Harga Jual:",
                       style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                     ),
@@ -216,7 +216,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                         isDense: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 16.0),
-                          child: Text(
+                          child: AutoSizeText(
                             "Rp",
                             style: AppTheme.text.subtitle,
                           ),
@@ -253,7 +253,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        AutoSizeText(
                           "Tags:",
                           style: AppTheme.text.subtitle.copyWith(
                             fontWeight: FontWeight.w500,
@@ -324,7 +324,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        AutoSizeText(
                           "Diskon Produk:",
                           style: AppTheme.text.subtitle.copyWith(
                             fontWeight: FontWeight.w500,
@@ -353,7 +353,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        AutoSizeText(
                                           "Buat pilihan diskon baru:",
                                           style: AppTheme.text.title
                                               .copyWith(fontWeight: FontWeight.w500),
@@ -382,7 +382,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                               hintStyle: AppTheme.text.subtitle.copyWith(
                                                 color: AppTheme.colors.outline,
                                               ),
-                                              label: const Text("Nama diskon"),
+                                              label: const AutoSizeText("Nama diskon"),
                                             ),
                                           ),
                                         ),
@@ -416,7 +416,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                                     AppTheme.text.subtitle.copyWith(
                                                   color: AppTheme.colors.outline,
                                                 ),
-                                                label: const Text(
+                                                label: const AutoSizeText(
                                                     "Jumlah pengurangan harga")),
                                           ),
                                         ),
@@ -482,7 +482,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            AutoSizeText(
                               productDiscounts[index].discountName,
                               style: AppTheme.text.footnote
                                   .copyWith(fontWeight: FontWeight.w500),
@@ -492,7 +492,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4.0),
-                                  child: Text(
+                                  child: AutoSizeText(
                                     NumberFormat.simpleCurrency(
                                       locale: 'id_ID',
                                       decimalDigits: 0,
@@ -531,7 +531,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                       ..showSnackBar(
                         SnackBar(
                           backgroundColor: AppTheme.colors.success,
-                          content: Text(
+                          content: AutoSizeText(
                             widget.existingProduct != null ? "Produk berhasil diperbarui!" : "Produk berhasil disimpan!",
                             style: AppTheme.text.subtitle.copyWith(
                               color: Colors.white,
@@ -551,7 +551,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                           ..showSnackBar(
                             SnackBar(
                               backgroundColor: AppTheme.colors.error,
-                              content: Text(
+                              content: AutoSizeText(
                                 "Form nama produk harus diisi!",
                                 style:
                                     AppTheme.text.subtitle.copyWith(color: Colors.white),
@@ -568,7 +568,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                           ..showSnackBar(
                             SnackBar(
                               backgroundColor: AppTheme.colors.error,
-                              content: Text(
+                              content: AutoSizeText(
                                 "Form harga beli produk harus diisi!",
                                 style:
                                     AppTheme.text.subtitle.copyWith(color: Colors.white),
@@ -585,7 +585,7 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                           ..showSnackBar(
                             SnackBar(
                               backgroundColor: AppTheme.colors.error,
-                              content: Text(
+                              content: AutoSizeText(
                                 "Form harga jual produk harus diisi!",
                                 style: AppTheme.text.subtitle.copyWith(
                                   color: Colors.white,

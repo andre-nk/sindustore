@@ -52,7 +52,7 @@ class ProductBottomSheet extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 product.productName,
                                 style: AppTheme.text.title,
                               ),
@@ -77,7 +77,7 @@ class ProductBottomSheet extends StatelessWidget {
                                               padding: const EdgeInsets.only(
                                                 right: 8.0,
                                               ),
-                                              child: Text(
+                                              child: AutoSizeText(
                                                 NumberFormat.simpleCurrency(
                                                   locale: 'id_ID',
                                                   decimalDigits: 0,
@@ -91,7 +91,7 @@ class ProductBottomSheet extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            Text(
+                                            AutoSizeText(
                                               NumberFormat.simpleCurrency(
                                                 locale: 'id_ID',
                                                 decimalDigits: 0,
@@ -109,7 +109,7 @@ class ProductBottomSheet extends StatelessWidget {
                                           ],
                                         );
                                       } else {
-                                        return Text(
+                                        return AutoSizeText(
                                           NumberFormat.simpleCurrency(
                                             locale: 'id_ID',
                                             decimalDigits: 0,
@@ -120,7 +120,7 @@ class ProductBottomSheet extends StatelessWidget {
                                         );
                                       }
                                     } else {
-                                      return Text(
+                                      return AutoSizeText(
                                         NumberFormat.simpleCurrency(
                                           locale: 'id_ID',
                                           decimalDigits: 0,

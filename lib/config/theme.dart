@@ -40,6 +40,7 @@ class AppTypography {
 class DefaultAppTheme {
   ThemeData appTheme() {
     return ThemeData(
+      brightness: Brightness.light,
       colorScheme: const ColorScheme(
         primary: Color(0xFF1A2C50),
         onPrimary: Color(0xFF1A2C50),

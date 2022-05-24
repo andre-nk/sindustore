@@ -56,7 +56,7 @@ class PINInputPage extends StatelessWidget {
             ),
             Column(
               children: [
-                Text(
+                AutoSizeText(
                   "Verifikasi PIN kamu",
                   style: AppTheme.text.h2.copyWith(fontSize: 24),
                 ),
@@ -120,7 +120,7 @@ class PINInputPage extends StatelessWidget {
                                   delay: const Duration(milliseconds: 50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 24.0),
-                                    child: Text(
+                                    child: AutoSizeText(
                                       "PIN salah! Coba lagi",
                                       style: AppTheme.text.subtitle.copyWith(
                                         color: AppTheme.colors.error,

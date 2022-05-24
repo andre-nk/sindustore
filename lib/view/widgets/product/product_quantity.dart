@@ -52,7 +52,7 @@ class ProductCardQuantity extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
+                      child: AutoSizeText(
                         containedProducts.first.quantity.toString(),
                         style: AppTheme.text.subtitle,
                       ),
@@ -107,7 +107,7 @@ class ProductCardQuantity extends StatelessWidget {
                         elevation: 0,
                       ),
                       child: Center(
-                        child: Text(
+                        child: AutoSizeText(
                           "Tambah",
                           style: AppTheme.text.footnote.copyWith(
                             color: AppTheme.colors.secondary,
@@ -183,7 +183,7 @@ class ProductCardQuantityLarge extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
+                    child: AutoSizeText(
                       containedProducts.first.quantity.toString(),
                       style: AppTheme.text.title,
                     ),

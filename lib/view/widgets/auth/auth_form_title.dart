@@ -7,7 +7,7 @@ class FormTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        return Text(
+        return AutoSizeText(
           (state is AuthStateInitial || state is AuthStateEmailChanged)
               ? "Masukkan e-mail kamu:"
               : "Masukkan password kamu:",

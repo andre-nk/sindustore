@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:deep_collection/deep_collection.dart';
 import 'package:delayed_display/delayed_display.dart';

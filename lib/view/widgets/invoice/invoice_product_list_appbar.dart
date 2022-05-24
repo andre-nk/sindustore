@@ -13,7 +13,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
     return BlocBuilder<ProductBloc, ProductState>(
       builder: (context, state) {
         return SliverAppBar(
-          title: Text(
+          title: AutoSizeText(
             existingInvoice != null ? "Perbarui nota" : "Pilih produk",
             style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
           ),

@@ -21,7 +21,7 @@ class ProductCardDiscount extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.only(bottom: 8.0, left: 4.0),
-              child: Text("Pilihan diskon:"),
+              child: AutoSizeText("Pilihan diskon:"),
             ),
             SizedBox(
               width: MQuery.width(0.9, context),
@@ -42,7 +42,7 @@ class ProductCardDiscount extends StatelessWidget {
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<double>(
-                          hint: Text(
+                          hint: AutoSizeText(
                             'Select Item',
                             style: TextStyle(
                               fontSize: 14,
@@ -53,7 +53,7 @@ class ProductCardDiscount extends StatelessWidget {
                               .map(
                                 (item) => DropdownMenuItem<double>(
                                   value: item.amount,
-                                  child: Text(
+                                  child: AutoSizeText(
                                     item.discountName +
                                         " (${NumberFormat.simpleCurrency(locale: 'id_ID', decimalDigits: 0).format(item.amount)})",
                                     style: const TextStyle(

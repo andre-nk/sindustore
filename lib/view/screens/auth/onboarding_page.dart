@@ -56,7 +56,7 @@ class OnboardingPage extends StatelessWidget {
             ),
             Column(
               children: [
-                Text(
+                AutoSizeText(
                   "Selamat datang!",
                   style: AppTheme.text.h2,
                 ),
@@ -64,7 +64,7 @@ class OnboardingPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     vertical: 8,
                   ),
-                  child: Text(
+                  child: AutoSizeText(
                     "SinduStore adalah aplikasi kasir dan manajemen stok pribadi untuk toko Sinar Dunia Elektrik",
                     textAlign: TextAlign.center,
                     style: AppTheme.text.paragraph.copyWith(height: 1.67),
@@ -87,7 +87,7 @@ class OnboardingPage extends StatelessWidget {
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {},
-                  child: Text(
+                  child: AutoSizeText(
                     "Butuh bantuan? Hubungi admin",
                     textAlign: TextAlign.center,
                     style: AppTheme.text.subtitle.copyWith(height: 1.67),

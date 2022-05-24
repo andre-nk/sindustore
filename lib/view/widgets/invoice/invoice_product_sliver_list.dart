@@ -28,12 +28,12 @@ class InvoiceProductSliverList extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 36.0, bottom: 8.0),
-                      child: Text(
+                      child: AutoSizeText(
                         "Produk tidak ditemukan.",
                         style: AppTheme.text.h3,
                       ),
                     ),
-                    Text(
+                    AutoSizeText(
                       "Coba gunakan kata kunci lain.",
                       style: AppTheme.text.subtitle,
                     ),

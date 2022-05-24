@@ -19,7 +19,7 @@ class InvoiceCardValue extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                AutoSizeText(
                   NumberFormat.simpleCurrency(
                     locale: 'id_ID',
                     decimalDigits: 0,
@@ -44,7 +44,7 @@ class InvoiceCardValue extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Center(
-                      child: Text(
+                      child: AutoSizeText(
                         invoice.status == InvoiceStatus.paid ? "Detail" : "Bayar",
                         style: AppTheme.text.footnote.copyWith(
                           color: AppTheme.colors.secondary,

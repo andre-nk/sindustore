@@ -26,7 +26,7 @@ class AuthForm extends StatelessWidget {
             ..showSnackBar(
               SnackBar(
                 backgroundColor: AppTheme.colors.error,
-                content: Text(
+                content: AutoSizeText(
                   exceptionMessage,
                   style: AppTheme.text.subtitle.copyWith(color: Colors.white),
                 ),

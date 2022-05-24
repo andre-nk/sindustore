@@ -63,14 +63,14 @@ class InvoiceCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      AutoSizeText(
                         "Nota " + index.toString(),
                         style:
                             AppTheme.text.paragraph.copyWith(fontWeight: FontWeight.w600),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
+                        child: AutoSizeText(
                           DateFormat.Hm().format(invoice.createdAt) +
                               ", " +
                               DateFormat.yMd().format(invoice.createdAt),
@@ -89,7 +89,7 @@ class InvoiceCard extends StatelessWidget {
                         Radius.circular(4.0),
                       ),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       invoice.status.name.capitalize(),
                       style: AppTheme.text.footnote.copyWith(color: Colors.white),
                     ),

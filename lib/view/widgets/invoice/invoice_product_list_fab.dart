@@ -37,7 +37,7 @@ class InvoiceProductListFAB extends StatelessWidget {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            AutoSizeText(
                               "${state.invoice.products.length} produk",
                               style: AppTheme.text.subtitle.copyWith(
                                 color: Colors.white,
@@ -47,7 +47,7 @@ class InvoiceProductListFAB extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
+                              child: AutoSizeText(
                                 "Lanjut ke halaman checkout",
                                 style: AppTheme.text.footnote
                                     .copyWith(color: Colors.white, letterSpacing: 0.1),
@@ -58,7 +58,7 @@ class InvoiceProductListFAB extends StatelessWidget {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            AutoSizeText(
                               "Belum ada produk",
                               style: AppTheme.text.subtitle.copyWith(
                                 color: Colors.white,
@@ -68,7 +68,7 @@ class InvoiceProductListFAB extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
+                              child: AutoSizeText(
                                 "Tambah produk diatas...",
                                 style: AppTheme.text.footnote
                                     .copyWith(color: Colors.white, letterSpacing: 0.1),

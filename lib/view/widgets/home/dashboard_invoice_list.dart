@@ -48,7 +48,7 @@ class DashboardInvoiceList extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                AutoSizeText(
                   "Nota aktif",
                   style: AppTheme.text.h3,
                 ),
@@ -56,7 +56,7 @@ class DashboardInvoiceList extends StatelessWidget {
                   onTap: (){
                     RouteWrapper.push(context, child: const InvoiceListPage());
                   },
-                  child: Text(
+                  child: AutoSizeText(
                     "lihat semua",
                     style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
                   ),

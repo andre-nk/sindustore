@@ -59,7 +59,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text(
+                                                AutoSizeText(
                                                   "Produk (${invoiceState.invoice.products.length})",
                                                   style: AppTheme.text.paragraph.copyWith(
                                                     fontWeight: FontWeight.w600,
@@ -75,7 +75,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
                                                   child: Padding(
                                                     padding: const EdgeInsets.symmetric(
                                                         horizontal: 4.0),
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       "Tambah",
                                                       style: AppTheme.text.footnote.copyWith(
                                                         color: AppTheme.colors.secondary,
@@ -131,7 +131,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
+                                        AutoSizeText(
                                           "Belum ada produk",
                                           style: AppTheme.text.paragraph.copyWith(
                                             fontWeight: FontWeight.w600,
@@ -146,7 +146,7 @@ class InvoiceCheckoutPage extends StatelessWidget {
                                           child: Padding(
                                             padding:
                                                 const EdgeInsets.symmetric(horizontal: 4.0),
-                                            child: Text(
+                                            child: AutoSizeText(
                                               "Tambah",
                                               style: AppTheme.text.footnote.copyWith(
                                                 color: AppTheme.colors.secondary,
@@ -175,12 +175,12 @@ class InvoiceCheckoutPage extends StatelessWidget {
                                                 top: 36.0,
                                                 bottom: 8.0,
                                               ),
-                                              child: Text(
+                                              child: AutoSizeText(
                                                 "Belum ada produk di nota ini!",
                                                 style: AppTheme.text.title,
                                               ),
                                             ),
-                                            Text(
+                                            AutoSizeText(
                                               "Coba mulai tambahkan produk melalui tombol di atas",
                                               style: AppTheme.text.subtitle,
                                               textAlign: TextAlign.center,

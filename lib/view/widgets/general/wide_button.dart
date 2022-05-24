@@ -25,7 +25,7 @@ class WideButton extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(
+        child: AutoSizeText(
           title,
           style: AppTheme.text.paragraph.copyWith(
             fontWeight: FontWeight.w500,

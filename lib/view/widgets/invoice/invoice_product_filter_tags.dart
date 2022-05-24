@@ -44,7 +44,8 @@ class InvoiceProductFilterTags extends StatelessWidget {
                         ).copyWith(right: 12.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: state is TagsStateSelected && state.activeTagIndex == index
+                              primary: state is TagsStateSelected &&
+                                      state.activeTagIndex == index
                                   ? AppTheme.colors.tertiary
                                   : Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -67,18 +68,23 @@ class InvoiceProductFilterTags extends StatelessWidget {
                                     index != state.activeTagIndex)) {
                               context.read<TagsBloc>().add(
                                     TagsEventSelect(
-                                        tags: state.productTags, activeTagIndex: index),
+                                      tags: state.productTags,
+                                      activeTagIndex: index,
+                                    ),
                                   );
+
+                              context.read<ProductBloc>().add(ProductEventFilter(
+                                  filterTag: state.productTags[index]));
                             } else {
                               context.read<TagsBloc>().add(
                                     TagsEventSelect(
                                         tags: state.productTags, activeTagIndex: -1),
                                   );
-                            }
 
-                            context.read<ProductBloc>().add(ProductEventFilter(filterTag: state.productTags[index]));
+                              context.read<ProductBloc>().add(const ProductEventFetchQuery());
+                            }
                           },
-                          child: Text(
+                          child: AutoSizeText(
                             toBeginningOfSentenceCase(state.productTags[index])!,
                             style: AppTheme.text.footnote.copyWith(
                               color: state is TagsStateSelected &&

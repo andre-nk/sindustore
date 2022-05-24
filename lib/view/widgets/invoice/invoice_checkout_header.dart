@@ -18,7 +18,7 @@ class InvoiceCheckoutHeader extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AutoSizeText(
                       "Yth. (opsional)",
                       style: AppTheme.text.footnote,
                     ),
@@ -57,13 +57,13 @@ class InvoiceCheckoutHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                AutoSizeText(
                   "Dirilis pada",
                   style: AppTheme.text.footnote,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
+                  child: AutoSizeText(
                     invoice != null
                         ? DateFormat.Hm().format(invoice!.createdAt) +
                             ", " +
