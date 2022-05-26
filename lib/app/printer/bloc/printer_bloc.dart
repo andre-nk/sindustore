@@ -39,7 +39,8 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         var bluetoothPermission = await Permission.bluetoothConnect.status;
 
         if (bluetoothPermission.isGranted) {
-          List<BluetoothDevice> devices = await printerInstance.getBondedDevices();
+          List<BluetoothDevice> devices =
+              await printerInstance.getBondedDevices();
           emit(PrinterStateLoaded(devices: devices));
         } else {
           emit(const PrinterStatePermissionError());
@@ -55,9 +56,10 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
     });
 
     Future<void> _printInvoice(
-      PrinterEventPrint event,
+      PrinterEventOriginalPrint event,
     ) async {
-      final double invoiceValue = await invoiceRepository.sumInvoice(event.invoice);
+      final double invoiceValue =
+          await invoiceRepository.sumInvoice(event.invoice);
 
       Uint8List? logoBytes;
       await rootBundle.load("assets/icon_print.png").then((value) {
@@ -81,7 +83,8 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           "TANGGAL   : ${DateFormat.Hm().format(event.invoice.createdAt) + ", " + DateFormat.yMd().format(event.invoice.createdAt)}",
           1,
           0);
-      printerInstance.printCustom("PELANGGAN : ${event.invoice.customerName}", 1, 0);
+      printerInstance.printCustom(
+          "PELANGGAN : ${event.invoice.customerName}", 1, 0);
       printerInstance.printCustom("--------------------------------", 1, 1);
       printerInstance.printLeftRight("Produk (Qty)", "Harga", 1);
 
@@ -96,7 +99,8 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           NumberFormat.simpleCurrency(
             locale: 'id_ID',
             decimalDigits: 0,
-          ).format((productInstance.productSellPrice + product.discount).toInt()),
+          ).format(
+              (productInstance.productSellPrice + product.discount).toInt()),
           1,
         );
       }
@@ -110,14 +114,75 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         1,
         0,
       );
-      printerInstance.printCustom("TOTAL ITEM : ${event.invoice.products.length}", 1, 0);
+      printerInstance.printCustom(
+          "TOTAL ITEM : ${event.invoice.products.length}", 1, 0);
       printerInstance.printCustom("--------------------------------", 1, 1);
       printerInstance.printNewLine();
       printerInstance.printCustom("Terima kasih!", 2, 1);
+    }
+
+    Future<void> _printInvoiceCopy(
+      PrinterEventCopyPrint event,
+    ) async {
+      final double invoiceValue =
+          await invoiceRepository.sumInvoice(event.invoice);
+
+      Uint8List? logoBytes;
+      await rootBundle.load("assets/icon_print.png").then((value) {
+        logoBytes = value.buffer.asUint8List();
+      });
+
+      printerInstance.printNewLine();
+      printerInstance.printNewLine();
+
+      if (logoBytes != null) {
+        printerInstance.printImageBytes(logoBytes!);
+      }
+
+      printerInstance.printCustom("SINAR DUNIA ELEKTRIK (COPY)", 1, 1);
+      printerInstance.printCustom("--------------------------------", 1, 1);
+      printerInstance.printCustom(
+          "TANGGAL   : ${DateFormat.Hm().format(event.invoice.createdAt) + ", " + DateFormat.yMd().format(event.invoice.createdAt)}",
+          1,
+          0);
+      printerInstance.printCustom(
+          "PELANGGAN : ${event.invoice.customerName}", 1, 0);
+      printerInstance.printCustom("--------------------------------", 1, 1);
+      printerInstance.printLeftRight("Produk (Qty)", "Harga", 1);
+
+      for (var product in event.invoice.products) {
+        Product productInstance =
+            await productRepository.getProductByID(product.productID);
+
+        printerInstance.printCustom("${productInstance.productName} ", 1, 0);
+
+        printerInstance.printLeftRight(
+          "(${product.quantity.toString()}x)",
+          NumberFormat.simpleCurrency(
+            locale: 'id_ID',
+            decimalDigits: 0,
+          ).format(
+              (productInstance.productSellPrice + product.discount).toInt()),
+          1,
+        );
+      }
+
+      printerInstance.printCustom("--------------------------------", 1, 1);
+      printerInstance.printCustom(
+        "TOTAL HARGA : ${NumberFormat.simpleCurrency(
+          locale: 'id_ID',
+          decimalDigits: 0,
+        ).format(invoiceValue)}",
+        1,
+        0,
+      );
+      printerInstance.printCustom(
+          "TOTAL ITEM : ${event.invoice.products.length}", 1, 0);
+      printerInstance.printCustom("--------------------------------", 1, 1);
       printerInstance.paperCut();
     }
 
-    on<PrinterEventPrint>((event, emit) async {
+    on<PrinterEventOriginalPrint>((event, emit) async {
       //If we have connected to the printer earlier, then we shut down the printer, and then we tap the print button again, the preStatus tests will pass perfectly!
       //This indicates that the printerInstance can't detect whether the previously connected printer is dead or not
       //resulting into (uncaught exception on printing)? but the flow will continue to Firestore
@@ -145,7 +210,10 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           await _printInvoice(event);
           await printerInstance.disconnect();
 
-          emit(const PrinterStatePrinted());
+          emit(PrinterStateOriginalPrinted(
+            device: event.device,
+            invoice: event.invoice,
+          ));
         } else {
           await printerInstance.connect(event.device);
 
@@ -160,7 +228,10 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
             await _printInvoice(event);
             await printerInstance.disconnect();
 
-            emit(const PrinterStatePrinted());
+            emit(PrinterStateOriginalPrinted(
+              device: event.device,
+              invoice: event.invoice,
+            ));
           } else {
             emit(
               PrinterStateFailed(
@@ -175,7 +246,69 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         emit(
           PrinterStateFailed(
             e,
-            customMessage: "Printer mati atau sudah terhubung dengan perangkat lain!",
+            customMessage:
+                "Printer mati atau sudah terhubung dengan perangkat lain!",
+            devices: state.devices,
+          ),
+        );
+      } on Exception catch (e) {
+        emit(
+          PrinterStateFailed(
+            e,
+            customMessage: "Printer tidak dapat terhubung!",
+            devices: state.devices,
+          ),
+        );
+      }
+    });
+
+    on<PrinterEventCopyPrint>((event, emit) async {
+      try {
+        emit(PrinterStateConnecting(devices: state.devices));
+
+        final preStatus = [
+          await printerInstance.isDeviceConnected(event.device),
+          await printerInstance.isOn,
+          await printerInstance.isAvailable,
+          await printerInstance.isConnected,
+        ];
+
+        if (preStatus.every((element) => element == true)) {
+          await _printInvoiceCopy(event);
+          await printerInstance.disconnect();
+
+          emit(const PrinterStateCopyPrinted());
+        } else {
+          await printerInstance.connect(event.device);
+
+          final postStatus = [
+            await printerInstance.isDeviceConnected(event.device),
+            await printerInstance.isOn,
+            await printerInstance.isAvailable,
+            await printerInstance.isConnected,
+          ];
+
+          if (postStatus.every((element) => element == true)) {
+            await _printInvoiceCopy(event);
+            await printerInstance.disconnect();
+
+            emit(const PrinterStateCopyPrinted());
+          } else {
+            emit(
+              PrinterStateFailed(
+                Exception(),
+                customMessage: "Printer gagal terhubung! Coba lagi!",
+                devices: state.devices,
+              ),
+            );
+          }
+        }
+      } on PlatformException catch (e) {
+        emit(
+          PrinterStateFailed(
+            e,
+            customMessage:
+                "Printer mati atau sudah terhubung dengan perangkat lain!",
             devices: state.devices,
           ),
         );

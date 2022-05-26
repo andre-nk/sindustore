@@ -40,15 +40,6 @@ class ProductBottomSheet extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            margin: const EdgeInsets.only(right: 16.0),
-                            decoration: BoxDecoration(
-                              color: AppTheme.colors.surface,
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

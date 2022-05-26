@@ -79,7 +79,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                 secondary: Colors.black,
                               ),
                             ),
-                            child: child ?? const AutoSizeText(""),
+                            child: child ?? const Text(""),
                           );
                         },
                         initialDate: pickedDateTime ?? DateTime.now(),
@@ -123,12 +123,12 @@ class _ArchivePageState extends State<ArchivePage> {
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 36.0, bottom: 8.0),
-                              child: AutoSizeText(
+                              child: Text(
                                 "Belum ada riwayat penjualan!",
                                 style: AppTheme.text.h3,
                               ),
                             ),
-                            AutoSizeText(
+                            Text(
                               "Silahkan buat nota melalui Beranda",
                               style: AppTheme.text.subtitle,
                             ),
@@ -140,6 +140,14 @@ class _ArchivePageState extends State<ArchivePage> {
                 } else {
                   final jsonRecordData = state.recordItems
                       .sublist(0, state.recordItems.length - 1);
+
+                  List<Map> incompleteProducts = [];
+                  for (var element in state.recordItems
+                      .sublist(0, state.recordItems.length - 1)) {
+                    if (element["Total Harga Beli"] == 0.0) {
+                      incompleteProducts.add(element);
+                    }
+                  }
 
                   return SingleChildScrollView(
                     child: Column(
@@ -160,7 +168,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                   color: AppTheme.colors.outline,
                                 ),
                               ),
-                              child: AutoSizeText(
+                              child: Text(
                                 value ?? "_header_",
                                 textAlign: TextAlign.center,
                                 style: AppTheme.text.subtitle
@@ -180,7 +188,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                   color: AppTheme.colors.outline,
                                 ),
                               ),
-                              child: AutoSizeText(
+                              child: Text(
                                 value,
                                 textAlign: TextAlign.center,
                                 style: AppTheme.text.subtitle,
@@ -188,18 +196,107 @@ class _ArchivePageState extends State<ArchivePage> {
                             );
                           },
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                          child: AutoSizeText(
-                            "Total Pendapatan: ${state.recordItems.last["Total Pendapatan"]}",
-                            style: AppTheme.text.paragraph,
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8.0)),
+                            color: AppTheme.colors.surface.withOpacity(0.75),
+                          ),
+                          margin:
+                              const EdgeInsets.all(16.0).copyWith(bottom: 0.0),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12.0),
+                                child: Icon(
+                                  Ionicons.cash_outline,
+                                  color: AppTheme.colors.success,
+                                ),
+                              ),
+                              Text(
+                                "Total Pendapatan: ${state.recordItems.last["Total Pendapatan"]}",
+                                style: AppTheme.text.subtitle,
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0, left: 16.0, bottom: 16.0),
-                          child: AutoSizeText(
-                            "Total Laba: ${state.recordItems.last["Total Laba"]}",
-                            style: AppTheme.text.paragraph,
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8.0)),
+                            color: AppTheme.colors.surface.withOpacity(0.75),
+                          ),
+                          margin: const EdgeInsets.all(16.0).copyWith(top: 8.0),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12.0),
+                                child: Icon(
+                                  Ionicons.analytics_outline,
+                                  color: AppTheme.colors.success,
+                                ),
+                              ),
+                              Text(
+                                "Total Laba: ${state.recordItems.last["Total Laba"]}",
+                                style: AppTheme.text.subtitle,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8.0)),
+                            color: AppTheme.colors.tertiary,
+                          ),
+                          margin: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Icon(Ionicons.warning_outline,
+                                          color: Colors.white),
+                                    ),
+                                    Text(
+                                      "Produk Tanpa Harga Beli!",
+                                      style: AppTheme.text.subtitle.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Wrap(
+                                direction: Axis.vertical,
+                                spacing: 6.0,
+                                children: List.generate(
+                                  incompleteProducts.length,
+                                  (index) {
+                                    return Text(
+                                      (index + 1).toString() +
+                                          ". " +
+                                          incompleteProducts.toList()[index]
+                                              ["Nama Produk"],
+                                      style: AppTheme.text.footnote.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

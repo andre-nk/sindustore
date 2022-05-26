@@ -15,12 +15,14 @@ class ProductCard extends StatelessWidget {
             showMaterialModalBottomSheet(
               context: context,
               builder: (_) {
-                return SizedBox(
-                  height: MQuery.height(0.425, context),
-                  child: ProductBottomSheet(
-                    product: product,
-                    ancestorContext: context,
-                  ),
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ProductBottomSheet(
+                      product: product,
+                      ancestorContext: context,
+                    ),
+                  ],
                 );
               },
             );
@@ -51,7 +53,8 @@ class ProductCard extends StatelessWidget {
                                 invoiceState.invoice.products.isNotEmpty) {
                               List<InvoiceItem> filteredItems = invoiceState
                                   .invoice.products
-                                  .where((element) => element.productID == product.id)
+                                  .where((element) =>
+                                      element.productID == product.id)
                                   .toList();
 
                               if (filteredItems.isNotEmpty &&
@@ -73,7 +76,8 @@ class ProductCard extends StatelessWidget {
                                         style: AppTheme.text.footnote.copyWith(
                                           fontSize: 12,
                                           color: AppTheme.colors.outline,
-                                          decoration: TextDecoration.lineThrough,
+                                          decoration:
+                                              TextDecoration.lineThrough,
                                         ),
                                       ),
                                     ),
@@ -85,7 +89,8 @@ class ProductCard extends StatelessWidget {
                                         product.productSellPrice.toInt() +
                                             invoiceState.invoice.products
                                                 .where((element) =>
-                                                    element.productID == product.id)
+                                                    element.productID ==
+                                                    product.id)
                                                 .first
                                                 .discount,
                                       ),

@@ -13,8 +13,10 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productBuyPriceController = TextEditingController();
   TextEditingController productSellPriceController = TextEditingController();
-  TextEditingController productNewDiscountNameController = TextEditingController();
-  TextEditingController productNewDiscountAmountController = TextEditingController();
+  TextEditingController productNewDiscountNameController =
+      TextEditingController();
+  TextEditingController productNewDiscountAmountController =
+      TextEditingController();
   List<TextEditingController> tags = [];
   List<ProductDiscount> productDiscounts = [];
 
@@ -26,10 +28,12 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
         TextEditingValue(text: widget.existingProduct!.productName),
       );
       productBuyPriceController = TextEditingController.fromValue(
-        TextEditingValue(text: widget.existingProduct!.productBuyPrice.toString()),
+        TextEditingValue(
+            text: widget.existingProduct!.productBuyPrice.toString()),
       );
       productSellPriceController = TextEditingController.fromValue(
-        TextEditingValue(text: widget.existingProduct!.productSellPrice.toString()),
+        TextEditingValue(
+            text: widget.existingProduct!.productSellPrice.toString()),
       );
       tags = widget.existingProduct!.tags
           .map((e) => TextEditingController.fromValue(
@@ -42,8 +46,18 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProductBloc(ProductRepository()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ProductBloc(ProductRepository()),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(AuthRepository())
+            ..add(
+              const AuthEventInitialize(),
+            ),
+        ),
+      ],
       child: Scaffold(
         appBar: GeneralAppBar(
             title: "Buat produk baru",
@@ -68,8 +82,8 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                       Radius.circular(12.0),
                                     ),
                                   ),
-                                  contentPadding:
-                                      const EdgeInsets.all(24.0).copyWith(right: 32.0),
+                                  contentPadding: const EdgeInsets.all(24.0)
+                                      .copyWith(right: 32.0),
                                   title: const Text("Hapus produk ini?"),
                                   content: const Text(
                                     "Hati-hati, data produk ini tidak dapat dikembalikan setelah terhapus!",
@@ -118,7 +132,8 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: AutoSizeText(
                     "Nama produk",
-                    style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
+                    style: AppTheme.text.subtitle
+                        .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
                 Padding(
@@ -147,53 +162,64 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: AutoSizeText(
-                      "Harga Beli:",
-                      style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: TextField(
-                      controller: productBuyPriceController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthStateLoggedIn &&
+                    state.user.role != UserRoles.worker) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
                           child: AutoSizeText(
-                            "Rp",
-                            style: AppTheme.text.subtitle,
+                            "Harga Beli:",
+                            style: AppTheme.text.subtitle
+                                .copyWith(fontWeight: FontWeight.w500),
                           ),
                         ),
-                        prefixIconConstraints: BoxConstraints.tight(const Size(48, 22)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            width: 1,
-                            style: BorderStyle.solid,
-                            color: AppTheme.colors.primary,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: TextField(
+                            controller: productBuyPriceController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: AutoSizeText(
+                                  "Rp",
+                                  style: AppTheme.text.subtitle,
+                                ),
+                              ),
+                              prefixIconConstraints:
+                                  BoxConstraints.tight(const Size(48, 22)),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  style: BorderStyle.solid,
+                                  color: AppTheme.colors.primary,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 14,
+                                horizontal: 16,
+                              ),
+                              hintText: "contoh: 250000",
+                            ),
                           ),
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 16,
-                        ),
-                        hintText: "contoh: 250000",
-                      ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
@@ -204,7 +230,8 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: AutoSizeText(
                       "Harga Jual:",
-                      style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
+                      style: AppTheme.text.subtitle
+                          .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
                   Padding(
@@ -221,7 +248,8 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                             style: AppTheme.text.subtitle,
                           ),
                         ),
-                        prefixIconConstraints: BoxConstraints.tight(const Size(48, 22)),
+                        prefixIconConstraints:
+                            BoxConstraints.tight(const Size(48, 22)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
@@ -299,10 +327,12 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                               suffixIconConstraints:
                                   BoxConstraints.tight(const Size(36, 48)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppTheme.colors.primary),
+                                borderSide:
+                                    BorderSide(color: AppTheme.colors.primary),
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppTheme.colors.primary),
+                                borderSide:
+                                    BorderSide(color: AppTheme.colors.primary),
                               ),
                               hintText: "contoh: Kompor",
                             ),
@@ -343,51 +373,60 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                   child: Container(
                                     height: MQuery.height(0.31, context),
                                     width: MQuery.width(0.95, context),
-                                    padding:
-                                        EdgeInsets.all(MQuery.height(0.025, context)),
+                                    padding: EdgeInsets.all(
+                                        MQuery.height(0.025, context)),
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          const BorderRadius.all(Radius.circular(20)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
                                       color: AppTheme.colors.background,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         AutoSizeText(
                                           "Buat pilihan diskon baru:",
-                                          style: AppTheme.text.title
-                                              .copyWith(fontWeight: FontWeight.w500),
+                                          style: AppTheme.text.title.copyWith(
+                                              fontWeight: FontWeight.w500),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 24.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 24.0),
                                           child: TextField(
-                                            controller: productNewDiscountNameController,
+                                            controller:
+                                                productNewDiscountNameController,
                                             decoration: InputDecoration(
                                               isDense: true,
                                               border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                                 borderSide: BorderSide(
                                                   width: 1,
                                                   style: BorderStyle.solid,
-                                                  color: AppTheme.colors.primary,
+                                                  color:
+                                                      AppTheme.colors.primary,
                                                 ),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
-                                              contentPadding: const EdgeInsets.symmetric(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
                                                 vertical: 14,
                                                 horizontal: 16,
                                               ),
                                               hintText: "Nama diskon...",
-                                              hintStyle: AppTheme.text.subtitle.copyWith(
+                                              hintStyle: AppTheme.text.subtitle
+                                                  .copyWith(
                                                 color: AppTheme.colors.outline,
                                               ),
-                                              label: const AutoSizeText("Nama diskon"),
+                                              label: const AutoSizeText(
+                                                  "Nama diskon"),
                                             ),
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 16.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 16.0),
                                           child: TextField(
                                             keyboardType: TextInputType.number,
                                             controller:
@@ -395,15 +434,18 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                             decoration: InputDecoration(
                                                 isDense: true,
                                                 border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(12),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                   borderSide: BorderSide(
                                                     width: 1,
                                                     style: BorderStyle.solid,
-                                                    color: AppTheme.colors.primary,
+                                                    color:
+                                                        AppTheme.colors.primary,
                                                   ),
                                                 ),
                                                 prefixText: "-Rp ",
-                                                prefixStyle: AppTheme.text.subtitle,
+                                                prefixStyle:
+                                                    AppTheme.text.subtitle,
                                                 filled: true,
                                                 fillColor: Colors.white,
                                                 contentPadding:
@@ -411,20 +453,25 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                                   vertical: 14,
                                                   horizontal: 16,
                                                 ),
-                                                hintText: "Jumlah pengurangan harga",
-                                                hintStyle:
-                                                    AppTheme.text.subtitle.copyWith(
-                                                  color: AppTheme.colors.outline,
+                                                hintText:
+                                                    "Jumlah pengurangan harga",
+                                                hintStyle: AppTheme
+                                                    .text.subtitle
+                                                    .copyWith(
+                                                  color:
+                                                      AppTheme.colors.outline,
                                                 ),
                                                 label: const AutoSizeText(
                                                     "Jumlah pengurangan harga")),
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
                                             Container(
-                                              padding: const EdgeInsets.only(top: 24),
+                                              padding: const EdgeInsets.only(
+                                                  top: 24),
                                               width: 116,
                                               height: 68,
                                               child: WideButton(
@@ -434,10 +481,15 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                                       productNewDiscountAmountController
                                                           .text;
 
-                                                  if (discountAmount.isNotEmpty &&
-                                                      double.parse(discountAmount
-                                                              .replaceAll('.', '')
-                                                              .replaceAll('-', '')) >=
+                                                  if (discountAmount
+                                                          .isNotEmpty &&
+                                                      double.parse(
+                                                              discountAmount
+                                                                  .replaceAll(
+                                                                      '.', '')
+                                                                  .replaceAll(
+                                                                      '-',
+                                                                      '')) >=
                                                           0) {
                                                     setState(() {
                                                       productDiscounts
@@ -445,8 +497,10 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                                                         id: const Uuid().v4(),
                                                         amount: double.parse(
                                                             discountAmount
-                                                                .replaceAll('.', '')
-                                                                .replaceAll('-', '')),
+                                                                .replaceAll(
+                                                                    '.', '')
+                                                                .replaceAll(
+                                                                    '-', '')),
                                                         discountName:
                                                             productNewDiscountNameController
                                                                 .text,
@@ -475,7 +529,8 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                   ),
                   Container(
                     padding: const EdgeInsets.only(right: 0.0, left: 8.0),
-                    height: MQuery.height(0.075 * productDiscounts.length, context),
+                    height:
+                        MQuery.height(0.075 * productDiscounts.length, context),
                     child: ListView.builder(
                       itemCount: productDiscounts.length,
                       itemBuilder: (context, index) {
@@ -532,7 +587,9 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                         SnackBar(
                           backgroundColor: AppTheme.colors.success,
                           content: AutoSizeText(
-                            widget.existingProduct != null ? "Produk berhasil diperbarui!" : "Produk berhasil disimpan!",
+                            widget.existingProduct != null
+                                ? "Produk berhasil diperbarui!"
+                                : "Produk berhasil disimpan!",
                             style: AppTheme.text.subtitle.copyWith(
                               color: Colors.white,
                             ),
@@ -543,86 +600,105 @@ class _ProductEditorPageState extends State<ProductEditorPage> {
                   }
                 },
                 builder: (context, state) {
-                  return WideButton(
-                    onPressed: () {
-                      if (productNameController.text.isEmpty) {
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              backgroundColor: AppTheme.colors.error,
-                              content: AutoSizeText(
-                                "Form nama produk harus diisi!",
-                                style:
-                                    AppTheme.text.subtitle.copyWith(color: Colors.white),
-                              ),
-                            ),
-                          );
-                      } else if (productBuyPriceController.text.isEmpty ||
-                          double.parse(productBuyPriceController.text
-                                  .replaceAll('.', '')
-                                  .replaceAll('-', '')) <=
-                              0) {
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              backgroundColor: AppTheme.colors.error,
-                              content: AutoSizeText(
-                                "Form harga beli produk harus diisi!",
-                                style:
-                                    AppTheme.text.subtitle.copyWith(color: Colors.white),
-                              ),
-                            ),
-                          );
-                      } else if (productSellPriceController.text.isEmpty ||
-                          double.parse(productSellPriceController.text
-                                  .replaceAll('.', '')
-                                  .replaceAll('-', '')) <=
-                              0) {
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              backgroundColor: AppTheme.colors.error,
-                              content: AutoSizeText(
-                                "Form harga jual produk harus diisi!",
-                                style: AppTheme.text.subtitle.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          );
-                      } else {
-                        if (widget.existingProduct != null) {
-                          context.read<ProductBloc>().add(
-                                ProductEventUpdate(
-                                  existingProductID: widget.existingProduct!.id,
-                                  productName: productNameController.text,
-                                  productBuyPrice:
-                                      double.parse(productBuyPriceController.text),
-                                  productSellPrice:
-                                      double.parse(productSellPriceController.text),
-                                  tags: tags.map((e) => e.text).toList(),
-                                  productDiscounts: productDiscounts,
+                  return BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, authState) {
+                      return WideButton(
+                        onPressed: () {
+                          if (productNameController.text.isEmpty) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  backgroundColor: AppTheme.colors.error,
+                                  content: AutoSizeText(
+                                    "Form nama produk harus diisi!",
+                                    style: AppTheme.text.subtitle
+                                        .copyWith(color: Colors.white),
+                                  ),
                                 ),
                               );
-                        } else {
-                          context.read<ProductBloc>().add(
-                                ProductEventCreate(
-                                  productName: productNameController.text,
-                                  productBuyPrice:
-                                      double.parse(productBuyPriceController.text),
-                                  productSellPrice:
-                                      double.parse(productSellPriceController.text),
-                                  tags: tags.map((e) => e.text).toList(),
-                                  productDiscounts: productDiscounts,
+                          } else if (authState is AuthStateLoggedIn &&
+                              authState.user.role != UserRoles.worker &&
+                              (productBuyPriceController.text.isEmpty ||
+                                  double.parse(productBuyPriceController.text
+                                          .replaceAll('.', '')
+                                          .replaceAll('-', '')) <=
+                                      0)) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  backgroundColor: AppTheme.colors.error,
+                                  content: AutoSizeText(
+                                    "Form harga beli produk harus diisi!",
+                                    style: AppTheme.text.subtitle
+                                        .copyWith(color: Colors.white),
+                                  ),
                                 ),
                               );
-                        }
-                      }
+                          } else if (productSellPriceController.text.isEmpty ||
+                              double.parse(productSellPriceController.text
+                                      .replaceAll('.', '')
+                                      .replaceAll('-', '')) <=
+                                  0) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  backgroundColor: AppTheme.colors.error,
+                                  content: AutoSizeText(
+                                    "Form harga jual produk harus diisi!",
+                                    style: AppTheme.text.subtitle.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              );
+                          } else {
+                            if (widget.existingProduct != null) {
+                              context.read<ProductBloc>().add(
+                                    ProductEventUpdate(
+                                      existingProductID:
+                                          widget.existingProduct!.id,
+                                      productName: productNameController.text,
+                                      productBuyPrice: (authState
+                                                  is AuthStateLoggedIn &&
+                                              authState.user.role ==
+                                                  UserRoles.worker)
+                                          ? 0.0
+                                          : double.parse(
+                                              productBuyPriceController.text,
+                                            ),
+                                      productSellPrice: double.parse(
+                                          productSellPriceController.text),
+                                      tags: tags.map((e) => e.text).toList(),
+                                      productDiscounts: productDiscounts,
+                                    ),
+                                  );
+                            } else {
+                              context.read<ProductBloc>().add(
+                                    ProductEventCreate(
+                                      productName: productNameController.text,
+                                      productBuyPrice: (authState
+                                                  is AuthStateLoggedIn &&
+                                              authState.user.role ==
+                                                  UserRoles.worker)
+                                          ? 0.0
+                                          : double.parse(
+                                              productBuyPriceController.text,
+                                            ),
+                                      productSellPrice: double.parse(
+                                          productSellPriceController.text),
+                                      tags: tags.map((e) => e.text).toList(),
+                                      productDiscounts: productDiscounts,
+                                    ),
+                                  );
+                            }
+                          }
+                        },
+                        title: "Simpan produk",
+                      );
                     },
-                    title: "Simpan produk",
                   );
                 },
               ),

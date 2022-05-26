@@ -53,7 +53,7 @@ class SheetsRepository {
               "Total Harga Jual": NumberFormat('#,###,000').format(
                   ((productInstance.productSellPrice + invoiceItem.discount) *
                       invoiceItem.quantity)),
-              "Total Harga Beli": NumberFormat('#,###,000')
+              "Total Harga Beli": productInstance.productBuyPrice == 0.0 ? 0.0 : NumberFormat('#,###,000')
                   .format((productInstance.productBuyPrice * invoiceItem.quantity)),
               "Laba": NumberFormat('#,###,000').format(
                   ((productInstance.productSellPrice + invoiceItem.discount) *
