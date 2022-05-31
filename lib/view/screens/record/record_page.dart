@@ -44,8 +44,8 @@ class _ArchivePageState extends State<ArchivePage> {
             child: Theme(
               data: ThemeData(
                 textTheme: TextTheme(
-                  bodyMedium: AppTheme.text.paragraph
-                      .copyWith(color: AppTheme.colors.primary),
+                  bodyMedium:
+                      AppTheme.text.paragraph.copyWith(color: AppTheme.colors.primary),
                 ),
               ),
               child: BlocBuilder<SheetsBloc, SheetsState>(
@@ -121,8 +121,7 @@ class _ArchivePageState extends State<ArchivePage> {
                               height: MQuery.height(0.125, context),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 36.0, bottom: 8.0),
+                              padding: const EdgeInsets.only(top: 36.0, bottom: 8.0),
                               child: Text(
                                 "Belum ada riwayat penjualan!",
                                 style: AppTheme.text.h3,
@@ -138,13 +137,14 @@ class _ArchivePageState extends State<ArchivePage> {
                     ),
                   );
                 } else {
-                  final jsonRecordData = state.recordItems
-                      .sublist(0, state.recordItems.length - 1);
+                  final jsonRecordData =
+                      state.recordItems.sublist(0, state.recordItems.length - 1);
 
                   List<Map> incompleteProducts = [];
-                  for (var element in state.recordItems
-                      .sublist(0, state.recordItems.length - 1)) {
-                    if (element["Total Harga Beli"] == 0.0) {
+                  for (var element
+                      in state.recordItems.sublist(0, state.recordItems.length - 1)) {
+                    if (element["Total Harga Beli"] == 0.0 ||
+                        element["Total Harga Beli"] == "000") {
                       incompleteProducts.add(element);
                     }
                   }
@@ -155,56 +155,76 @@ class _ArchivePageState extends State<ArchivePage> {
                       children: [
                         JsonTable(
                           jsonRecordData,
+                          onRowSelect: ((index, map) {
+                            final Map<String, dynamic> stringifiedProduct = jsonDecode(
+                                map["PI"]
+                                    .toString()
+                                    .substring(18, map["PI"].toString().length));
+
+                            final Product productInstance =
+                                Product.fromJson(stringifiedProduct);
+
+                            RouteWrapper.push(context,
+                                child: ProductEditorPage(
+                                  existingProduct: productInstance,
+                                ));
+                          }),
                           tableHeaderBuilder: (value) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0,
-                                vertical: 10.0,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: AppTheme.colors.outline,
+                            if (value == "PI") {
+                              return const SizedBox();
+                            } else {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18.0,
+                                  vertical: 10.0,
                                 ),
-                              ),
-                              child: Text(
-                                value ?? "_header_",
-                                textAlign: TextAlign.center,
-                                style: AppTheme.text.subtitle
-                                    .copyWith(fontWeight: FontWeight.w500),
-                              ),
-                            );
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  border: Border.all(
+                                    width: 0.5,
+                                    color: AppTheme.colors.outline,
+                                  ),
+                                ),
+                                child: Text(
+                                  value ?? "_header_",
+                                  textAlign: TextAlign.center,
+                                  style: AppTheme.text.subtitle
+                                      .copyWith(fontWeight: FontWeight.w500),
+                                ),
+                              );
+                            }
                           },
                           tableCellBuilder: (value) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0,
-                                vertical: 10.0,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: AppTheme.colors.outline,
+                            if ((value as String).contains("Product Instance: ")) {
+                              return const SizedBox();
+                            } else {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18.0,
+                                  vertical: 10.0,
                                 ),
-                              ),
-                              child: Text(
-                                value,
-                                textAlign: TextAlign.center,
-                                style: AppTheme.text.subtitle,
-                              ),
-                            );
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 0.5,
+                                    color: AppTheme.colors.outline,
+                                  ),
+                                ),
+                                child: Text(
+                                  value,
+                                  textAlign: TextAlign.center,
+                                  style: AppTheme.text.subtitle,
+                                ),
+                              );
+                            }
                           },
                         ),
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                             color: AppTheme.colors.surface.withOpacity(0.75),
                           ),
-                          margin:
-                              const EdgeInsets.all(16.0).copyWith(bottom: 0.0),
+                          margin: const EdgeInsets.all(16.0).copyWith(bottom: 0.0),
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
                             children: [
@@ -225,8 +245,7 @@ class _ArchivePageState extends State<ArchivePage> {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                             color: AppTheme.colors.surface.withOpacity(0.75),
                           ),
                           margin: const EdgeInsets.all(16.0).copyWith(top: 8.0),
@@ -250,8 +269,7 @@ class _ArchivePageState extends State<ArchivePage> {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                             color: AppTheme.colors.tertiary,
                           ),
                           margin: const EdgeInsets.all(16.0),

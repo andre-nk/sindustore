@@ -70,7 +70,8 @@ class DashboardInvoiceList extends StatelessWidget {
               horizontal: MQuery.width(0.05, context),
             ).copyWith(bottom: index == snapshot.docs.length + 1 ? 32.0 : 0.0),
             child: InvoiceCard(
-              index: index - 1,
+              index: index,
+              length: snapshot.docs.length,
               invoiceUID: snapshot.docs[index - 2].id,
               invoice: (snapshot.docs[index - 2].data() as Invoice),
             ),

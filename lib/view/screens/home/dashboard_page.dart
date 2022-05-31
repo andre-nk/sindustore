@@ -17,7 +17,6 @@ class DashboardPage extends StatelessWidget {
               return const CustomLoadingIndicator();
             } else if (state is InvoiceStateQueryLoaded) {
               return FirestoreQueryBuilder(
-                pageSize: 5,
                 query: state.query,
                 builder: (context, snapshot, _) {
                   if (snapshot.docs.isEmpty) {

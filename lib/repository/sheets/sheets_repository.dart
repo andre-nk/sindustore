@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
@@ -59,7 +61,8 @@ class SheetsRepository {
                   ((productInstance.productSellPrice + invoiceItem.discount) *
                           invoiceItem.quantity) -
                       (productInstance.productBuyPrice * invoiceItem.quantity)),
-              "Waktu": DateFormat.Hm().format(invoiceInstance.createdAt)
+              "Waktu": DateFormat.Hm().format(invoiceInstance.createdAt),
+              "PI": "Product Instance: " + jsonEncode(productInstance)
             });
 
             totalRevenue += ((productInstance.productSellPrice + invoiceItem.discount) *

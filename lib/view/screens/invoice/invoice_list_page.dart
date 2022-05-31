@@ -76,7 +76,6 @@ class InvoiceListPage extends StatelessWidget {
             builder: (context, state) {
               if (state is InvoiceStateQueryLoaded) {
                 return FirestoreQueryBuilder(
-                  pageSize: 5,
                   query: state.query,
                   builder: (context, snapshot, _) {
                     if (snapshot.docs.isEmpty) {
@@ -119,7 +118,8 @@ class InvoiceListPage extends StatelessWidget {
                               bottom: index == snapshot.docs.length - 1 ? 24.0 : 0.0,
                             ),
                             child: InvoiceCard(
-                              index: index - 1,
+                              index: index,
+                              length: snapshot.docs.length,
                               invoiceUID: snapshot.docs[index].id,
                               invoice: (snapshot.docs[index].data() as Invoice),
                             ),

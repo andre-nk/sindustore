@@ -8,11 +8,12 @@ extension StringExtension on String {
 
 class InvoiceCard extends StatelessWidget {
   const InvoiceCard(
-      {Key? key, required this.invoice, required this.index, required this.invoiceUID})
+      {Key? key, required this.invoice, required this.index, required this.length, required this.invoiceUID})
       : super(key: key);
 
   final Invoice invoice;
   final String invoiceUID;
+  final int length;
   final int index;
 
   @override
@@ -64,7 +65,7 @@ class InvoiceCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AutoSizeText(
-                        "Nota " + index.toString(),
+                        "Nota " + (length - index).toString(),
                         style:
                             AppTheme.text.paragraph.copyWith(fontWeight: FontWeight.w600),
                       ),
