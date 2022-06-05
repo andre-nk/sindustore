@@ -26,18 +26,8 @@ class PrinterStateConnecting extends PrinterState {
   const PrinterStateConnecting({List<BluetoothDevice>? devices})
       : super(devices);
 }
-
-class PrinterStateOriginalPrinted extends PrinterState {
-  final BluetoothDevice device;
-  final Invoice invoice;
-
-  const PrinterStateOriginalPrinted(
-      {required this.invoice, required this.device})
-      : super(null);
-}
-
-class PrinterStateCopyPrinted extends PrinterState {
-  const PrinterStateCopyPrinted() : super(null);
+class PrinterStatePrinted extends PrinterState {
+  const PrinterStatePrinted() : super(null);
 }
 
 class PrinterStatePermissionError extends PrinterState {

@@ -1,8 +1,7 @@
 part of "../widgets.dart";
 
 class InvoiceCheckoutSheet extends StatelessWidget {
-  const InvoiceCheckoutSheet(
-      {Key? key, required this.invoice, this.existingInvoiceUID})
+  const InvoiceCheckoutSheet({Key? key, required this.invoice, this.existingInvoiceUID})
       : super(key: key);
 
   final Invoice invoice;
@@ -24,8 +23,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                 children: [
                   AutoSizeText(
                     "Status nota",
-                    style: AppTheme.text.subtitle
-                        .copyWith(fontWeight: FontWeight.w500),
+                    style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                   ),
                   BlocBuilder<InvoiceBloc, InvoiceState>(
                     builder: (context, state) {
@@ -45,8 +43,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                           ),
                           child: AutoSizeText(
                             state.invoice.status.name.capitalize(),
-                            style: AppTheme.text.footnote
-                                .copyWith(color: Colors.white),
+                            style: AppTheme.text.footnote.copyWith(color: Colors.white),
                           ),
                         );
                       } else {
@@ -64,8 +61,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                   children: [
                     AutoSizeText(
                       "Total:",
-                      style: AppTheme.text.subtitle
-                          .copyWith(fontWeight: FontWeight.w500),
+                      style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
                     ),
                     BlocBuilder<InvoiceBloc, InvoiceState>(
                       builder: (context, state) {
@@ -82,8 +78,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                       .sumInvoice(state.invoice);
                                 }
                               },
-                              child: BlocBuilder<InvoiceValueCubit,
-                                  InvoiceValueState>(
+                              child: BlocBuilder<InvoiceValueCubit, InvoiceValueState>(
                                 builder: (context, state) {
                                   if (state is InvoiceValueStateLoaded) {
                                     return AutoSizeText(
@@ -91,8 +86,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                         locale: 'id_ID',
                                         decimalDigits: 0,
                                       ).format(state.invoiceValue),
-                                      style: AppTheme.text.subtitle.copyWith(
-                                          fontWeight: FontWeight.w500),
+                                      style: AppTheme.text.subtitle
+                                          .copyWith(fontWeight: FontWeight.w500),
                                     );
                                   } else {
                                     return AutoSizeText(
@@ -100,8 +95,8 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                         locale: 'id_ID',
                                         decimalDigits: 0,
                                       ).format(0),
-                                      style: AppTheme.text.subtitle.copyWith(
-                                          fontWeight: FontWeight.w500),
+                                      style: AppTheme.text.subtitle
+                                          .copyWith(fontWeight: FontWeight.w500),
                                     );
                                   }
                                 },
@@ -136,12 +131,10 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                   child: BlocConsumer<PrinterBloc, PrinterState>(
                     listener: (context, state) {
                       if (state is PrinterStatePermissionError) {
-                        context
-                            .read<PrinterBloc>()
-                            .add(PrinterEventRequestPermission());
+                        context.read<PrinterBloc>().add(PrinterEventRequestPermission());
                       } else if (state is PrinterStatePermissionGranted) {
                         context.read<PrinterBloc>().add(PrinterEventScan());
-                      } else if (state is PrinterStateCopyPrinted) {
+                      } else if (state is PrinterStatePrinted && invoice.status != InvoiceStatus.paid) {
                         Invoice invoiceInstance = Invoice(
                           adminHandlerUID: invoice.adminHandlerUID,
                           customerName: invoice.customerName,
@@ -169,8 +162,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                             backgroundColor: AppTheme.colors.success,
                             content: AutoSizeText(
                               "Nota berhasil dicetak!",
-                              style: AppTheme.text.subtitle
-                                  .copyWith(color: Colors.white),
+                              style: AppTheme.text.subtitle.copyWith(color: Colors.white),
                             ),
                           ),
                         );
@@ -180,112 +172,85 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                             backgroundColor: AppTheme.colors.error,
                             content: AutoSizeText(
                               state.customMessage ?? state.e.toString(),
-                              style: AppTheme.text.subtitle
-                                  .copyWith(color: Colors.white),
+                              style: AppTheme.text.subtitle.copyWith(color: Colors.white),
                             ),
                           ),
                         );
                       }
                     },
                     builder: (context, state) {
-                      return Opacity(
-                        opacity:
-                            invoice.status != InvoiceStatus.paid ? 1.0 : 0.5,
-                        child: state is PrinterStateConnecting
-                            ? const CustomLoadingIndicator()
-                            : WideButton(
-                                title: state is PrinterStateOriginalPrinted
-                                    ? "Cetak nota salinan"
-                                    : "Konfirmasi dan cetak nota",
-                                onPressed: () {
-                                  if (invoice.status != InvoiceStatus.paid) {
-                                    if ((state is PrinterStateLoaded) &&
-                                        state.devices != null) {
-                                      if (state.devices!
-                                          .where((element) =>
-                                              element.name == "MPT-II")
-                                          .isNotEmpty) {
-                                        context.read<PrinterBloc>().add(
-                                              PrinterEventOriginalPrint(
-                                                invoice: (context
-                                                            .read<InvoiceBloc>()
-                                                            .state
-                                                        as InvoiceStateActivated)
-                                                    .invoice,
-                                                device: state.devices!
-                                                    .where((element) =>
-                                                        element.name ==
-                                                        "MPT-II")
-                                                    .first,
-                                              ),
-                                            );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(
-                                            SnackBar(
-                                              backgroundColor:
-                                                  AppTheme.colors.error,
-                                              content: AutoSizeText(
-                                                "Printer tidak dapat ditemukan",
-                                                style: AppTheme.text.subtitle
-                                                    .copyWith(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
+                      return state is PrinterStateConnecting
+                          ? const CustomLoadingIndicator()
+                          : WideButton(
+                              title: invoice.status == InvoiceStatus.paid
+                                  ? "Cetak ulang nota"
+                                  : "Konfirmasi dan cetak nota",
+                              onPressed: () {
+                                if ((state is PrinterStateLoaded) &&
+                                    state.devices != null) {
+                                  if (state.devices!
+                                      .where((element) => element.name == "MPT-II")
+                                      .isNotEmpty) {
+                                    context.read<PrinterBloc>().add(
+                                          PrinterEventPrint(
+                                            invoice: (context.read<InvoiceBloc>().state
+                                                    as InvoiceStateActivated)
+                                                .invoice,
+                                            device: state.devices!
+                                                .where(
+                                                    (element) => element.name == "MPT-II")
+                                                .first,
+                                          ),
+                                        );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: AppTheme.colors.error,
+                                          content: AutoSizeText(
+                                            "Printer tidak dapat ditemukan",
+                                            style: AppTheme.text.subtitle.copyWith(
+                                              color: Colors.white,
                                             ),
-                                          );
-                                      }
-                                    } else if (state
-                                        is PrinterStateOriginalPrinted) {
-                                      context.read<PrinterBloc>().add(
-                                            PrinterEventCopyPrint(
-                                              invoice: state.invoice,
-                                              device: state.device,
-                                            ),
-                                          );
-                                    } else if (state is PrinterStateFailed &&
-                                        state.devices != null) {
-                                      if (state.devices!
-                                          .where((element) =>
-                                              element.name == "MPT-II")
-                                          .isNotEmpty) {
-                                        context.read<PrinterBloc>().add(
-                                              PrinterEventOriginalPrint(
-                                                invoice: (context
-                                                            .read<InvoiceBloc>()
-                                                            .state
-                                                        as InvoiceStateActivated)
-                                                    .invoice,
-                                                device: state.devices!
-                                                    .where((element) =>
-                                                        element.name ==
-                                                        "MPT-II")
-                                                    .first,
-                                              ),
-                                            );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(
-                                            SnackBar(
-                                              backgroundColor:
-                                                  AppTheme.colors.error,
-                                              content: AutoSizeText(
-                                                "Printer tidak dapat ditemukan",
-                                                style: AppTheme.text.subtitle
-                                                    .copyWith(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                      }
-                                    }
+                                          ),
+                                        ),
+                                      );
                                   }
-                                },
-                              ),
-                      );
+                                } else if (state is PrinterStateFailed &&
+                                    state.devices != null) {
+                                  if (state.devices!
+                                      .where((element) => element.name == "MPT-II")
+                                      .isNotEmpty) {
+                                    context.read<PrinterBloc>().add(
+                                          PrinterEventPrint(
+                                            invoice: (context.read<InvoiceBloc>().state
+                                                    as InvoiceStateActivated)
+                                                .invoice,
+                                            device: state.devices!
+                                                .where(
+                                                    (element) => element.name == "MPT-II")
+                                                .first,
+                                          ),
+                                        );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: AppTheme.colors.error,
+                                          content: AutoSizeText(
+                                            "Printer tidak dapat ditemukan",
+                                            style: AppTheme.text.subtitle.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                  }
+                                }
+                              },
+                            );
                     },
                   ),
                 ),

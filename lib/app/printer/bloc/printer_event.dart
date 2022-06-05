@@ -11,16 +11,9 @@ class PrinterEventRequestPermission extends PrinterEvent {}
 
 class PrinterEventScan extends PrinterEvent {}
 
-class PrinterEventOriginalPrint extends PrinterEvent {
+class PrinterEventPrint extends PrinterEvent {
   final BluetoothDevice device;
   final Invoice invoice;
 
-  const PrinterEventOriginalPrint({required this.invoice, required this.device});
-}
-
-class PrinterEventCopyPrint extends PrinterEvent {
-  final BluetoothDevice device;
-  final Invoice invoice;
-
-  const PrinterEventCopyPrint({required this.invoice, required this.device});
+  const PrinterEventPrint({required this.invoice, required this.device});
 }
