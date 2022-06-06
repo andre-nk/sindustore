@@ -17,3 +17,5 @@ class PrinterEventPrint extends PrinterEvent {
 
   const PrinterEventPrint({required this.invoice, required this.device});
 }
+
+class PrinterEventPass extends PrinterEvent {}

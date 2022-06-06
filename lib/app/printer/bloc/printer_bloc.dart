@@ -186,5 +186,9 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         );
       }
     });
+  
+    on<PrinterEventPass>((event, emit) async {
+      emit(const PrinterStatePrinted());
+    });
   }
 }

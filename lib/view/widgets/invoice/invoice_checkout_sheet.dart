@@ -270,7 +270,9 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                                   Expanded(
                                     flex: 2,
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        context.read<PrinterBloc>().add(PrinterEventPass());
+                                      },
                                       style: ElevatedButton.styleFrom(
                                         shape: const CircleBorder(),
                                         minimumSize: const Size(double.infinity, 54),
