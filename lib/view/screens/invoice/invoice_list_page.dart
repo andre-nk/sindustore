@@ -76,6 +76,7 @@ class InvoiceListPage extends StatelessWidget {
             builder: (context, state) {
               if (state is InvoiceStateQueryLoaded) {
                 return FirestoreQueryBuilder(
+                  pageSize: 1000,
                   query: state.query,
                   builder: (context, snapshot, _) {
                     if (snapshot.docs.isEmpty) {
@@ -111,6 +112,10 @@ class InvoiceListPage extends StatelessWidget {
                       return ListView.builder(
                         itemCount: snapshot.docs.length,
                         itemBuilder: (context, index) {
+                          if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                            snapshot.fetchMore();
+                          }
+
                           return Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: MQuery.width(0.05, context),

@@ -11,6 +11,10 @@ class DashboardInvoiceList extends StatelessWidget {
       itemCount: snapshot.docs.length + 2,
       itemBuilder: (context, index) {
         if (index == 0) {
+          if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+            snapshot.fetchMore();
+          }
+
           return Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -53,12 +57,13 @@ class DashboardInvoiceList extends StatelessWidget {
                   style: AppTheme.text.h3,
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     RouteWrapper.push(context, child: const InvoiceListPage());
                   },
                   child: AutoSizeText(
                     "lihat semua",
-                    style: AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
+                    style:
+                        AppTheme.text.subtitle.copyWith(color: AppTheme.colors.tertiary),
                   ),
                 )
               ],
