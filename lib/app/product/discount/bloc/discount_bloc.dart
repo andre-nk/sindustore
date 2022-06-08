@@ -12,6 +12,8 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
       : super(const DiscountStateFormChanged(amount: 0.0, discountName: "")) {
     on<DiscountEventCreate>((event, emit) async {
       try {
+        emit(DiscountStateLoading());
+
         await discountRepository.createDiscount(
           event.productID,
           ProductDiscount(

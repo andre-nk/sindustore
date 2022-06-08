@@ -1,9 +1,13 @@
 part of '../widgets.dart';
 
 class ProductDiscountModal extends StatelessWidget {
-  const ProductDiscountModal({Key? key, required this.productID})
-      : super(key: key);
+  const ProductDiscountModal({
+    Key? key,
+    required this.productID,
+    required this.ancestorSheetContext,
+  }) : super(key: key);
 
+  final BuildContext ancestorSheetContext;
   final String productID;
 
   @override
@@ -26,6 +30,7 @@ class ProductDiscountModal extends StatelessWidget {
                 listener: (_, state) {
                   if (state is DiscountStateCreated) {
                     Navigator.of(context).pop();
+                    Navigator.of(ancestorSheetContext).pop();
                   }
                 },
                 builder: (context, state) {
@@ -35,17 +40,15 @@ class ProductDiscountModal extends StatelessWidget {
                       children: [
                         Text(
                           "Buat pilihan diskon baru:",
-                          style: AppTheme.text.title
-                              .copyWith(fontWeight: FontWeight.w500),
+                          style:
+                              AppTheme.text.title.copyWith(fontWeight: FontWeight.w500),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 24.0),
                           child: TextField(
                             onChanged: (value) {
-                              context.read<DiscountBloc>().add(
-                                  DiscountEventFormChange(
-                                      discountName: value,
-                                      amount: state.amount));
+                              context.read<DiscountBloc>().add(DiscountEventFormChange(
+                                  discountName: value, amount: state.amount));
                             },
                             decoration: InputDecoration(
                                 isDense: true,
@@ -123,7 +126,8 @@ class ProductDiscountModal extends StatelessWidget {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: AppTheme.colors.primary,
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 24.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 24.0),
                                   shape: const StadiumBorder(),
                                 ),
                                 child: Padding(

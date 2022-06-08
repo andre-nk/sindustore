@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,19 +14,29 @@ import 'package:sindu_store/view/screens/screens.dart';
 import 'package:sindu_store/repository/auth/auth_repository.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: AppTheme.colors.primary),
-    );
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) async {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: AppTheme.colors.primary),
+      );
 
-    BlocOverrides.runZoned(
-      () => runApp(const App()),
-      blocObserver: AppBlocObserver(),
-    );
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      } else {
+      }
+
+      BlocOverrides.runZoned(
+        () => runApp(const App()),
+        blocObserver: AppBlocObserver(),
+      );
+    });
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
   });
 }
 

@@ -1,5 +1,21 @@
 part of "../widgets.dart";
 
+double? _dropdownValue(InvoiceState state, Product product) {
+  if (state is InvoiceStateActivated) {
+    final List<InvoiceItem> items = state.invoice.products;
+    final List<InvoiceItem> item =
+        items.where((element) => element.productID == product.id).toList();
+
+    if (items.isNotEmpty && item.isNotEmpty) {
+      return item.first.discount;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
+
 class ProductCardDiscount extends StatelessWidget {
   const ProductCardDiscount({
     Key? key,
@@ -43,7 +59,7 @@ class ProductCardDiscount extends StatelessWidget {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<double>(
                           hint: AutoSizeText(
-                            'Select Item',
+                            'Pilih diskon',
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).hintColor,
@@ -63,28 +79,7 @@ class ProductCardDiscount extends StatelessWidget {
                                 ),
                               )
                               .toList(),
-                          value: state is InvoiceStateActivated &&
-                                  state.invoice.products.isNotEmpty
-                              ? state.invoice.products
-                                          .where((element) =>
-                                              element.productID == product.id)
-                                          .isNotEmpty &&
-                                      state.invoice.products
-                                              .where((element) =>
-                                                  element.productID == product.id)
-                                              .first
-                                              .discount !=
-                                          0
-                                  ? state.invoice.products
-                                      .where((element) => element.productID == product.id)
-                                      .first
-                                      .discount
-                                  : product.productDiscounts.isEmpty
-                                      ? 0.0
-                                      : product.productDiscounts.first.amount
-                              : product.productDiscounts.isEmpty
-                                  ? 0.0
-                                  : product.productDiscounts.first.amount,
+                          value: _dropdownValue(state, product),
                           onChanged: (value) {
                             if (value != null && state is InvoiceStateActivated) {
                               context.read<InvoiceBloc>().add(
@@ -108,7 +103,10 @@ class ProductCardDiscount extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return ProductDiscountModal(productID: product.id);
+                            return ProductDiscountModal(
+                              productID: product.id,
+                              ancestorSheetContext: ancestorContext,
+                            );
                           },
                         );
                       },

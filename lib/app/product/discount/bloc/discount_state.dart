@@ -17,6 +17,8 @@ class DiscountStateFormChanged extends DiscountState {
   const DiscountStateFormChanged({required this.discountName, required this.amount});
 }
 
+class DiscountStateLoading extends DiscountState {}
+
 class DiscountStateCreated extends DiscountState {}
 
 class DiscountStateFailed extends DiscountState {
