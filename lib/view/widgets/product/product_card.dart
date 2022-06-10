@@ -45,6 +45,7 @@ class ProductCard extends StatelessWidget {
                       children: [
                         AutoSizeText(
                           product.productName,
+                          overflow: TextOverflow.visible,
                           style: AppTheme.text.title,
                         ),
                         BlocBuilder<InvoiceBloc, InvoiceState>(

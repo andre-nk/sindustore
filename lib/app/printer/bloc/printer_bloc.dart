@@ -112,6 +112,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       printerInstance.printCustom("--------------------------------", 1, 1);
       printerInstance.printNewLine();
       printerInstance.printCustom("Terima kasih!", 2, 1);
+      printerInstance.paperCut();
     }
 
     on<PrinterEventPrint>((event, emit) async {
