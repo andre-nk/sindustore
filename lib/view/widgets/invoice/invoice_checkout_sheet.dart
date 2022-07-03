@@ -120,6 +120,7 @@ class InvoiceCheckoutSheet extends StatelessWidget {
                         BlueThermalPrinter.instance,
                         ProductRepository(),
                         InvoiceRepository(),
+                        PrinterRepository()
                       )..add(PrinterEventScan()),
                     ),
                     BlocProvider(

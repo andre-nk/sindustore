@@ -5,12 +5,14 @@ class InvoiceProductListPage extends StatelessWidget {
     Key? key,
     this.existingInvoice,
     this.existingInvoiceUID,
-    this.dashboardSearchQuery,
+    this.dashboardQuery,
+    this.dashboardSearchQuery = ""
   }) : super(key: key);
 
   final Invoice? existingInvoice;
   final String? existingInvoiceUID;
-  final Query? dashboardSearchQuery;
+  final Query? dashboardQuery;
+  final String dashboardSearchQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -91,13 +93,14 @@ class InvoiceProductListPage extends StatelessWidget {
                       if (state is ProductStateQueryLoaded) {
                         return FirestoreQueryBuilder(
                           pageSize: 10,
-                          query: dashboardSearchQuery ?? state.query,
+                          query: dashboardQuery ?? state.query,
                           builder: (context, snapshot, _) {
                             return CustomScrollView(
                               slivers: [
                                 InvoiceProductListAppBar(
                                   existingInvoice: existingInvoice,
                                   existingInvoiceUID: existingInvoiceUID,
+                                  dashboardSearchQuery: dashboardSearchQuery,
                                 ),
                                 InvoiceProductSliverList(snapshot: snapshot)
                               ],

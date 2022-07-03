@@ -34,6 +34,8 @@ import 'package:sindu_store/repository/product/product_repository.dart';
 import 'package:sindu_store/repository/product/tags_repository.dart';
 import 'package:sindu_store/repository/sheets/sheets_repository.dart';
 import 'package:sindu_store/view/screens/screens.dart';
+
+import '../../repository/printer/printer_repository.dart';
 part "general/app_bar.dart";
 part "general/wide_button.dart";
 part "general/loading_indicator.dart";

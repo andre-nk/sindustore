@@ -1,12 +1,36 @@
 part of "../widgets.dart";
 
-class InvoiceProductListAppBar extends StatelessWidget {
-  const InvoiceProductListAppBar(
-      {Key? key, this.existingInvoice, this.existingInvoiceUID})
-      : super(key: key);
+class InvoiceProductListAppBar extends StatefulWidget {
+  const InvoiceProductListAppBar({
+    Key? key,
+    this.existingInvoice,
+    this.existingInvoiceUID,
+    this.dashboardSearchQuery = "",
+  }) : super(key: key);
 
   final Invoice? existingInvoice;
   final String? existingInvoiceUID;
+  final String dashboardSearchQuery;
+
+  @override
+  State<InvoiceProductListAppBar> createState() => _InvoiceProductListAppBarState();
+}
+
+class _InvoiceProductListAppBarState extends State<InvoiceProductListAppBar> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.text = widget.dashboardSearchQuery;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +38,7 @@ class InvoiceProductListAppBar extends StatelessWidget {
       builder: (context, state) {
         return SliverAppBar(
           title: AutoSizeText(
-            existingInvoice != null ? "Perbarui nota" : "Pilih produk",
+            widget.existingInvoice != null ? "Perbarui nota" : "Pilih produk",
             style: AppTheme.text.subtitle.copyWith(fontWeight: FontWeight.w500),
           ),
           leading: BlocConsumer<InvoiceBloc, InvoiceState>(
@@ -28,18 +52,18 @@ class InvoiceProductListAppBar extends StatelessWidget {
                 icon: const Icon(Ionicons.chevron_back),
                 onPressed: () {
                   if (state is InvoiceStateActivated) {
-                    if (existingInvoice != null) {
+                    if (widget.existingInvoice != null) {
                       showDialog(
                         context: context,
                         builder: (_) {
                           return InvoiceBackModal(
                             invoice: state.invoice,
-                            existingInvoiceUID: existingInvoiceUID,
+                            existingInvoiceUID: widget.existingInvoiceUID,
                             ancestorContext: context,
                           );
                         },
                       );
-                    } else if (existingInvoice == null &&
+                    } else if (widget.existingInvoice == null &&
                         state.invoice.products.isNotEmpty) {
                       showDialog(
                         context: context,
@@ -109,12 +133,25 @@ class InvoiceProductListAppBar extends StatelessWidget {
                                       ProductEventSearchActive(searchQuery: value),
                                     );
                               },
+                              controller: _searchController,
                               decoration: InputDecoration(
                                 isDense: true,
                                 prefixIcon: Icon(
                                   Ionicons.search,
                                   size: 20,
                                   color: AppTheme.colors.primary,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _searchController.clear();
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Ionicons.close_circle_outline,
+                                    size: 20,
+                                    color: AppTheme.colors.primary,
+                                  ),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),

@@ -1,7 +1,21 @@
 part of "../widgets.dart";
 
-class MainBox extends StatelessWidget {
+class MainBox extends StatefulWidget {
   const MainBox({Key? key}) : super(key: key);
+
+  @override
+  State<MainBox> createState() => _MainBoxState();
+}
+
+class _MainBoxState extends State<MainBox> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +46,8 @@ class MainBox extends StatelessWidget {
                     RouteWrapper.push(
                       context,
                       child: InvoiceProductListPage(
-                        dashboardSearchQuery: state.query,
+                        dashboardQuery: state.query,
+                        dashboardSearchQuery: _searchController.text
                       ),
                     );
                   }
@@ -44,11 +59,24 @@ class MainBox extends StatelessWidget {
                             ProductEventSearchActive(searchQuery: value),
                           );
                     },
+                    controller: _searchController,
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: const EdgeInsets.only(bottom: 4.0),
                         child: Icon(
                           Ionicons.search,
+                          size: 20,
+                          color: AppTheme.colors.primary,
+                        ),
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                          });
+                        },
+                        icon: Icon(
+                          Ionicons.close_circle_outline,
                           size: 20,
                           color: AppTheme.colors.primary,
                         ),

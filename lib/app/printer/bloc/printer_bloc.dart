@@ -1,14 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:bloc/bloc.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sindu_store/model/invoice/invoice.dart';
-import 'package:sindu_store/model/product/product.dart';
 import 'package:sindu_store/repository/invoice/invoice_repository.dart';
+import 'package:sindu_store/repository/printer/printer_repository.dart';
 import 'package:sindu_store/repository/product/product_repository.dart';
 
 part 'printer_event.dart';
@@ -19,6 +16,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
     BlueThermalPrinter printerInstance,
     ProductRepository productRepository,
     InvoiceRepository invoiceRepository,
+    PrinterRepository printerRepository,
   ) : super(const PrinterStateInitial()) {
     on<PrinterEventRequestPermission>((event, emit) async {
       try {
@@ -54,67 +52,6 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       }
     });
 
-    Future<void> _printInvoice(PrinterEventPrint event) async {
-      final double invoiceValue = await invoiceRepository.sumInvoice(event.invoice);
-
-      Uint8List? logoBytes;
-      await rootBundle.load("assets/icon_print.png").then((value) {
-        logoBytes = value.buffer.asUint8List();
-      });
-
-      printerInstance.printNewLine();
-      printerInstance.printNewLine();
-
-      if (logoBytes != null) {
-        printerInstance.printImageBytes(logoBytes!);
-      }
-
-      printerInstance.printCustom("SINAR DUNIA ELEKTRIK", 1, 1);
-      printerInstance.printCustom(
-          "Jl. Ahmad Yani, no. 76, Wonosobo, 56311 | Telp: (0286) 321146 | WA: 0812-8005-1677",
-          0,
-          1);
-      printerInstance.printCustom("--------------------------------", 1, 1);
-      printerInstance.printCustom(
-          "TANGGAL   : ${DateFormat.Hm().format(event.invoice.createdAt) + ", " + DateFormat.yMd().format(event.invoice.createdAt)}",
-          1,
-          0);
-      printerInstance.printCustom("PELANGGAN : ${event.invoice.customerName}", 1, 0);
-      printerInstance.printCustom("--------------------------------", 1, 1);
-      printerInstance.printLeftRight("Produk (Qty)", "Harga", 1);
-
-      for (var product in event.invoice.products) {
-        Product productInstance =
-            await productRepository.getProductByID(product.productID);
-
-        printerInstance.printCustom("${productInstance.productName} ", 1, 0);
-
-        printerInstance.printLeftRight(
-          "(${product.quantity.toString()}x)",
-          NumberFormat.simpleCurrency(
-            locale: 'id_ID',
-            decimalDigits: 0,
-          ).format((productInstance.productSellPrice + product.discount).toInt()),
-          1,
-        );
-      }
-
-      printerInstance.printCustom("--------------------------------", 1, 1);
-      printerInstance.printCustom(
-        "TOTAL HARGA : ${NumberFormat.simpleCurrency(
-          locale: 'id_ID',
-          decimalDigits: 0,
-        ).format(invoiceValue)}",
-        1,
-        0,
-      );
-      printerInstance.printCustom("TOTAL ITEM : ${event.invoice.products.length}", 1, 0);
-      printerInstance.printCustom("--------------------------------", 1, 1);
-      printerInstance.printNewLine();
-      printerInstance.printCustom("Terima kasih!", 2, 1);
-      printerInstance.paperCut();
-    }
-
     on<PrinterEventPrint>((event, emit) async {
       //If we have connected to the printer earlier, then we shut down the printer, and then we tap the print button again, the preStatus tests will pass perfectly!
       //This indicates that the printerInstance can't detect whether the previously connected printer is dead or not
@@ -140,7 +77,12 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         ];
 
         if (preStatus.every((element) => element == true)) {
-          await _printInvoice(event);
+          await printerRepository.printInvoice(
+            event,
+            productRepository,
+            invoiceRepository,
+            printerInstance,
+          );
           await printerInstance.disconnect();
 
           emit(const PrinterStatePrinted());
@@ -155,7 +97,12 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
           ];
 
           if (postStatus.every((element) => element == true)) {
-            await _printInvoice(event);
+            await printerRepository.printInvoice(
+              event,
+              productRepository,
+              invoiceRepository,
+              printerInstance,
+            );
             await printerInstance.disconnect();
 
             emit(const PrinterStatePrinted());
@@ -187,7 +134,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         );
       }
     });
-  
+
     on<PrinterEventPass>((event, emit) async {
       emit(const PrinterStatePrinted());
     });
